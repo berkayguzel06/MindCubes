@@ -1,0 +1,63 @@
+agents:
+  default_model: "gpt-4"
+  max_retries: 3
+  timeout: 300
+  
+models:
+  local:
+    cache_dir: "./models/cache"
+    device: "auto"  # auto, cuda, cpu
+    load_in_4bit: false  # Enable 4-bit quantization
+    load_in_8bit: false  # Enable 8-bit quantization
+    trust_remote_code: false  # Allow custom code from model repos
+  
+  huggingface:
+    # Popular models from HuggingFace Hub
+    recommended_models:
+      code_generation:
+        - "codellama/CodeLlama-7b-Instruct-hf"
+        - "bigcode/starcoder"
+        - "Salesforce/codegen-2B-mono"
+      chat:
+        - "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+        - "microsoft/phi-2"
+        - "mistralai/Mistral-7B-Instruct-v0.2"
+      small_models:
+        - "microsoft/phi-2"  # 2.7B
+        - "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # 1.1B
+        - "stabilityai/stablelm-2-1_6b"  # 1.6B
+  
+  api:
+    providers:
+      - openai
+      - anthropic
+    rate_limit: 100  # requests per minute
+
+training:
+  output_dir: "./models/checkpoints"
+  batch_size: 4
+  learning_rate: 2e-4
+  num_epochs: 3
+  gradient_accumulation_steps: 4
+  warmup_steps: 100
+  logging_steps: 10
+  save_steps: 100
+
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.1
+  target_modules:
+    - q_proj
+    - v_proj
+    - k_proj
+    - o_proj
+
+tools:
+  enabled:
+    - web_search
+    - code_executor
+    - file_manager
+    - data_analyzer
+    - api_caller
+
