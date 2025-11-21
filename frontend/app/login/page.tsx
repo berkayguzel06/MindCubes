@@ -1,6 +1,67 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
+
+const MICROSOFT_AUTH_BASE = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
+const MICROSOFT_AUTH_PARAMS = {
+  client_id: '22c7a263-dc1c-4b96-8e72-d86990737b9b',
+  response_type: 'code',
+  redirect_uri: 'http://localhost:5678/webhook/oauth2/callback',
+  response_mode: 'query',
+  scope: 'offline_access https://graph.microsoft.com/.default',
+};
+const USER_EMAIL_KEY = 'mindcubes:userEmail';
 
 export default function Login() {
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [savedEmail, setSavedEmail] = useState('');
+  const [error, setError] = useState('');
+
+  const handleInputChange =
+    (field: 'email' | 'password') =>
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setForm((prev) => ({ ...prev, [field]: event.target.value }));
+    };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!form.email.trim()) {
+      setError('Lütfen geçerli bir e-posta adresi girin.');
+      return;
+    }
+
+    const normalizedEmail = form.email.trim();
+
+    setError('');
+    setSavedEmail(normalizedEmail);
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(USER_EMAIL_KEY, normalizedEmail);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const storedEmail = window.localStorage.getItem(USER_EMAIL_KEY);
+    if (storedEmail) {
+      setSavedEmail(storedEmail);
+      setForm((prev) => ({ ...prev, email: storedEmail }));
+    }
+  }, []);
+
+  const microsoftAuthUrl = useMemo(() => {
+    if (!savedEmail) return '';
+
+    const params = new URLSearchParams({
+      ...MICROSOFT_AUTH_PARAMS,
+      state: savedEmail,
+    });
+
+    return `${MICROSOFT_AUTH_BASE}?${params.toString()}`;
+  }, [savedEmail]);
+
   return (
     <main className="h-screen w-full overflow-hidden futuristic-bg flex items-center justify-center relative">
       {/* Decorative elements */}
@@ -17,11 +78,13 @@ export default function Login() {
           <p className="text-gray-400 text-sm">Sign in to continue to MindCubes</p>
         </div>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Email</label>
             <input
               type="email"
+              value={form.email}
+              onChange={handleInputChange('email')}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
               placeholder="name@company.com"
             />
@@ -31,6 +94,8 @@ export default function Login() {
             <label className="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Password</label>
             <input
               type="password"
+              value={form.password}
+              onChange={handleInputChange('password')}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
               placeholder="••••••••"
             />
@@ -41,13 +106,38 @@ export default function Login() {
               <input type="checkbox" className="mr-2 rounded bg-white/10 border-white/10" />
               Remember me
             </label>
-            <a href="#" className="text-white hover:underline">Forgot password?</a>
+            <a href="#" className="text-white hover:underline">
+              Forgot password?
+            </a>
           </div>
 
-          <button className="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors mt-6">
+          {error && <p className="text-red-400 text-sm">{error}</p>}
+
+          <button
+            type="submit"
+            className="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors mt-6"
+          >
             Sign In
           </button>
         </form>
+
+        {savedEmail && microsoftAuthUrl && (
+          <div className="mt-8 p-4 bg-white/5 border border-white/10 rounded-xl space-y-3">
+            <div className="text-sm text-gray-300">
+              <p className="font-semibold text-white">Microsoft Auth Hazır</p>
+              <p className="text-gray-400">State parametresi olarak {savedEmail} kullanılıyor.</p>
+            </div>
+            <a
+              href={microsoftAuthUrl}
+              className="block text-center w-full bg-indigo-500/90 hover:bg-indigo-400 text-white font-medium py-3 rounded-lg transition-colors"
+            >
+              Microsoft ile Yetkilendir
+            </a>
+            <p className="text-xs text-gray-500">
+              Tıklayarak Microsoft login sayfasına yönlendirilecek ve state değeri olarak e-posta adresiniz gönderilecektir.
+            </p>
+          </div>
+        )}
 
         <div className="mt-6 text-center text-sm text-gray-400">
           Don't have an account?{' '}

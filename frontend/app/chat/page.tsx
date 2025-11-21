@@ -1,6 +1,17 @@
 "use client";
+
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+const MICROSOFT_AUTH_BASE = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
+const MICROSOFT_AUTH_PARAMS = {
+  client_id: '22c7a263-dc1c-4b96-8e72-d86990737b9b',
+  response_type: 'code',
+  redirect_uri: 'http://localhost:5678/webhook/oauth2/callback',
+  response_mode: 'query',
+  scope: 'offline_access https://graph.microsoft.com/.default',
+};
+const USER_EMAIL_KEY = 'mindcubes:userEmail';
 
 export default function Chat() {
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([
@@ -9,6 +20,7 @@ export default function Chat() {
   const [input, setInput] = useState('');
   const [provider, setProvider] = useState(''); // empty means default
   const [model, setModel] = useState('');
+  const [userEmail, setUserEmail] = useState('');
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -35,6 +47,23 @@ export default function Chat() {
       setMessages((prev) => [...prev, { role: 'assistant', content: 'Error contacting server.' }]);
     }
   };
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const storedEmail = window.localStorage.getItem(USER_EMAIL_KEY);
+    if (storedEmail) {
+      setUserEmail(storedEmail);
+    }
+  }, []);
+
+  const microsoftAuthUrl = useMemo(() => {
+    if (!userEmail) return '';
+    const params = new URLSearchParams({
+      ...MICROSOFT_AUTH_PARAMS,
+      state: userEmail,
+    });
+    return `${MICROSOFT_AUTH_BASE}?${params.toString()}`;
+  }, [userEmail]);
 
   return (
     <main className="h-screen w-full overflow-hidden futuristic-bg flex relative">
@@ -69,7 +98,30 @@ export default function Chat() {
           </Link>
         </nav>
 
-        <div className="p-4 border-t border-white/5">
+        <div className="px-4 pb-4">
+          <div className="border border-white/10 rounded-xl p-4 space-y-3">
+            <div>
+              <p className="text-sm font-semibold text-white">Microsoft Auth</p>
+              <p className="text-xs text-gray-400">
+                {userEmail ? `State parametresi için ${userEmail}` : 'Email adresini giriş ekranından kaydet.'}
+              </p>
+            </div>
+            {userEmail ? (
+              <a
+                href={microsoftAuthUrl}
+                className="block text-center bg-indigo-500/90 hover:bg-indigo-400 text-white text-sm font-medium py-2 rounded-lg transition-colors"
+              >
+                Yetkilendirmeyi Aç
+              </a>
+            ) : (
+              <div className="text-xs text-gray-500 bg-white/5 rounded-lg px-3 py-2">
+                Microsoft bağlantısı için önce login sayfasından e-posta gir.
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="p-4 border-t border-white/5 mt-auto">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500" />
             <div className="flex-1 min-w-0">

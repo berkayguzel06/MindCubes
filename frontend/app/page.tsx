@@ -90,7 +90,7 @@ export default function Home() {
             Start Building
           </Link>
           <Link
-            href="/demo"
+            href="/chat"
             className="px-8 py-4 glass-panel text-white rounded-full font-medium hover:bg-white/5 transition-all"
           >
             View Demo
