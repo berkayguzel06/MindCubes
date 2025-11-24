@@ -2,11 +2,13 @@
  * Main server file for MindCubes Backend
  */
 
+// Load environment variables FIRST (before any other imports)
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
 
 const connectDB = require('./config/database');
 const logger = require('./config/logger');
@@ -18,15 +20,15 @@ const taskRoutes = require('./routes/taskRoutes');
 const modelRoutes = require('./routes/modelRoutes');
 const authRoutes = require('./routes/authRoutes');
 const chatRoutes = require('./routes/chatRoutes');
-
-// Load environment variables
-dotenv.config();
+const n8nRoutes = require('./routes/n8nRoutes');
 
 // Initialize Express app
 const app = express();
 
-// Connect to database
-connectDB();
+// Connect to database (optional for now)
+connectDB().catch(err => {
+  logger.warn('Starting server without MongoDB connection');
+});
 
 // Middleware
 app.use(helmet()); // Security headers
@@ -55,6 +57,7 @@ app.use(`/api/${API_VERSION}/agents`, agentRoutes);
 app.use(`/api/${API_VERSION}/tasks`, taskRoutes);
 app.use(`/api/${API_VERSION}/models`, modelRoutes);
 app.use(`/api/${API_VERSION}/chat`, chatRoutes);
+app.use(`/api/${API_VERSION}/n8n`, n8nRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

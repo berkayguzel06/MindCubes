@@ -24,10 +24,10 @@ export default function Models() {
             <span className="w-2 h-2 bg-gray-600 rounded-full" />
             Agents
           </Link>
-          <Link href="/tasks" className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+          {/* <Link href="/tasks" className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
             <span className="w-2 h-2 bg-gray-600 rounded-full" />
             Tasks
-          </Link>
+          </Link> */}
           <Link href="/models" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/10 text-white">
             <span className="w-2 h-2 bg-pink-500 rounded-full" />
             Models

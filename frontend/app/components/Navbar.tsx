@@ -32,9 +32,9 @@ export default function Navbar() {
             <Link href="/chat" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
               Chat
             </Link>
-            <Link href="/tasks" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            {/* <Link href="/tasks" className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
               Tasks
-            </Link>
+            </Link> */}
           </div>
 
           {/* Auth Buttons */}
@@ -79,9 +79,9 @@ export default function Navbar() {
             <Link href="/chat" className="block text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
               Chat
             </Link>
-            <Link href="/tasks" className="block text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+            {/* <Link href="/tasks" className="block text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
               Tasks
-            </Link>
+            </Link> */}
             <div className="pt-4 space-y-3 border-t border-gray-200 dark:border-gray-800">
               <Link href="/login" className="block text-gray-700 dark:text-gray-300">
                 Login

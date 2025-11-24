@@ -32,7 +32,8 @@ const connectDB = async () => {
 
   } catch (error) {
     logger.error(`Error connecting to MongoDB: ${error.message}`);
-    process.exit(1);
+    logger.warn('MongoDB is not available, continuing without database connection...');
+    // process.exit(1); // Commented out - MongoDB is optional for now
   }
 };
 
