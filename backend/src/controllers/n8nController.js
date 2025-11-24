@@ -29,10 +29,24 @@ exports.getWorkflows = async (req, res, next) => {
   try {
     const response = await n8nApi.get('/workflows');
     
+    // Filter workflows: only include those with 'executable' tag and exclude 'archive' tag
+    const allWorkflows = response.data.data || [];
+    const filteredWorkflows = allWorkflows.filter(workflow => {
+      const tags = workflow.tags || [];
+      const tagNames = tags.map(tag => tag.name.toLowerCase());
+      
+      // Must have 'executable' tag
+      const hasExecutable = tagNames.includes('executable');
+      // Must NOT have 'archive' tag
+      const hasArchive = tagNames.includes('archive');
+      
+      return hasExecutable && !hasArchive;
+    });
+    
     res.json({
       success: true,
-      count: response.data.data?.length || 0,
-      data: response.data.data || []
+      count: filteredWorkflows.length,
+      data: filteredWorkflows
     });
   } catch (error) {
     logger.error(`Error fetching n8n workflows: ${error.message}`);
