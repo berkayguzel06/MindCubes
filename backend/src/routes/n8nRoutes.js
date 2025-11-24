@@ -4,6 +4,7 @@
 
 const express = require('express');
 const router = express.Router();
+const upload = require('../middleware/upload');
 const {
   getWorkflows,
   getWorkflow,
@@ -19,7 +20,8 @@ router.get('/workflows', getWorkflows);
 router.get('/workflows/:id', getWorkflow);
 router.post('/workflows/:id/activate', activateWorkflow);
 router.post('/workflows/:id/deactivate', deactivateWorkflow);
-router.post('/workflows/:id/execute', executeWorkflow);
+// Execute workflow with optional file upload
+router.post('/workflows/:id/execute', upload.single('file'), executeWorkflow);
 router.get('/workflows/:id/executions', getWorkflowExecutions);
 
 // Webhook trigger route

@@ -10,12 +10,28 @@ interface N8nWorkflow {
   tags?: Array<{ id: string; name: string }>;
   createdAt?: string;
   updatedAt?: string;
+  nodes?: Array<{
+    type: string;
+    parameters?: {
+      path?: string;
+    };
+  }>;
 }
 
 export default function Agents() {
   const [workflows, setWorkflows] = useState<N8nWorkflow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [executeModal, setExecuteModal] = useState<{
+    isOpen: boolean;
+    workflowId: string;
+    workflowName: string;
+  }>({ isOpen: false, workflowId: '', workflowName: '' });
+  const [chatInput, setChatInput] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [userId, setUserId] = useState('user_demo_123'); // TODO: Get from auth context
+  const [webhookPath, setWebhookPath] = useState('');
+  const [executing, setExecuting] = useState(false);
 
   // Fetch workflows from n8n via backend
   useEffect(() => {
@@ -41,26 +57,65 @@ export default function Agents() {
     }
   };
 
-  const executeWorkflow = async (workflowId: string) => {
+  const openExecuteModal = (workflowId: string, workflowName: string) => {
+    setExecuteModal({ isOpen: true, workflowId, workflowName });
+    setChatInput('');
+    setSelectedFile(null);
+    setWebhookPath('');
+  };
+
+  const closeExecuteModal = () => {
+    setExecuteModal({ isOpen: false, workflowId: '', workflowName: '' });
+    setChatInput('');
+    setSelectedFile(null);
+    setWebhookPath('');
+  };
+
+  const executeWorkflow = async () => {
+    if (!chatInput.trim()) {
+      alert('Please enter a chat message');
+      return;
+    }
+
     try {
-      const response = await fetch(`http://localhost:5000/api/v1/n8n/workflows/${workflowId}/execute`, {
+      setExecuting(true);
+      
+      const formData = new FormData();
+      formData.append('chatInput', chatInput);
+      formData.append('userId', userId);
+      
+      if (webhookPath) {
+        formData.append('webhookPath', webhookPath);
+      }
+      
+      if (selectedFile) {
+        formData.append('file', selectedFile);
+      }
+
+      const response = await fetch(`http://localhost:5000/api/v1/n8n/workflows/${executeModal.workflowId}/execute`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ data: {} })
+        body: formData // Don't set Content-Type, browser will set it with boundary
       });
       
       const data = await response.json();
       
       if (data.success) {
-        alert('Workflow triggered successfully!');
+        alert('✅ Workflow executed successfully!');
+        closeExecuteModal();
       } else {
-        alert('Failed to trigger workflow: ' + data.message);
+        alert('❌ Failed to execute workflow: ' + data.message);
       }
     } catch (err) {
       console.error('Error executing workflow:', err);
-      alert('Failed to execute workflow. Check console for details.');
+      alert('❌ Failed to execute workflow. Check console for details.');
+    } finally {
+      setExecuting(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
     }
   };
 
@@ -208,7 +263,7 @@ export default function Agents() {
                       {workflow.active ? 'Deactivate' : 'Activate'}
                     </button>
                     <button 
-                      onClick={() => executeWorkflow(workflow.id)}
+                      onClick={() => openExecuteModal(workflow.id, workflow.name)}
                       className="text-xs bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full border border-purple-500/30 hover:bg-purple-500/30 transition-colors"
                     >
                       ▶ Execute
@@ -220,6 +275,145 @@ export default function Agents() {
           )}
         </div>
       </div>
+
+      {/* Execute Modal */}
+      {executeModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="glass-panel border border-white/10 rounded-2xl p-6 w-full max-w-lg mx-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-white">Execute Workflow</h2>
+              <button 
+                onClick={closeExecuteModal}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-sm text-gray-400 mb-4">
+                Workflow: <span className="text-white font-medium">{executeModal.workflowName}</span>
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {/* User ID */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  User ID
+                </label>
+                <input
+                  type="text"
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                  placeholder="Enter user ID"
+                />
+              </div>
+
+              {/* Webhook Path (Optional) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Webhook Path (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={webhookPath}
+                  onChange={(e) => setWebhookPath(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors"
+                  placeholder="e.g., chat-workflow"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  If your workflow has a webhook, enter its path here (e.g., 'my-webhook')
+                </p>
+              </div>
+
+              {/* Chat Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Chat Message *
+                </label>
+                <textarea
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  rows={4}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors resize-none"
+                  placeholder="Enter your message or prompt..."
+                />
+              </div>
+
+              {/* File Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Upload File (Optional)
+                </label>
+                <div className="flex items-center gap-3">
+                  <label className="flex-1 cursor-pointer">
+                    <div className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-gray-400 hover:border-purple-500/50 transition-colors flex items-center justify-between">
+                      <span className="text-sm truncate">
+                        {selectedFile ? selectedFile.name : 'Choose a file...'}
+                      </span>
+                      <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                    </div>
+                    <input
+                      type="file"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      accept="image/*,.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.json"
+                    />
+                  </label>
+                  {selectedFile && (
+                    <button
+                      onClick={() => setSelectedFile(null)}
+                      className="px-3 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+                {selectedFile && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    Size: {(selectedFile.size / 1024).toFixed(2)} KB
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={closeExecuteModal}
+                className="flex-1 px-4 py-2 bg-white/5 text-white rounded-lg hover:bg-white/10 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={executeWorkflow}
+                disabled={executing || !chatInput.trim()}
+                className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {executing ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Executing...
+                  </>
+                ) : (
+                  <>
+                    ▶ Execute Workflow
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
