@@ -1,26 +1,37 @@
 "use client";
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
-
-const MICROSOFT_AUTH_BASE = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
-const MICROSOFT_AUTH_PARAMS = {
-  client_id: '22c7a263-dc1c-4b96-8e72-d86990737b9b',
-  response_type: 'code',
-  redirect_uri: 'http://localhost:5678/webhook/oauth2/callback',
-  response_mode: 'query',
-  scope: 'offline_access https://graph.microsoft.com/.default',
-};
-const USER_EMAIL_KEY = 'mindcubes:userEmail';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useStoredUser } from '@/hooks/useStoredUser';
+import SidebarUserCard from '../components/SidebarUserCard';
+import SidebarMicrosoftCard from '../components/SidebarMicrosoftCard';
 
 export default function Chat() {
+  const router = useRouter();
+  const { user, saveUser, hydrated } = useStoredUser();
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([
-    { role: 'assistant', content: 'How can I help you today?' },
   ]);
   const [input, setInput] = useState('');
-  const [provider, setProvider] = useState(''); // empty means default
-  const [model, setModel] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+  const [provider, setProvider] = useState('ollama');
+  const MODEL_PRESETS = [
+    {
+      key: 'gptoss20b',
+      label: 'GPT-OSS 20B',
+      values: {
+        local: 'openai/gpt-oss-20b',
+        ollama: 'gpt-oss:20b',
+        default: 'openai/gpt-oss-20b',
+      },
+    },
+  ] as const;
+  const [modelKey, setModelKey] = useState<(typeof MODEL_PRESETS)[number]['key']>('gptoss20b');
+
+  const resolveModel = () => {
+    const preset = MODEL_PRESETS.find((item) => item.key === modelKey);
+    if (!preset) return '';
+    return preset.values[provider as keyof typeof preset.values] ?? preset.values.default ?? '';
+  };
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -28,14 +39,22 @@ export default function Chat() {
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
     try {
+      const resolvedModel = resolveModel();
       const response = await fetch('http://localhost:8000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userMsg.content,
           provider: provider || undefined,
-          model: model || undefined,
-          userId: 'default',
+          model: resolvedModel || undefined,
+          userId: user?.id ?? 'anonymous',
+          metadata: {
+            directModel: true,
+            provider,
+            model: resolvedModel,
+            systemPrompt:
+              'You are a friendly assistant for the MindCubes application. Respond conversationally in the same language as the user and only provide code or technical details when explicitly requested.',
+          },
         }),
       });
       const data = await response.json();
@@ -49,21 +68,25 @@ export default function Chat() {
   };
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const storedEmail = window.localStorage.getItem(USER_EMAIL_KEY);
-    if (storedEmail) {
-      setUserEmail(storedEmail);
+    if (!hydrated) return;
+    if (!user) {
+      router.replace('/login');
+      return;
     }
-  }, []);
+  }, [hydrated, user, router]);
 
-  const microsoftAuthUrl = useMemo(() => {
-    if (!userEmail) return '';
-    const params = new URLSearchParams({
-      ...MICROSOFT_AUTH_PARAMS,
-      state: userEmail,
-    });
-    return `${MICROSOFT_AUTH_BASE}?${params.toString()}`;
-  }, [userEmail]);
+  const handleLogout = () => {
+    saveUser(null);
+    router.replace('/login');
+  };
+
+  if (!hydrated || !user) {
+    return (
+      <main className="h-screen w-full flex items-center justify-center bg-black text-white">
+        Loading...
+      </main>
+    );
+  }
 
   return (
     <main className="h-screen w-full overflow-hidden futuristic-bg flex relative">
@@ -99,36 +122,11 @@ export default function Chat() {
         </nav>
 
         <div className="px-4 pb-4">
-          <div className="border border-white/10 rounded-xl p-4 space-y-3">
-            <div>
-              <p className="text-sm font-semibold text-white">Microsoft Auth</p>
-              <p className="text-xs text-gray-400">
-                {userEmail ? `State parametresi için ${userEmail}` : 'Email adresini giriş ekranından kaydet.'}
-              </p>
-            </div>
-            {userEmail ? (
-              <a
-                href={microsoftAuthUrl}
-                className="block text-center bg-indigo-500/90 hover:bg-indigo-400 text-white text-sm font-medium py-2 rounded-lg transition-colors"
-              >
-                Yetkilendirmeyi Aç
-              </a>
-            ) : (
-              <div className="text-xs text-gray-500 bg-white/5 rounded-lg px-3 py-2">
-                Microsoft bağlantısı için önce login sayfasından e-posta gir.
-              </div>
-            )}
-          </div>
+          <SidebarMicrosoftCard user={user} />
         </div>
 
         <div className="p-4 border-t border-white/5 mt-auto">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500" />
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-white truncate">User Name</div>
-              <div className="text-xs text-gray-500 truncate">user@example.com</div>
-            </div>
-          </div>
+          <SidebarUserCard user={user} onLogout={handleLogout} />
         </div>
       </aside>
 
@@ -141,24 +139,23 @@ export default function Chat() {
             <select
               value={provider}
               onChange={(e) => setProvider(e.target.value)}
-              className="bg-white/10 text-white rounded px-2 py-1"
+              className="bg-white/80 text-gray-900 rounded px-3 py-1 text-sm border border-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
             >
-              <option value="">Default Provider</option>
+              <option value="local">Local</option>
+              <option value="ollama">Ollama</option>
               <option value="openai">OpenAI</option>
               <option value="anthropic">Anthropic</option>
-              <option value="local">Local</option>
             </select>
             <select
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              className="bg-white/10 text-white rounded px-2 py-1"
+              value={modelKey}
+              onChange={(e) => setModelKey(e.target.value as (typeof MODEL_PRESETS)[number]['key'])}
+              className="bg-white/80 text-gray-900 rounded px-3 py-1 text-sm border border-white/40 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
             >
-              <option value="">Default Model</option>
-              <option value="gpt-4o-mini">GPT-4o Mini</option>
-              <option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet</option>
-              <option value="TinyLlama/TinyLlama-1.1B-Chat-v1.0">TinyLlama</option>
-              <option value="phi-2">Microsoft Phi-2</option>
-              <option value="codellama/CodeLlama-7b-Instruct-hf">CodeLlama 7B</option>
+              {MODEL_PRESETS.map((option) => (
+                <option key={option.key} value={option.key}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
         </header>
@@ -166,8 +163,17 @@ export default function Chat() {
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {messages.map((msg, idx) => (
-            <div key={idx} className={msg.role === 'user' ? 'self-end' : 'self-start'}>
-              <div className={`p-4 rounded-lg ${msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-white/5 text-white'}`}>
+            <div
+              key={idx}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`max-w-3xl w-fit rounded-2xl px-5 py-4 text-sm leading-relaxed shadow-lg ${
+                  msg.role === 'user'
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-br-sm'
+                    : 'bg-white/80 text-gray-900 rounded-bl-sm border border-white/40'
+                }`}
+              >
                 {msg.content}
               </div>
             </div>

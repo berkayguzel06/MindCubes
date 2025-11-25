@@ -7,6 +7,9 @@ from typing import Any, Dict, Optional
 import os
 from datetime import datetime
 
+import httpx
+
+
 
 class LLMProvider(ABC):
     """Abstract base class for LLM providers."""
@@ -312,6 +315,18 @@ class LocalModelProvider(LLMProvider):
                 print(f"Could not fetch model info: {e}")
         return self._model_info
     
+    def _requires_native_quantization(self) -> bool:
+        """
+        Some community models (e.g., GPT-OSS 20B) ship with their own quantization
+        configs (like Mxfp4Config). Loading those with BitsAndBytes would fail.
+        """
+        model_name_lower = self.model_name.lower()
+        native_quant_models = [
+            "gpt-oss-20b",
+            "gpt-oss_20b",
+        ]
+        return any(keyword in model_name_lower for keyword in native_quant_models)
+
     def _load_model(self):
         """
         Lazy loading of model and tokenizer from HuggingFace Hub.
@@ -343,19 +358,24 @@ class LocalModelProvider(LLMProvider):
                 
                 # Configure quantization if requested
                 quantization_config = None
-                if self.load_in_4bit:
-                    print("Loading in 4-bit mode (requires bitsandbytes)...")
-                    quantization_config = BitsAndBytesConfig(
-                        load_in_4bit=True,
-                        bnb_4bit_compute_dtype=torch.float16,
-                        bnb_4bit_quant_type="nf4",
-                        bnb_4bit_use_double_quant=True
-                    )
-                elif self.load_in_8bit:
-                    print("Loading in 8-bit mode (requires bitsandbytes)...")
-                    quantization_config = BitsAndBytesConfig(
-                        load_in_8bit=True
-                    )
+                requires_native_quant = self._requires_native_quantization()
+                if not requires_native_quant:
+                    if self.load_in_4bit:
+                        print("Loading in 4-bit mode (requires bitsandbytes)...")
+                        quantization_config = BitsAndBytesConfig(
+                            load_in_4bit=True,
+                            bnb_4bit_compute_dtype=torch.float16,
+                            bnb_4bit_quant_type="nf4",
+                            bnb_4bit_use_double_quant=True
+                        )
+                    elif self.load_in_8bit:
+                        print("Loading in 8-bit mode (requires bitsandbytes)...")
+                        quantization_config = BitsAndBytesConfig(
+                            load_in_8bit=True
+                        )
+                else:
+                    print(f"ℹ️  {self.model_name} ships with its own quantization. Skipping bitsandbytes config.")
+                    self.trust_remote_code = True
                 
                 # Load model
                 print("Loading model...")
@@ -527,4 +547,100 @@ class LocalModelProvider(LLMProvider):
             return info
         except Exception as e:
             return {"error": str(e)}
+
+
+class OllamaProvider(LLMProvider):
+    """
+    Provider that proxies requests to a locally running Ollama instance.
+    """
+
+    def __init__(
+        self,
+        model_name: str,
+        base_url: Optional[str] = None,
+        temperature: float = 0.7,
+        max_tokens: int = 512
+    ):
+        super().__init__(model_name, temperature, max_tokens)
+        self.base_url = (base_url or os.getenv("OLLAMA_BASE_URL") or "http://localhost:11434").rstrip("/")
+        self.timeout = float(os.getenv("OLLAMA_TIMEOUT", "120"))
+
+    async def _post(self, path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+        url = f"{self.base_url}{path}"
+        async with httpx.AsyncClient(timeout=self.timeout) as client:
+            response = await client.post(url, json=payload)
+            response.raise_for_status()
+            return response.json()
+
+    async def _chat(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            return await self._post("/api/chat", payload)
+        except httpx.HTTPStatusError as error:
+            # Hata detayını okuyalım
+            error_details = error.response.read().decode()
+            print(f"Ollama API Hatası: {error_details}")
+
+            # Sadece gerçekten endpoint yoksa fallback yapmalı, 
+            # ama model yoksa (model not found) hata fırlatmalı.
+            if error.response.status_code == 404 and "model" not in error_details:
+                print("Endpoint bulunamadı, legacy metoda geçiliyor...")
+                return await self._legacy_generate(payload)
+            raise
+
+    async def _legacy_generate(self, chat_payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Fallback to /api/generate for older Ollama versions."""
+        messages = chat_payload.get("messages", [])
+        formatted_prompt = "\n".join(
+            f"{msg.get('role', 'user')}: {msg.get('content', '')}"
+            for msg in messages
+        )
+        payload = {
+            "model": chat_payload.get("model"),
+            "prompt": formatted_prompt,
+            "stream": False,
+            "options": chat_payload.get("options", {}),
+        }
+        data = await self._post("/api/generate", payload)
+        response_text = data.get("response", "")
+        return {"message": {"content": response_text}}
+
+    def _build_messages(self, prompt: str, system_prompt: Optional[str]) -> Any:
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
+        return messages
+
+    async def generate(
+        self,
+        prompt: str,
+        system_prompt: Optional[str] = None,
+        **kwargs
+    ) -> str:
+        payload = {
+            "model": self.model_name,
+            "messages": self._build_messages(prompt, system_prompt),
+            "stream": False,
+            "options": {
+                "temperature": kwargs.get("temperature", self.temperature),
+                "num_predict": kwargs.get("max_tokens", self.max_tokens),
+                "top_p": kwargs.get("top_p", 0.95),
+            }
+        }
+
+        data = await self._chat(payload)
+        message = data.get("message", {})
+        content = message.get("content", "") if isinstance(message, dict) else ""
+
+        self.request_count += 1
+        return content.strip()
+
+    async def generate_stream(
+        self,
+        prompt: str,
+        system_prompt: Optional[str] = None,
+        **kwargs
+    ):
+        response = await self.generate(prompt, system_prompt, **kwargs)
+        yield response
 

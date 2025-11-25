@@ -11,6 +11,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 
 const connectDB = require('./config/database');
+const { initPostgres } = require('./config/postgres');
 const logger = require('./config/logger');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -25,10 +26,20 @@ const n8nRoutes = require('./routes/n8nRoutes');
 // Initialize Express app
 const app = express();
 
-// Connect to database (optional for now)
-connectDB().catch(err => {
-  logger.warn('Starting server without MongoDB connection');
-});
+const startDatabases = async () => {
+  try {
+    await initPostgres();
+  } catch (error) {
+    logger.error(`Failed to initialize PostgreSQL: ${error.message}`);
+    process.exit(1);
+  }
+
+  try {
+    await connectDB();
+  } catch (error) {
+    logger.warn(`Starting server without MongoDB connection: ${error.message}`);
+  }
+};
 
 // Middleware
 app.use(helmet()); // Security headers
@@ -81,15 +92,22 @@ app.use((req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 5000;
+let server;
 
-const server = app.listen(PORT, () => {
-  logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+startDatabases().then(() => {
+  server = app.listen(PORT, () => {
+    logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  });
 });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   logger.error(`Unhandled Rejection: ${err.message}`);
-  server.close(() => process.exit(1));
+  if (server) {
+    server.close(() => process.exit(1));
+  } else {
+    process.exit(1);
+  }
 });
 
 module.exports = app;

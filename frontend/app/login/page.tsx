@@ -1,66 +1,116 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useStoredUser } from '@/hooks/useStoredUser';
 
-const MICROSOFT_AUTH_BASE = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
-const MICROSOFT_AUTH_PARAMS = {
-  client_id: '22c7a263-dc1c-4b96-8e72-d86990737b9b',
-  response_type: 'code',
-  redirect_uri: 'http://localhost:5678/webhook/oauth2/callback',
-  response_mode: 'query',
-  scope: 'offline_access https://graph.microsoft.com/.default',
+const USER_PROFILE_KEY = 'mindcubes:userProfile';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:5000/api/v1';
+
+type ProfilePayload = {
+  name: string;
+  lastName: string;
+  email: string;
 };
-const USER_EMAIL_KEY = 'mindcubes:userEmail';
 
 export default function Login() {
+  const router = useRouter();
+  const { user, saveUser, hydrated } = useStoredUser();
   const [form, setForm] = useState({ email: '', password: '' });
-  const [savedEmail, setSavedEmail] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange =
-    (field: 'email' | 'password') =>
+    (field: keyof typeof form) =>
     (event: ChangeEvent<HTMLInputElement>) => {
       setForm((prev) => ({ ...prev, [field]: event.target.value }));
     };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!form.email.trim()) {
-      setError('Lütfen geçerli bir e-posta adresi girin.');
-      return;
-    }
-
-    const normalizedEmail = form.email.trim();
-
-    setError('');
-    setSavedEmail(normalizedEmail);
-
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(USER_EMAIL_KEY, normalizedEmail);
-    }
-  };
-
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const storedEmail = window.localStorage.getItem(USER_EMAIL_KEY);
-    if (storedEmail) {
-      setSavedEmail(storedEmail);
-      setForm((prev) => ({ ...prev, email: storedEmail }));
+    const storedProfile = window.localStorage.getItem(USER_PROFILE_KEY);
+    if (storedProfile) {
+      try {
+        const parsed = JSON.parse(storedProfile) as ProfilePayload;
+        setForm((prev) => ({
+          ...prev,
+          email: parsed.email
+        }));
+      } catch (parseError) {
+        console.warn('Failed to parse stored profile', parseError);
+        window.localStorage.removeItem(USER_PROFILE_KEY);
+      }
     }
   }, []);
 
-  const microsoftAuthUrl = useMemo(() => {
-    if (!savedEmail) return '';
+  useEffect(() => {
+    if (!hydrated) return;
+    if (user) {
+      router.replace('/agents');
+    }
+  }, [hydrated, user, router]);
 
-    const params = new URLSearchParams({
-      ...MICROSOFT_AUTH_PARAMS,
-      state: savedEmail,
-    });
+  const persistProfile = (profile: ProfilePayload) => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
+    }
+  };
 
-    return `${MICROSOFT_AUTH_BASE}?${params.toString()}`;
-  }, [savedEmail]);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!form.email.trim() || !form.password.trim()) {
+      setError('Lütfen e-posta ve şifre alanlarını doldurun.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: form.email.trim(),
+          password: form.password
+        })
+      });
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        setError(result.message || 'Giriş başarısız. Bilgilerinizi kontrol edin.');
+        return;
+      }
+
+      const profileFromServer: ProfilePayload = {
+        name: result.data.name,
+        lastName: result.data.lastName,
+        email: result.data.email
+      };
+      persistProfile(profileFromServer);
+      saveUser({
+        id: result.data.id,
+        name: result.data.name,
+        lastName: result.data.lastName,
+        email: result.data.email,
+        token: result.token
+      });
+      router.push('/agents');
+    } catch (loginError) {
+      console.error('Login error', loginError);
+      setError('Sunucu ile bağlantı kurulamadı. Lütfen daha sonra tekrar deneyin.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!hydrated || user) {
+    return (
+      <main className="h-screen w-full flex items-center justify-center bg-black text-white">
+        Loading...
+      </main>
+    );
+  }
 
   return (
     <main className="h-screen w-full overflow-hidden futuristic-bg flex items-center justify-center relative">
@@ -115,29 +165,12 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors mt-6"
+            disabled={loading}
+            className="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sign In
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
-
-        {savedEmail && microsoftAuthUrl && (
-          <div className="mt-8 p-4 bg-white/5 border border-white/10 rounded-xl space-y-3">
-            <div className="text-sm text-gray-300">
-              <p className="font-semibold text-white">Microsoft Auth Hazır</p>
-              <p className="text-gray-400">State parametresi olarak {savedEmail} kullanılıyor.</p>
-            </div>
-            <a
-              href={microsoftAuthUrl}
-              className="block text-center w-full bg-indigo-500/90 hover:bg-indigo-400 text-white font-medium py-3 rounded-lg transition-colors"
-            >
-              Microsoft ile Yetkilendir
-            </a>
-            <p className="text-xs text-gray-500">
-              Tıklayarak Microsoft login sayfasına yönlendirilecek ve state değeri olarak e-posta adresiniz gönderilecektir.
-            </p>
-          </div>
-        )}
 
         <div className="mt-6 text-center text-sm text-gray-400">
           Don't have an account?{' '}

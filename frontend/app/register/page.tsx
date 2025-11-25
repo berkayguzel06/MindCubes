@@ -1,6 +1,96 @@
+'use client';
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useStoredUser } from '@/hooks/useStoredUser';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:5000/api/v1';
+const USER_PROFILE_KEY = 'mindcubes:userProfile';
 
 export default function Register() {
+  const router = useRouter();
+  const { user, saveUser, hydrated } = useStoredUser();
+  const [form, setForm] = useState({ name: '', lastName: '', email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange =
+    (field: keyof typeof form) =>
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setForm((prev) => ({ ...prev, [field]: event.target.value }));
+    };
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (user) {
+      router.replace('/agents');
+    }
+  }, [hydrated, user, router]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!form.name.trim() || !form.lastName.trim() || !form.email.trim() || !form.password.trim()) {
+      setError('Lütfen tüm alanları doldurun.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          lastName: form.lastName.trim(),
+          email: form.email.trim(),
+          password: form.password
+        })
+      });
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        setError(result.message || 'Kayıt işlemi başarısız oldu.');
+        return;
+      }
+
+      const profile = {
+        name: result.data.name,
+        lastName: result.data.lastName,
+        email: result.data.email
+      };
+
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
+      }
+
+      saveUser({
+        id: result.data.id,
+        name: result.data.name,
+        lastName: result.data.lastName,
+        email: result.data.email,
+        token: result.token
+      });
+
+      router.push('/agents');
+    } catch (registrationError) {
+      console.error('Registration error', registrationError);
+      setError('Sunucuya ulaşılamadı. Lütfen daha sonra tekrar deneyin.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!hydrated || user) {
+    return (
+      <main className="h-screen w-full flex items-center justify-center bg-black text-white">
+        Loading...
+      </main>
+    );
+  }
+
   return (
     <main className="h-screen w-full overflow-hidden futuristic-bg flex items-center justify-center relative">
       {/* Decorative elements */}
@@ -17,12 +107,14 @@ export default function Register() {
           <p className="text-gray-400 text-sm">Join MindCubes today</p>
         </div>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">First Name</label>
               <input
                 type="text"
+                value={form.name}
+                onChange={handleChange('name')}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
                 placeholder="John"
               />
@@ -31,6 +123,8 @@ export default function Register() {
               <label className="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Last Name</label>
               <input
                 type="text"
+                value={form.lastName}
+                onChange={handleChange('lastName')}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
                 placeholder="Doe"
               />
@@ -41,6 +135,8 @@ export default function Register() {
             <label className="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Email</label>
             <input
               type="email"
+              value={form.email}
+              onChange={handleChange('email')}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
               placeholder="name@company.com"
             />
@@ -50,13 +146,21 @@ export default function Register() {
             <label className="block text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">Password</label>
             <input
               type="password"
+              value={form.password}
+              onChange={handleChange('password')}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
               placeholder="••••••••"
             />
           </div>
 
-          <button className="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors mt-6">
-            Create Account
+          {error && <p className="text-red-400 text-sm">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-white text-black font-medium py-3 rounded-lg hover:bg-gray-200 transition-colors mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 

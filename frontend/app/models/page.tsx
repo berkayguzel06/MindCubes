@@ -1,6 +1,36 @@
+'use client';
+
 import Link from 'next/link';
+import { useStoredUser } from '@/hooks/useStoredUser';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import SidebarUserCard from '../components/SidebarUserCard';
+import SidebarMicrosoftCard from '../components/SidebarMicrosoftCard';
 
 export default function Models() {
+  const router = useRouter();
+  const { user, saveUser, hydrated } = useStoredUser();
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!user) {
+      router.replace('/login');
+    }
+  }, [hydrated, user, router]);
+
+  const handleLogout = () => {
+    saveUser(null);
+    router.replace('/login');
+  };
+
+  if (!hydrated || !user) {
+    return (
+      <main className="h-screen w-full flex items-center justify-center bg-black text-white">
+        Loading...
+      </main>
+    );
+  }
+
   return (
     <main className="h-screen w-full overflow-hidden futuristic-bg flex relative">
       {/* Sidebar (Same as Chat) */}
@@ -34,14 +64,11 @@ export default function Models() {
           </Link>
         </nav>
 
+        <div className="px-4 pb-4">
+          <SidebarMicrosoftCard user={user} />
+        </div>
         <div className="p-4 border-t border-white/5">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500" />
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-white truncate">User Name</div>
-              <div className="text-xs text-gray-500 truncate">user@example.com</div>
-            </div>
-          </div>
+          <SidebarUserCard user={user} onLogout={handleLogout} />
         </div>
       </aside>
 

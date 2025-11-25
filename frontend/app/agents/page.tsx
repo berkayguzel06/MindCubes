@@ -2,6 +2,10 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useStoredUser } from '@/hooks/useStoredUser';
+import { useRouter } from 'next/navigation';
+import SidebarUserCard from '../components/SidebarUserCard';
+import SidebarMicrosoftCard from '../components/SidebarMicrosoftCard';
 
 interface N8nWorkflow {
   id: string;
@@ -19,6 +23,8 @@ interface N8nWorkflow {
 }
 
 export default function Agents() {
+  const router = useRouter();
+  const { user, saveUser, hydrated } = useStoredUser();
   const [workflows, setWorkflows] = useState<N8nWorkflow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -29,14 +35,23 @@ export default function Agents() {
   }>({ isOpen: false, workflowId: '', workflowName: '' });
   const [chatInput, setChatInput] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [userId, setUserId] = useState('user_demo_123'); // TODO: Get from auth context
+  const [userId, setUserId] = useState(user?.id ?? 'guest');
   const [webhookPath, setWebhookPath] = useState('');
   const [executing, setExecuting] = useState(false);
 
   // Fetch workflows from n8n via backend
   useEffect(() => {
+    if (!hydrated) return;
+    if (!user) {
+      router.replace('/login');
+      return;
+    }
     fetchWorkflows();
-  }, []);
+  }, [hydrated, user, router]);
+
+  useEffect(() => {
+    setUserId(user?.id ?? 'guest');
+  }, [user]);
 
   const fetchWorkflows = async () => {
     try {
@@ -140,6 +155,19 @@ export default function Agents() {
     }
   };
 
+  const handleLogout = () => {
+    saveUser(null);
+    router.replace('/login');
+  };
+
+  if (!hydrated || !user) {
+    return (
+      <main className="h-screen w-full flex items-center justify-center bg-black text-white">
+        Loading...
+      </main>
+    );
+  }
+
   return (
     <main className="h-screen w-full overflow-hidden futuristic-bg flex relative">
       {/* Sidebar (Same as Chat) */}
@@ -173,14 +201,11 @@ export default function Agents() {
           </Link>
         </nav>
 
+        <div className="px-4 pb-4">
+          <SidebarMicrosoftCard user={user} />
+        </div>
         <div className="p-4 border-t border-white/5">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500" />
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-white truncate">User Name</div>
-              <div className="text-xs text-gray-500 truncate">user@example.com</div>
-            </div>
-          </div>
+          <SidebarUserCard user={user} onLogout={handleLogout} />
         </div>
       </aside>
 

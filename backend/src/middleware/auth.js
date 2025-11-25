@@ -3,8 +3,8 @@
  */
 
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
 const logger = require('../config/logger');
+const userService = require('../services/userService');
 
 // Protect routes
 exports.protect = async (req, res, next) => {
@@ -18,7 +18,7 @@ exports.protect = async (req, res, next) => {
   // Check for API key
   if (!token && req.headers['x-api-key']) {
     try {
-      const user = await User.findOne({ apiKey: req.headers['x-api-key'] });
+      const user = await userService.getUserByApiKey(req.headers['x-api-key']);
       if (user) {
         req.user = user;
         return next();
@@ -40,7 +40,7 @@ exports.protect = async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    req.user = await User.findById(decoded.id);
+    req.user = await userService.getUserById(decoded.id);
     
     if (!req.user) {
       return res.status(401).json({

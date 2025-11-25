@@ -15,6 +15,7 @@ from core import (
     OpenAIProvider,
     AnthropicProvider,
     LocalModelProvider,
+    OllamaProvider,
     ConversationMemory,
     AgentOrchestrator,
 )
@@ -50,6 +51,7 @@ DEFAULT_LOCAL_CACHE = os.getenv("LOCAL_MODEL_CACHE", "./models/cache")
 DEFAULT_LOCAL_4BIT = os.getenv("LOCAL_MODEL_4BIT", "true").lower() != "false"
 DEFAULT_OPENAI_MODEL = os.getenv("OPENAI_MODEL_NAME", "gpt-4o-mini")
 DEFAULT_ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL_NAME", "claude-3-5-sonnet-20240620")
+DEFAULT_OLLAMA_MODEL = os.getenv("OLLAMA_DEFAULT_MODEL", "gpt-oss:20b")
 
 
 class ChatMessage(BaseModel):
@@ -109,6 +111,12 @@ def get_llm_provider(provider_name: str, model_name: Optional[str] = None):
             model_name=model_name or DEFAULT_ANTHROPIC_MODEL,
             api_key=api_key,
         )
+    elif provider_key == "ollama":
+        provider = OllamaProvider(
+            model_name=model_name or DEFAULT_OLLAMA_MODEL,
+            temperature=float(os.getenv("OLLAMA_TEMPERATURE", "0.7")),
+            max_tokens=int(os.getenv("OLLAMA_MAX_TOKENS", "512"))
+        )
     elif provider_key in ("local", "hf", "huggingface"):
         provider = LocalModelProvider(
             model_name=model_name or DEFAULT_LOCAL_MODEL,
@@ -153,14 +161,32 @@ async def startup_event():
     
     print("🚀 Initializing AI Engine...")
     
-    default_provider = "openai" if os.getenv("OPENAI_API_KEY") else "local"
+    default_provider = os.getenv("DEFAULT_PROVIDER", "ollama").lower()
     default_model = None
-    if default_provider == "local":
-        default_model = DEFAULT_LOCAL_MODEL
-        print(f"⚙️  No OPENAI_API_KEY detected. Defaulting to local model '{default_model}'")
+
+    if default_provider == "openai":
+        if not os.getenv("OPENAI_API_KEY"):
+            print("⚠️ OPENAI_API_KEY missing, falling back to local provider")
+            default_provider = "local"
+            default_model = DEFAULT_LOCAL_MODEL
+        else:
+            default_model = DEFAULT_OPENAI_MODEL
+            print(f"✅ Using OpenAI model '{default_model}'")
+    elif default_provider == "anthropic":
+        if not os.getenv("ANTHROPIC_API_KEY"):
+            print("⚠️ ANTHROPIC_API_KEY missing, falling back to local provider")
+            default_provider = "local"
+            default_model = DEFAULT_LOCAL_MODEL
+        else:
+            default_model = DEFAULT_ANTHROPIC_MODEL
+            print(f"✅ Using Anthropic model '{default_model}'")
+    elif default_provider == "ollama":
+        default_model = DEFAULT_OLLAMA_MODEL
+        print(f"✅ Using Ollama model '{default_model}'")
     else:
-        default_model = DEFAULT_OPENAI_MODEL
-        print(f"✅ Using OpenAI model '{default_model}'")
+        default_provider = "local"
+        default_model = DEFAULT_LOCAL_MODEL
+        print(f"⚙️ Defaulting to local model '{default_model}'")
     
     llm_provider = get_llm_provider(default_provider, default_model)
     
@@ -241,26 +267,46 @@ async def chat(request: ChatRequest):
         requested_provider = (
             (request.provider or "").strip()
             or (request.metadata or {}).get("provider", "")
+            or "local"
         )
         requested_model = (
             (request.model or "").strip()
             or (request.metadata or {}).get("model")
         )
+        direct_model = bool((request.metadata or {}).get("directModel"))
         
         try:
-            if requested_provider:
-                agent, agent_key = get_or_create_agent(requested_provider, requested_model)
+            if direct_model:
+                provider = get_llm_provider(requested_provider, requested_model)
+                history_lines = []
+                for item in context["history"]:
+                    role = item.get("role", "user")
+                    content = item.get("content", "")
+                    history_lines.append(f"{role}: {content}")
+                prompt_parts = []
+                if history_lines:
+                    prompt_parts.append("\n".join(history_lines))
+                prompt_parts.append(f"user: {request.message}")
+                prompt = "\n".join(prompt_parts)
+                system_prompt = (
+                    (request.metadata or {}).get("systemPrompt")
+                    or "You are a friendly conversational assistant. Respond naturally and avoid writing code unless explicitly requested by the user."
+                )
+                response = await provider.generate(prompt, system_prompt=system_prompt)
+                agent_key = f"direct::{requested_provider}"
             else:
-                agent = general_agent
-                agent_key = "default"
+                if requested_provider:
+                    agent, agent_key = get_or_create_agent(requested_provider, requested_model)
+                else:
+                    agent = general_agent
+                    agent_key = "default"
+                
+                response = await agent.process(
+                    request.message,
+                    context=context
+                )
         except ValueError as provider_error:
             raise HTTPException(status_code=400, detail=str(provider_error))
-        
-        # Process with agent
-        response = await agent.process(
-            request.message,
-            context=context
-        )
         
         # Add response to memory
         user_memory.add_message("assistant", response)

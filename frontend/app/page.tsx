@@ -2,9 +2,13 @@
 
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { useStoredUser } from '@/hooks/useStoredUser';
 
 export default function Home() {
   const containerRef = useRef<HTMLElement>(null);
+  const router = useRouter();
+  const { user, hydrated } = useStoredUser();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -25,6 +29,21 @@ export default function Home() {
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (user) {
+      router.replace('/agents');
+    }
+  }, [hydrated, user, router]);
+
+  if (!hydrated || user) {
+    return (
+      <main className="h-screen w-full flex items-center justify-center bg-black text-white">
+        {user ? 'Yönlendiriliyorsunuz...' : 'Loading...'}
+      </main>
+    );
+  }
 
   return (
     <main

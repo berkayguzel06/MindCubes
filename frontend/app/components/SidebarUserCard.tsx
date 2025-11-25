@@ -1,0 +1,75 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import type { StoredUserSession } from '@/hooks/useStoredUser';
+
+type SidebarUserCardProps = {
+  user: StoredUserSession | null;
+  onLogout: () => void;
+};
+
+export default function SidebarUserCard({ user, onLogout }: SidebarUserCardProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!containerRef.current) return;
+      if (!containerRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [menuOpen]);
+
+  const displayName = user ? `${user.name} ${user.lastName}` : 'Guest User';
+  const email = user?.email ?? 'guest@example.com';
+
+  return (
+    <div className="relative" ref={containerRef}>
+      <button
+        type="button"
+        onClick={() => setMenuOpen((prev) => !prev)}
+        className="w-full flex items-center gap-3 text-left focus:outline-none"
+      >
+        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500" />
+        <div className="flex-1 min-w-0">
+          <div className="text-sm font-medium text-white truncate">{displayName}</div>
+          <div className="text-xs text-gray-500 truncate">{email}</div>
+        </div>
+      </button>
+
+      {menuOpen && (
+        <div className="absolute right-0 bottom-12 z-30 w-40 bg-gray-900/90 border border-white/10 rounded-lg shadow-lg backdrop-blur p-2">
+          {user ? (
+            <button
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                onLogout();
+              }}
+              className="w-full text-left text-sm text-white px-3 py-2 rounded-md hover:bg-white/10 transition-colors"
+            >
+              Log out
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              onClick={() => setMenuOpen(false)}
+              className="block text-sm text-white px-3 py-2 rounded-md hover:bg-white/10 transition-colors"
+            >
+              Login
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
