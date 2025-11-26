@@ -98,6 +98,8 @@ export default function SidebarMicrosoftCard({ user }: SidebarMicrosoftCardProps
       ) : (
         <a
           href={microsoftAuthUrl}
+          target="_blank"
+          rel="noreferrer noopener"
           className="block text-center bg-indigo-500/90 hover:bg-indigo-400 text-white text-sm font-medium py-2 rounded-lg transition-colors"
         >
           Authorize

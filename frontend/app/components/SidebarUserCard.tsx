@@ -45,7 +45,7 @@ export default function SidebarUserCard({ user, onLogout }: SidebarUserCardProps
       </button>
 
       {menuOpen && (
-        <div className="absolute right-0 bottom-12 z-30 w-64 bg-gray-900/95 border border-white/10 rounded-xl shadow-2xl backdrop-blur-lg p-3 space-y-2.5">
+        <div className="absolute left-1/2 bottom-full mb-3 -translate-x-1/2 z-30 w-64 bg-gray-900/95 border border-white/10 rounded-xl shadow-2xl backdrop-blur-lg p-3 space-y-2.5">
           {user ? (
             <>
               <Link
