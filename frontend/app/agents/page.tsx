@@ -214,8 +214,8 @@ export default function Agents() {
         <div className="p-8">
           <header className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-2xl font-bold text-white mb-1">n8n Workflows</h1>
-              <p className="text-gray-400 text-sm">Manage and execute your n8n automation workflows</p>
+              <h1 className="text-2xl font-bold text-white mb-1">AI Agents</h1>
+              <p className="text-gray-400 text-sm">Manage and execute your agents</p>
             </div>
             <button 
               onClick={fetchWorkflows}

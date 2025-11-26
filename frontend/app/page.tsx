@@ -106,13 +106,7 @@ export default function Home() {
             href="/register"
             className="px-8 py-4 bg-white text-black rounded-full font-medium hover:bg-gray-200 transition-all transform hover:scale-105"
           >
-            Start Building
-          </Link>
-          <Link
-            href="/chat"
-            className="px-8 py-4 glass-panel text-white rounded-full font-medium hover:bg-white/5 transition-all"
-          >
-            View Demo
+            Start Working with Agents
           </Link>
         </div>
       </div>

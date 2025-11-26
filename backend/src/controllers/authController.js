@@ -155,15 +155,61 @@ exports.generateAPIKey = async (req, res, next) => {
 // @access  Private
 exports.getCredentialStatus = async (req, res, next) => {
   try {
-    const hasCredentials = await userService.hasCredentials(req.user.id);
+    const credentials = await userService.getDisplayableCredentials(req.user.id);
+    const hasCredentials = Boolean(credentials);
     res.json({
       success: true,
       data: {
-        hasCredentials
+        hasCredentials,
+        credentials
       }
     });
   } catch (error) {
     logger.error(`Error checking credentials: ${error.message}`);
+    next(error);
+  }
+};
+
+const parseChatIdValue = (value, fieldName) => {
+  if (value === undefined) return undefined;
+  if (value === null || value === '') return null;
+  const stringValue = String(value).trim();
+  if (!/^[\d-]+$/.test(stringValue) || !/\d/.test(stringValue)) {
+    const err = new Error(`${fieldName} must contain only digits or '-'`);
+    err.statusCode = 400;
+    throw err;
+  }
+  return stringValue;
+};
+
+// @desc    Update displayable credential metadata
+// @route   PATCH /api/v1/auth/credentials
+// @access  Private
+exports.updateCredentialMetadata = async (req, res, next) => {
+  try {
+    const telegramChatId = parseChatIdValue(req.body?.telegramChatId, 'telegramChatId');
+    const ctelegramChatId = parseChatIdValue(req.body?.ctelegramChatId, 'ctelegramChatId');
+
+    const updated = await userService.updateCredentialMetadata(req.user.id, {
+      telegramChatId,
+      ctelegramChatId
+    });
+
+    if (!updated) {
+      return res.status(404).json({
+        success: false,
+        message: 'No credentials found to update'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        credentials: updated
+      }
+    });
+  } catch (error) {
+    logger.error(`Error updating credentials: ${error.message}`);
     next(error);
   }
 };

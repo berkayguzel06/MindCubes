@@ -36,9 +36,34 @@ const ensureTables = async (client) => {
       user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       refresh_token TEXT NOT NULL,
       access_token TEXT NOT NULL,
+      telegram_chat_id TEXT,
+      ctelegram_chat_id TEXT,
       expires_at TIMESTAMPTZ NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
+  `);
+
+  // Backfill newly introduced / updated optional columns on already existing tables
+  await client.query(`
+    ALTER TABLE user_credentials
+    ADD COLUMN IF NOT EXISTS telegram_chat_id TEXT
+  `);
+
+  await client.query(`
+    ALTER TABLE user_credentials
+    ADD COLUMN IF NOT EXISTS ctelegram_chat_id TEXT
+  `);
+
+  await client.query(`
+    ALTER TABLE user_credentials
+    ALTER COLUMN telegram_chat_id
+    TYPE TEXT USING telegram_chat_id::TEXT
+  `);
+
+  await client.query(`
+    ALTER TABLE user_credentials
+    ALTER COLUMN ctelegram_chat_id
+    TYPE TEXT USING ctelegram_chat_id::TEXT
   `);
 
   await client.query(`

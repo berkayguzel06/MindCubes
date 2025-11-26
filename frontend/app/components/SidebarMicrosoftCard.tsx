@@ -82,8 +82,8 @@ export default function SidebarMicrosoftCard({ user }: SidebarMicrosoftCardProps
         <p className="text-sm font-semibold text-white">Microsoft Auth</p>
         <p className="text-xs text-gray-400">
           {hasCredentials
-            ? 'Hesabın Microsoft ile yetkilendirildi.'
-            : 'Microsoft bağlantısı için bilgilerin gönderilecektir.'}
+            ? 'Your account is authorized with Microsoft.'
+            : 'Continue to Microsoft to link your account and share credentials.'}
         </p>
       </div>
       {hasCredentials ? (
@@ -93,14 +93,14 @@ export default function SidebarMicrosoftCard({ user }: SidebarMicrosoftCardProps
           disabled={actionLoading}
           className="w-full text-center bg-red-500/80 hover:bg-red-400 text-white text-sm font-medium py-2 rounded-lg transition-colors disabled:opacity-60"
         >
-          {actionLoading ? 'Kaldırılıyor...' : 'Yetkilendirmeyi Kaldır'}
+          {actionLoading ? 'Revoking...' : 'Remove Authorization'}
         </button>
       ) : (
         <a
           href={microsoftAuthUrl}
           className="block text-center bg-indigo-500/90 hover:bg-indigo-400 text-white text-sm font-medium py-2 rounded-lg transition-colors"
         >
-          Yetkilendir
+          Authorize
         </a>
       )}
     </div>

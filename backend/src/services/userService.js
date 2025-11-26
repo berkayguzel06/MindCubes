@@ -91,12 +91,51 @@ const storeCredentials = async ({ userId, refreshToken, accessToken, expiresAt }
   );
 };
 
-const hasCredentials = async (userId) => {
+const mapDisplayableCredentials = (row) => {
+  if (!row) return null;
+  return {
+    telegramChatId: row.telegram_chat_id ? String(row.telegram_chat_id) : null,
+    ctelegramChatId: row.ctelegram_chat_id ? String(row.ctelegram_chat_id) : null,
+    expiresAt: row.expires_at,
+    createdAt: row.created_at
+  };
+};
+
+const getDisplayableCredentials = async (userId) => {
   const result = await query(
-    `SELECT 1 FROM user_credentials WHERE user_id = $1 LIMIT 1`,
+    `
+      SELECT telegram_chat_id, ctelegram_chat_id, expires_at, created_at
+      FROM user_credentials
+      WHERE user_id = $1
+      LIMIT 1
+    `,
     [userId]
   );
-  return result.rowCount > 0;
+  return mapDisplayableCredentials(result.rows[0]);
+};
+
+const hasCredentials = async (userId) => {
+  const credentials = await getDisplayableCredentials(userId);
+  return Boolean(credentials);
+};
+
+const updateCredentialMetadata = async (userId, { telegramChatId, ctelegramChatId }) => {
+  const result = await query(
+    `
+      UPDATE user_credentials
+      SET telegram_chat_id = $2,
+          ctelegram_chat_id = $3
+      WHERE user_id = $1
+      RETURNING telegram_chat_id, ctelegram_chat_id, expires_at, created_at
+    `,
+    [userId, telegramChatId, ctelegramChatId]
+  );
+
+  if (result.rowCount === 0) {
+    return null;
+  }
+
+  return mapDisplayableCredentials(result.rows[0]);
 };
 
 const deleteCredentialsByUserId = async (userId) => {
@@ -120,7 +159,9 @@ module.exports = {
   updateLastLogin,
   saveApiKey,
   storeCredentials,
+  getDisplayableCredentials,
   hasCredentials,
+  updateCredentialMetadata,
   deleteCredentialsByUserId,
   comparePassword,
   generateToken,

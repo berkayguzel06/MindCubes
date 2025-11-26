@@ -45,18 +45,28 @@ export default function SidebarUserCard({ user, onLogout }: SidebarUserCardProps
       </button>
 
       {menuOpen && (
-        <div className="absolute right-0 bottom-12 z-30 w-40 bg-gray-900/90 border border-white/10 rounded-lg shadow-lg backdrop-blur p-2">
+        <div className="absolute right-0 bottom-12 z-30 w-64 bg-gray-900/95 border border-white/10 rounded-xl shadow-2xl backdrop-blur-lg p-3 space-y-2.5">
           {user ? (
-            <button
-              type="button"
-              onClick={() => {
-                setMenuOpen(false);
-                onLogout();
-              }}
-              className="w-full text-left text-sm text-white px-3 py-2 rounded-md hover:bg-white/10 transition-colors"
-            >
-              Log out
-            </button>
+            <>
+              <Link
+                href="/credentials"
+                onClick={() => setMenuOpen(false)}
+                className="block text-left text-sm text-white px-3 py-2 rounded-md border border-white/10 hover:bg-white/10 transition-colors"
+              >
+                Credentials
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  onLogout();
+                }}
+                className="w-full text-left text-sm text-white px-3 py-2 rounded-md border border-red-500/40 hover:bg-red-500/20 transition-colors"
+              >
+                Log out
+              </button>
+            </>
           ) : (
             <Link
               href="/login"

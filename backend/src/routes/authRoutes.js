@@ -10,6 +10,7 @@ const {
   getMe,
   generateAPIKey,
   getCredentialStatus,
+  updateCredentialMetadata,
   revokeCredentials
 } = require('../controllers/authController');
 
@@ -20,6 +21,7 @@ router.post('/login', login);
 router.get('/me', protect, getMe);
 router.post('/api-key', protect, generateAPIKey);
 router.get('/credentials', protect, getCredentialStatus);
+router.patch('/credentials', protect, updateCredentialMetadata);
 router.delete('/credentials', protect, revokeCredentials);
 
 module.exports = router;

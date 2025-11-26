@@ -10,7 +10,8 @@ const {
   registerModel,
   updateModel,
   deleteModel,
-  getModelStats
+  getModelStats,
+  getOllamaModels
 } = require('../controllers/modelController');
 
 const { protect, authorize } = require('../middleware/auth');
@@ -18,6 +19,9 @@ const { protect, authorize } = require('../middleware/auth');
 router.route('/')
   .get(getModels)
   .post(protect, registerModel);
+
+router.route('/ollama')
+  .get(getOllamaModels);
 
 router.route('/:id')
   .get(getModel)

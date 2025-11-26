@@ -4,6 +4,7 @@
 
 const Model = require('../models/Model');
 const logger = require('../config/logger');
+const axios = require('axios');
 
 // @desc    Get all models
 // @route   GET /api/v1/models
@@ -163,6 +164,54 @@ exports.getModelStats = async (req, res, next) => {
   } catch (error) {
     logger.error(`Error fetching model stats: ${error.message}`);
     next(error);
+  }
+};
+
+// @desc    Get Ollama models
+// @route   GET /api/v1/models/ollama
+// @access  Public
+exports.getOllamaModels = async (req, res, next) => {
+  try {
+    const ollamaBaseUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
+    
+    const response = await axios.get(`${ollamaBaseUrl}/api/tags`, {
+      timeout: 5000
+    });
+    
+    const models = response.data.models || [];
+    
+    // Format models for frontend
+    const formattedModels = models.map((model) => {
+      const details = model.details || {};
+      return {
+        id: model.name,
+        name: model.name,
+        modifiedAt: model.modified_at,
+        size: model.size,
+        digest: model.digest,
+        parameterSize: details.parameter_size || 'Unknown',
+        quantizationLevel: details.quantization_level || 'Unknown',
+        family: details.family || 'Unknown',
+        format: details.format || 'Unknown',
+        status: 'Connected'
+      };
+    });
+    
+    res.json({
+      success: true,
+      count: formattedModels.length,
+      data: formattedModels
+    });
+  } catch (error) {
+    logger.error(`Error fetching Ollama models: ${error.message}`);
+    
+    // Return empty array if Ollama is not available
+    res.json({
+      success: false,
+      message: 'Ollama service is not available',
+      count: 0,
+      data: []
+    });
   }
 };
 
