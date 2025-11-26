@@ -1,11 +1,10 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useStoredUser } from '@/hooks/useStoredUser';
 import { useRouter } from 'next/navigation';
-import SidebarUserCard from '../components/SidebarUserCard';
-import SidebarMicrosoftCard from '../components/SidebarMicrosoftCard';
+import Sidebar from '../components/Sidebar';
+import NotificationPanel, { NotificationType } from '../components/NotificationPanel';
 
 interface N8nWorkflow {
   id: string;
@@ -38,6 +37,19 @@ export default function Agents() {
   const [userId, setUserId] = useState(user?.id ?? 'guest');
   const [webhookPath, setWebhookPath] = useState('');
   const [executing, setExecuting] = useState(false);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: NotificationType;
+    isOpen: boolean;
+  }>({ message: '', type: 'info', isOpen: false });
+
+  const showNotification = (message: string, type: NotificationType = 'info') => {
+    setNotification({ message, type, isOpen: true });
+  };
+
+  const closeNotification = () => {
+    setNotification((prev) => ({ ...prev, isOpen: false }));
+  };
 
   // Fetch workflows from n8n via backend
   useEffect(() => {
@@ -88,7 +100,7 @@ export default function Agents() {
 
   const executeWorkflow = async () => {
     if (!chatInput.trim()) {
-      alert('Please enter a chat message');
+      showNotification('Please enter a chat message.', 'error');
       return;
     }
 
@@ -115,14 +127,14 @@ export default function Agents() {
       const data = await response.json();
       
       if (data.success) {
-        alert('✅ Workflow executed successfully!');
+        showNotification('Workflow executed successfully.', 'success');
         closeExecuteModal();
       } else {
-        alert('❌ Failed to execute workflow: ' + data.message);
+        showNotification(`Failed to execute workflow: ${data.message}`, 'error');
       }
     } catch (err) {
       console.error('Error executing workflow:', err);
-      alert('❌ Failed to execute workflow. Check console for details.');
+      showNotification('Failed to execute workflow. Check console for details.', 'error');
     } finally {
       setExecuting(false);
     }
@@ -131,6 +143,35 @@ export default function Agents() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  // Execute workflow directly without opening the data input modal
+  // Used for workflows that DON'T have the `data-input` tag
+  const executeWorkflowDirect = async (workflowId: string) => {
+    try {
+      setExecuting(true);
+
+      const formData = new FormData();
+      formData.append('userId', userId);
+
+      const response = await fetch(`http://localhost:5000/api/v1/n8n/workflows/${workflowId}/execute`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showNotification('Workflow executed successfully.', 'success');
+      } else {
+        showNotification(`Failed to execute workflow: ${data.message}`, 'error');
+      }
+    } catch (err) {
+      console.error('Error executing workflow:', err);
+      showNotification('Failed to execute workflow. Check console for details.', 'error');
+    } finally {
+      setExecuting(false);
     }
   };
 
@@ -147,11 +188,11 @@ export default function Agents() {
         // Refresh workflows
         fetchWorkflows();
       } else {
-        alert('Failed to update workflow: ' + data.message);
+        showNotification(`Failed to update workflow: ${data.message}`, 'error');
       }
     } catch (err) {
       console.error('Error toggling workflow:', err);
-      alert('Failed to update workflow. Check console for details.');
+      showNotification('Failed to update workflow. Check console for details.', 'error');
     }
   };
 
@@ -170,44 +211,14 @@ export default function Agents() {
 
   return (
     <main className="h-screen w-full overflow-hidden futuristic-bg flex relative">
-      {/* Sidebar (Same as Chat) */}
-      <aside className="w-64 glass-panel border-r border-white/5 flex flex-col z-20">
-        <div className="p-6">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center border border-white/10">
-              <div className="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
-            </div>
-            <span className="text-lg font-medium text-white">MindCubes</span>
-          </Link>
-        </div>
+      <Sidebar user={user} onLogout={handleLogout} />
 
-        <nav className="flex-1 px-4 space-y-2">
-          <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-4 px-2">Menu</div>
-          <Link href="/chat" className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
-            <span className="w-2 h-2 bg-gray-600 rounded-full" />
-            Chat
-          </Link>
-          <Link href="/agents" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/10 text-white">
-            <span className="w-2 h-2 bg-purple-500 rounded-full" />
-            Agents
-          </Link>
-          {/* <Link href="/tasks" className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
-            <span className="w-2 h-2 bg-gray-600 rounded-full" />
-            Tasks
-          </Link> */}
-          <Link href="/models" className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
-            <span className="w-2 h-2 bg-gray-600 rounded-full" />
-            Models
-          </Link>
-        </nav>
-
-        <div className="px-4 pb-4">
-          <SidebarMicrosoftCard user={user} />
-        </div>
-        <div className="p-4 border-t border-white/5">
-          <SidebarUserCard user={user} onLogout={handleLogout} />
-        </div>
-      </aside>
+      <NotificationPanel
+        message={notification.message}
+        type={notification.type}
+        isOpen={notification.isOpen}
+        onClose={closeNotification}
+      />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative z-10 overflow-y-auto">
@@ -249,53 +260,71 @@ export default function Agents() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {workflows.map((workflow) => (
-                <div 
-                  key={workflow.id} 
-                  className="glass-panel p-6 rounded-xl border border-white/5 hover:border-white/20 transition-colors group"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
+              {workflows.map((workflow) => {
+                const tagNames = (workflow.tags || []).map((t) => t.name.toLowerCase());
+                const hasDataInput = tagNames.includes('data-input');
+                const isActive = workflow.active;
+
+                return (
+                  <div 
+                    key={workflow.id} 
+                    className="glass-panel p-6 rounded-xl border border-white/5 hover:border-white/20 transition-colors group"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                      </div>
+                      <div className={`px-2 py-1 text-xs rounded-full border ${
+                        workflow.active 
+                          ? 'bg-green-500/10 text-green-400 border-green-500/20' 
+                          : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
+                      }`}>
+                        {workflow.active ? 'Active' : 'Inactive'}
+                      </div>
                     </div>
-                    <div className={`px-2 py-1 text-xs rounded-full border ${
-                      workflow.active 
-                        ? 'bg-green-500/10 text-green-400 border-green-500/20' 
-                        : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
-                    }`}>
-                      {workflow.active ? 'Active' : 'Inactive'}
+                    
+                    <h3 className="text-lg font-medium text-white mb-2 truncate" title={workflow.name}>
+                      {workflow.name}
+                    </h3>
+                    
+                    <p className="text-sm text-gray-400 mb-4">
+                      {workflow.tags && workflow.tags.length > 0 
+                        ? `Tags: ${workflow.tags.map(t => t.name).join(', ')}`
+                        : 'No tags'
+                      }
+                    </p>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t border-white/5 gap-2">
+                      <button 
+                        onClick={() => toggleWorkflowActive(workflow.id, workflow.active)}
+                        className="text-xs text-white hover:underline px-2 py-1 rounded hover:bg-white/5 transition-colors"
+                      >
+                        {workflow.active ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button 
+                        onClick={() => {
+                          if (!isActive) return;
+                          if (hasDataInput) {
+                            openExecuteModal(workflow.id, workflow.name);
+                          } else {
+                            executeWorkflowDirect(workflow.id);
+                          }
+                        }}
+                        disabled={!isActive}
+                        className={`text-xs px-3 py-1 rounded-full border transition-colors ${
+                          isActive
+                            ? 'bg-purple-500/20 text-purple-400 border-purple-500/30 hover:bg-purple-500/30'
+                            : 'bg-gray-700/40 text-gray-500 border-gray-600/50 cursor-not-allowed'
+                        }`}
+                      >
+                        ▶ Execute
+                      </button>
                     </div>
                   </div>
-                  
-                  <h3 className="text-lg font-medium text-white mb-2 truncate" title={workflow.name}>
-                    {workflow.name}
-                  </h3>
-                  
-                  <p className="text-sm text-gray-400 mb-4">
-                    {workflow.tags && workflow.tags.length > 0 
-                      ? `Tags: ${workflow.tags.map(t => t.name).join(', ')}`
-                      : 'No tags'
-                    }
-                  </p>
-                  
-                  <div className="flex items-center justify-between pt-4 border-t border-white/5 gap-2">
-                    <button 
-                      onClick={() => toggleWorkflowActive(workflow.id, workflow.active)}
-                      className="text-xs text-white hover:underline px-2 py-1 rounded hover:bg-white/5 transition-colors"
-                    >
-                      {workflow.active ? 'Deactivate' : 'Activate'}
-                    </button>
-                    <button 
-                      onClick={() => openExecuteModal(workflow.id, workflow.name)}
-                      className="text-xs bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full border border-purple-500/30 hover:bg-purple-500/30 transition-colors"
-                    >
-                      ▶ Execute
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

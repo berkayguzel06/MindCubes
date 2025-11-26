@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useStoredUser } from '@/hooks/useStoredUser';
-import SidebarUserCard from '../components/SidebarUserCard';
-import SidebarMicrosoftCard from '../components/SidebarMicrosoftCard';
+import Sidebar from '../components/Sidebar';
 
 export default function Chat() {
   const router = useRouter();
@@ -90,45 +89,7 @@ export default function Chat() {
 
   return (
     <main className="h-screen w-full overflow-hidden futuristic-bg flex relative">
-      {/* Sidebar */}
-      <aside className="w-64 glass-panel border-r border-white/5 flex flex-col z-20">
-        <div className="p-6">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center border border-white/10">
-              <div className="w-3 h-3 bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
-            </div>
-            <span className="text-lg font-medium text-white">MindCubes</span>
-          </Link>
-        </div>
-
-        <nav className="flex-1 px-4 space-y-2">
-          <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-4 px-2">Menu</div>
-          <Link href="/chat" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/10 text-white">
-            <span className="w-2 h-2 bg-blue-500 rounded-full" />
-            Chat
-          </Link>
-          <Link href="/agents" className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
-            <span className="w-2 h-2 bg-gray-600 rounded-full" />
-            Agents
-          </Link>
-          {/* <Link href="/tasks" className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
-            <span className="w-2 h-2 bg-gray-600 rounded-full" />
-            Tasks
-          </Link> */}
-          <Link href="/models" className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
-            <span className="w-2 h-2 bg-gray-600 rounded-full" />
-            Models
-          </Link>
-        </nav>
-
-        <div className="px-4 pb-4">
-          <SidebarMicrosoftCard user={user} />
-        </div>
-
-        <div className="p-4 border-t border-white/5 mt-auto">
-          <SidebarUserCard user={user} onLogout={handleLogout} />
-        </div>
-      </aside>
+      <Sidebar user={user} onLogout={handleLogout} />
 
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col relative z-10">

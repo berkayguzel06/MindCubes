@@ -99,9 +99,11 @@ export default function Register() {
       <div className="w-full max-w-md p-8 glass-panel rounded-2xl relative z-10">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block mb-4">
-            <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center border border-white/10 mx-auto">
-              <div className="w-4 h-4 bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
-            </div>
+            <img
+              src="/icon.png"
+              alt="MindCubes Logo"
+              className="w-16 h-16 object-contain drop-shadow-[0_6px_20px_rgba(15,23,42,0.6)] mx-auto rounded-[26px]"
+            />
           </Link>
           <h2 className="text-2xl font-bold text-white mb-2">Create Account</h2>
           <p className="text-gray-400 text-sm">Join MindCubes today</p>

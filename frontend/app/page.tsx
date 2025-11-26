@@ -1,8 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import NexmindLogo from './nexmind3-logo.png';
 import { useStoredUser } from '@/hooks/useStoredUser';
 
 export default function Home() {
@@ -11,23 +13,40 @@ export default function Home() {
   const { user, hydrated } = useStoredUser();
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
+    let frameId: number;
+    let startTime: number | null = null;
 
-      const { clientX, clientY } = e;
-      const { innerWidth, innerHeight } = window;
+    const animate = (time: number) => {
+      if (!containerRef.current) {
+        frameId = requestAnimationFrame(animate);
+        return;
+      }
 
-      // Calculate mouse position as percentage (0 to 1)
-      const x = clientX / innerWidth;
-      const y = clientY / innerHeight;
+      if (startTime === null) {
+        startTime = time;
+      }
 
-      // Update CSS variables for smooth performance
+      const elapsed = (time - startTime) / 1000; // seconds
+
+      // Faster & more visible looping movement around center
+      const amplitude = 0.2; // how far it moves from center (0.5)
+      const speedX = 1.3;
+      const speedY = 1.7;
+
+      const x = 0.5 + amplitude * Math.cos(elapsed * speedX);
+      const y = 0.5 + amplitude * Math.sin(elapsed * speedY);
+
       containerRef.current.style.setProperty('--mouse-x', `${x}`);
       containerRef.current.style.setProperty('--mouse-y', `${y}`);
+
+      frameId = requestAnimationFrame(animate);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    frameId = requestAnimationFrame(animate);
+
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId);
+    };
   }, []);
 
   useEffect(() => {
@@ -58,16 +77,7 @@ export default function Home() {
       } as React.CSSProperties}
     >
       {/* Navigation */}
-      <nav className="w-full p-6 flex justify-between items-center z-10">
-        <div className="flex items-center gap-3">
-          <img
-            src="/icon.png"
-            alt="MindCubes Logo"
-            className="w-10 h-10 object-contain"
-          />
-          <span className="text-xl font-medium tracking-tight text-white">MindCubes</span>
-        </div>
-
+      <nav className="w-full p-6 flex justify-end items-center z-10">
         <div className="flex items-center gap-6">
           <Link
             href="/login"
@@ -89,8 +99,18 @@ export default function Home() {
         {/* Decorative elements */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-center tracking-tighter mb-8 max-w-5xl mx-auto">
-          <span className="text-white">Build with</span>
+        <div className="flex flex-col items-center gap-3 mb-2">
+          <div className="flex items-center justify-center">
+            <img
+              src="/icon.png"
+              alt="MindCubes Icon"
+              className="w-56 h-56 md:w-64 md:h-64 object-contain drop-shadow-[0_12px_25px_rgba(15,23,42,0.35)]"
+            />
+          </div>
+        </div>
+
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-center tracking-tighter mb-4 max-w-5xl mx-auto">
+          <span className="text-white">Work with</span>
           <br />
           <span className="text-gray-500">Intelligent Agents</span>
         </h1>
@@ -109,12 +129,22 @@ export default function Home() {
             Start Working with Agents
           </Link>
         </div>
+
+        <div className="mt-10 md:mt-16 flex items-center gap-5 text-gray-300 text-sm md:text-base">
+          <span className="uppercase tracking-[0.5em]">Powered by</span>
+          <Image
+            src={NexmindLogo}
+            alt="Nexmind3 Logo"
+            className="h-12 w-auto opacity-95"
+            width={220}
+            height={44}
+            priority
+          />
+        </div>
       </div>
 
-      {/* Footer / Bottom text */}
-      <div className="absolute bottom-8 w-full text-center text-gray-600 text-xs tracking-widest uppercase">
-        Powered by Advanced AI Models
-      </div>
+      {/* Footer spacer */}
+      <div className="h-12" />
     </main>
   );
 }
