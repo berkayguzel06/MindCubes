@@ -43,9 +43,18 @@ from core import (
 )
 from agents import CodeAgent, DataAnalysisAgent, ResearchAgent, TaskPlannerAgent, MasterAgent
 from tools import (
-    WebSearchTool, CodeExecutorTool, FileManagerTool, APICallerTool, DataProcessorTool,
-    TodoWorkflowTool, CalendarWorkflowTool, DriveWorkflowTool,
-    MailCategorizationTool, MailPrioritizingTool, create_workflow_tools
+    WebSearchTool,
+    CodeExecutorTool,
+    FileManagerTool,
+    APICallerTool,
+    DataProcessorTool,
+    DateTimeTool,
+    TodoWorkflowTool,
+    CalendarWorkflowTool,
+    DriveWorkflowTool,
+    MailCategorizationTool,
+    MailPrioritizingTool,
+    create_workflow_tools,
 )
 
 # Initialize FastAPI app
@@ -112,7 +121,8 @@ def _create_tools():
         CodeExecutorTool(),
         FileManagerTool(base_directory="./workspace"),
         APICallerTool(),
-        DataProcessorTool()
+        DataProcessorTool(),
+        DateTimeTool(),
     ]
 
 
@@ -187,7 +197,7 @@ def get_or_create_agent(provider_name: str, model_name: Optional[str] = None) ->
 
 
 def _create_workflow_tools():
-    """Create n8n workflow tools."""
+    """Create tools used by the Master Agent (n8n workflows + utility tools)."""
     # Log webhook IDs for debugging
     print("🔧 N8n Webhook Configuration:")
     print(f"   TODO:       {os.getenv('N8N_TODO_WEBHOOK_ID', 'NOT SET')}")
@@ -195,13 +205,18 @@ def _create_workflow_tools():
     print(f"   DRIVE:      {os.getenv('N8N_DRIVE_WEBHOOK_ID', 'NOT SET')}")
     print(f"   N8N_URL:    {os.getenv('N8N_WEBHOOK_URL', 'http://localhost:5678')}")
     
-    return [
+    tools = [
         TodoWorkflowTool(),
         CalendarWorkflowTool(),
         DriveWorkflowTool(),
         MailCategorizationTool(),
         MailPrioritizingTool(),
     ]
+
+    # Add custom non-n8n tools that Master Agent should be able to use
+    tools.append(DateTimeTool())
+
+    return tools
 
 
 @app.on_event("startup")

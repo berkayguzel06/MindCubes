@@ -158,6 +158,38 @@ class MasterAgent(BaseAgent):
         )
         self.use_llm_for_intent = use_llm_for_intent
         self._tool_map = {tool.name: tool for tool in (tools or [])}
+
+    def _is_datetime_question(self, message: str) -> bool:
+        """Detect if the user is asking about current date or time."""
+        msg = message.lower()
+
+        date_patterns = [
+            "bugün günlerden ne",
+            "bugün günlerden",
+            "bugün hangi gün",
+            "bugün ne gün",
+            "bugünün tarihi",
+            "tarih nedir",
+            "tarih ne",
+            "şu an hangi gün",
+            "hangi gündeyiz",
+            "hangi tarihteyiz",
+            "hangi gün",
+            "what day is it",
+            "today's date",
+            "what is the date",
+        ]
+
+        time_patterns = [
+            "saat kaç",
+            "şu an saat kaç",
+            "şuan saat kaç",
+            "şu an saat",
+            "what time is it",
+            "current time",
+        ]
+
+        return any(p in msg for p in date_patterns + time_patterns)
     
     def _default_system_prompt(self) -> str:
         return """Sen MindCubes platformunun AI asistanısın. Kullanıcılarla doğal ve samimi bir şekilde sohbet ediyorsun.
@@ -313,7 +345,34 @@ Görevlerin:
         history = context.get("history", [])
         has_file = file_data is not None
         self._current_model = context.get("model")  # Store model for LLM calls
-        
+
+        # Special case: questions about current date/time -> use DateTimeTool
+        if self._is_datetime_question(user_input):
+            datetime_tool = self._tool_map.get("current_datetime")
+            if datetime_tool:
+                try:
+                    # We don't need extra parameters; tool uses server time
+                    result = await datetime_tool.run()
+                    if result.get("success"):
+                        payload = result.get("result") or {}
+                        # Prefer natural language text if available
+                        text = payload.get("natural_text_tr") or payload.get("natural_text")
+                        if text:
+                            return text
+
+                        # Fallback: build a simple sentence from fields
+                        date = payload.get("date")
+                        time_val = payload.get("time")
+                        weekday = payload.get("weekday")
+                        if date and weekday:
+                            base = f"Bugün {weekday}, {date}."
+                            if time_val:
+                                base += f" Şu an saat {time_val}."
+                            return base
+                except Exception as e:
+                    print(f"Error while using current_datetime tool: {e}")
+            # If tool is missing or fails, we fall through to normal behavior
+
         # Detect intent
         tool_name, intent_data = await self.detect_intent(user_input, has_file)
         
