@@ -104,6 +104,41 @@ const ensureTables = async (client) => {
     CREATE INDEX IF NOT EXISTS idx_user_credentials_user_id
     ON user_credentials (user_id)
   `);
+
+  // Error logs table for tracking workflow errors
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS error_logs (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      error_message TEXT NOT NULL,
+      workflow_name VARCHAR(255),
+      workflow_id VARCHAR(255),
+      execution_id VARCHAR(255),
+      status VARCHAR(50) DEFAULT 'error',
+      metadata JSONB DEFAULT '{}',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_error_logs_user_id
+    ON error_logs (user_id)
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_error_logs_created_at
+    ON error_logs (created_at DESC)
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_error_logs_workflow_id
+    ON error_logs (workflow_id)
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_error_logs_execution_id
+    ON error_logs (execution_id)
+  `);
 };
 
 const initPostgres = async () => {
