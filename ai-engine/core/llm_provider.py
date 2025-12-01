@@ -617,8 +617,11 @@ class OllamaProvider(LLMProvider):
         system_prompt: Optional[str] = None,
         **kwargs
     ) -> str:
+        # Allow model override via kwargs
+        model_to_use = kwargs.get("model") or self.model_name
+        
         payload = {
-            "model": self.model_name,
+            "model": model_to_use,
             "messages": self._build_messages(prompt, system_prompt),
             "stream": False,
             "options": {

@@ -6,6 +6,27 @@ FastAPI server for handling chat requests from the backend
 import asyncio
 import os
 import base64
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load .env file - try multiple locations
+env_locations = [
+    Path(__file__).parent / '.env',              # ai-engine/.env
+    Path(__file__).parent.parent / '.env',        # project root/.env
+    Path(__file__).parent.parent / 'backend' / '.env',  # backend/.env
+]
+
+env_loaded = False
+for env_path in env_locations:
+    if env_path.exists():
+        load_dotenv(env_path)
+        print(f"✅ Loaded .env from {env_path}")
+        env_loaded = True
+        break
+
+if not env_loaded:
+    print("⚠️ No .env file found! Create ai-engine/.env with your configuration.")
+
 from fastapi import FastAPI, HTTPException, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -167,6 +188,13 @@ def get_or_create_agent(provider_name: str, model_name: Optional[str] = None) ->
 
 def _create_workflow_tools():
     """Create n8n workflow tools."""
+    # Log webhook IDs for debugging
+    print("🔧 N8n Webhook Configuration:")
+    print(f"   TODO:       {os.getenv('N8N_TODO_WEBHOOK_ID', 'NOT SET')}")
+    print(f"   CALENDAR:   {os.getenv('N8N_CALENDAR_WEBHOOK_ID', 'NOT SET')}")
+    print(f"   DRIVE:      {os.getenv('N8N_DRIVE_WEBHOOK_ID', 'NOT SET')}")
+    print(f"   N8N_URL:    {os.getenv('N8N_WEBHOOK_URL', 'http://localhost:5678')}")
+    
     return [
         TodoWorkflowTool(),
         CalendarWorkflowTool(),
@@ -311,7 +339,8 @@ async def chat(request: ChatRequest):
             "metadata": request.metadata or {},
             "user_id": user_id,
             "session_id": session_id,
-            "file_data": request.file_data
+            "file_data": request.file_data,
+            "model": request.model  # Pass selected model to agent
         }
         
         print(f"🔄 Processing message for user {user_id}: {request.message[:50]}...")

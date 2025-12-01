@@ -71,15 +71,20 @@ const getRecentHistory = async (userId, limit = 20) => {
  */
 const getUserSessions = async (userId, limit = 20) => {
   try {
+    // Get unique sessions with first user message as title
     const result = await pool.query(
-      `SELECT DISTINCT ON (session_id) 
-         session_id,
-         content as last_message,
-         created_at
-       FROM chat_history
-       WHERE user_id = $1 AND role = 'user'
-       ORDER BY session_id, created_at DESC
-       LIMIT $2`,
+      `WITH session_info AS (
+        SELECT DISTINCT ON (session_id) 
+          session_id,
+          content as last_message,
+          created_at
+        FROM chat_history
+        WHERE user_id = $1 AND role = 'user'
+        ORDER BY session_id, created_at ASC
+      )
+      SELECT * FROM session_info
+      ORDER BY created_at DESC
+      LIMIT $2`,
       [userId, limit]
     );
     return result.rows;

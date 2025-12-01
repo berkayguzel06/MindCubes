@@ -312,6 +312,7 @@ Görevlerin:
         user_id = context.get("user_id", "anonymous")
         history = context.get("history", [])
         has_file = file_data is not None
+        self._current_model = context.get("model")  # Store model for LLM calls
         
         # Detect intent
         tool_name, intent_data = await self.detect_intent(user_input, has_file)
@@ -416,7 +417,8 @@ Kurallar:
         try:
             response = await self.llm_provider.generate(
                 prompt,
-                system_prompt="Kısa ve doğal yanıtlar ver. Markdown formatı kullanma."
+                system_prompt="Kısa ve doğal yanıtlar ver. Markdown formatı kullanma.",
+                model=getattr(self, '_current_model', None)  # Pass selected model
             )
             
             response = response.strip()
@@ -462,7 +464,8 @@ Kurallar:
         try:
             response = await self.llm_provider.generate(
                 prompt,
-                system_prompt=self._default_system_prompt()
+                system_prompt=self._default_system_prompt(),
+                model=getattr(self, '_current_model', None)  # Pass selected model
             )
             # Clean markdown
             response = response.strip().replace("**", "").replace("*", "")

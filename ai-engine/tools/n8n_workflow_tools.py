@@ -103,6 +103,10 @@ class N8nWorkflowTool(BaseTool):
         # Add any extra kwargs to payload
         payload.update(kwargs)
         
+        # Debug logging
+        print(f"🔗 Webhook URL: {self.webhook_url}")
+        print(f"📤 Payload keys: {list(payload.keys())}")
+        
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.post(
@@ -112,6 +116,8 @@ class N8nWorkflowTool(BaseTool):
                     timeout=aiohttp.ClientTimeout(total=120)  # 2 minutes timeout
                 ) as response:
                     response_text = await response.text()
+                    print(f"📥 Response status: {response.status}")
+                    print(f"📥 Response preview: {response_text[:200] if response_text else 'empty'}")
                     
                     # Check for HTTP errors
                     if response.status >= 400:

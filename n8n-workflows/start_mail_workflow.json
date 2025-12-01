@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2025-11-28T07:50:40.000Z",
+  "updatedAt": "2025-12-01T08:56:48.000Z",
   "createdAt": "2025-11-21T12:59:01.179Z",
   "id": "Mfcwb9TbJBpZHqye",
   "name": "Start-Mail-Workflow",
   "description": null,
   "active": false,
-  "isArchived": false,
+  "isArchived": true,
   "nodes": [
     {
       "parameters": {
@@ -278,8 +278,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c2ac8245-3eb9-4bac-b05d-af08b7c6b214",
-  "versionCounter": 37,
+  "versionId": "1409d310-e3b5-466a-822c-4c0dff87d577",
+  "versionCounter": 38,
   "triggerCount": 1,
   "shared": [
     {

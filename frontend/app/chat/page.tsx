@@ -5,10 +5,13 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useStoredUser } from '@/hooks/useStoredUser';
 import Sidebar from '../components/Sidebar';
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+
 interface Message {
+  id?: string;
   role: string;
   content: string;
-  thinking?: string;  // CoT thinking content
+  thinking?: string;
   file?: {
     name: string;
     type: string;
@@ -18,13 +21,21 @@ interface Message {
     agent?: string;
     pending_action?: string;
   };
+  created_at?: string;
 }
 
 interface ChatSession {
+  session_id: string;
+  last_message: string;
+  created_at: string;
+  title?: string;
+}
+
+interface OllamaModel {
   id: string;
-  title: string;
-  lastMessage: string;
-  createdAt: string;
+  name: string;
+  parameterSize: string;
+  family: string;
 }
 
 // Generate unique session ID
@@ -34,14 +45,13 @@ const generateSessionId = () => {
 
 // Extract thinking content from CoT model response
 const extractThinking = (content: string): { thinking: string | null; response: string } => {
-  // Common CoT patterns: <think>...</think>, <thinking>...</thinking>, [thinking]...[/thinking]
   const thinkPatterns = [
     /<think>([\s\S]*?)<\/think>/i,
     /<thinking>([\s\S]*?)<\/thinking>/i,
     /\[thinking\]([\s\S]*?)\[\/thinking\]/i,
     /\[think\]([\s\S]*?)\[\/think\]/i,
-    /^(Düşünüyorum:[\s\S]*?)(?=\n\n|$)/m,
     /^(Let me think[\s\S]*?)(?=\n\n|$)/im,
+    /^(Thinking:[\s\S]*?)(?=\n\n|$)/m,
   ];
   
   for (const pattern of thinkPatterns) {
@@ -146,6 +156,10 @@ export default function Chat() {
   const [sessionId, setSessionId] = useState<string>('');
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+  const [availableModels, setAvailableModels] = useState<OllamaModel[]>([]);
+  const [selectedModel, setSelectedModel] = useState<string>('');
+  const [isLoadingModels, setIsLoadingModels] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -164,89 +178,102 @@ export default function Chat() {
     adjustTextareaHeight();
   }, [input, adjustTextareaHeight]);
 
-  // Load chat sessions from localStorage
-  const loadChatSessions = useCallback(() => {
-    const stored = localStorage.getItem('chat_sessions');
-    if (stored) {
-      try {
-        setChatSessions(JSON.parse(stored));
-      } catch {
-        setChatSessions([]);
+  // Load available Ollama models
+  const loadOllamaModels = useCallback(async () => {
+    setIsLoadingModels(true);
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/v1/models/ollama`);
+      const data = await response.json();
+      
+      if (data.success && data.data) {
+        setAvailableModels(data.data);
+        // Set default model if not already set
+        if (!selectedModel && data.data.length > 0) {
+          // Prefer gpt-oss model if available, otherwise use first model
+          const defaultModel = data.data.find((m: OllamaModel) => m.name.includes('gpt-oss')) || data.data[0];
+          setSelectedModel(defaultModel.name);
+        }
       }
+    } catch (error) {
+      console.error('Failed to load Ollama models:', error);
+    } finally {
+      setIsLoadingModels(false);
     }
-  }, []);
+  }, [selectedModel]);
 
-  // Save current session to history
-  const saveCurrentSession = useCallback((msgs: Message[], sid: string) => {
-    if (msgs.length === 0) return;
+  // Load chat sessions from database
+  const loadChatSessions = useCallback(async () => {
+    if (!user?.id) return;
     
-    const firstUserMsg = msgs.find(m => m.role === 'user');
-    const title = firstUserMsg?.content.slice(0, 50) || 'Yeni sohbet';
-    
-    const stored = localStorage.getItem('chat_sessions');
-    let sessions: ChatSession[] = stored ? JSON.parse(stored) : [];
-    
-    const existingIndex = sessions.findIndex(s => s.id === sid);
-    const sessionData: ChatSession = {
-      id: sid,
-      title: title + (title.length >= 50 ? '...' : ''),
-      lastMessage: msgs[msgs.length - 1]?.content.slice(0, 100) || '',
-      createdAt: new Date().toISOString()
-    };
-    
-    if (existingIndex >= 0) {
-      sessions[existingIndex] = sessionData;
-    } else {
-      sessions.unshift(sessionData);
-    }
-    
-    sessions = sessions.slice(0, 20);
-    
-    localStorage.setItem('chat_sessions', JSON.stringify(sessions));
-    setChatSessions(sessions);
-  }, []);
-
-  // Load session messages from localStorage
-  const loadSessionMessages = useCallback((sid: string) => {
-    const stored = localStorage.getItem(`chat_messages_${sid}`);
-    if (stored) {
-      try {
-        return JSON.parse(stored);
-      } catch {
-        return [];
+    setIsLoadingSessions(true);
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/v1/chat/sessions?userId=${user.id}`);
+      const data = await response.json();
+      
+      if (data.success && data.data) {
+        // Add title from last_message
+        const sessionsWithTitles = data.data.map((s: ChatSession) => ({
+          ...s,
+          title: s.last_message?.slice(0, 50) + (s.last_message?.length > 50 ? '...' : '') || 'New chat'
+        }));
+        setChatSessions(sessionsWithTitles);
       }
+    } catch (error) {
+      console.error('Failed to load sessions:', error);
+    } finally {
+      setIsLoadingSessions(false);
+    }
+  }, [user?.id]);
+
+  // Load session messages from database
+  const loadSessionMessages = useCallback(async (sid: string) => {
+    if (!user?.id) return [];
+    
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/v1/chat/history?userId=${user.id}&sessionId=${sid}`);
+      const data = await response.json();
+      
+      if (data.success && data.data) {
+        return data.data.map((msg: any) => ({
+          id: msg.id,
+          role: msg.role,
+          content: msg.content,
+          metadata: msg.metadata,
+          created_at: msg.created_at
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to load session messages:', error);
     }
     return [];
-  }, []);
+  }, [user?.id]);
 
-  // Save messages to localStorage
-  const saveSessionMessages = useCallback((msgs: Message[], sid: string) => {
-    localStorage.setItem(`chat_messages_${sid}`, JSON.stringify(msgs));
-  }, []);
+  // Load models on mount
+  useEffect(() => {
+    loadOllamaModels();
+  }, [loadOllamaModels]);
 
   // Initialize session on mount
   useEffect(() => {
+    if (!user?.id) return;
+    
     loadChatSessions();
     
+    // Check for existing session in sessionStorage
     const storedSessionId = sessionStorage.getItem('chat_session_id');
     if (storedSessionId) {
       setSessionId(storedSessionId);
-      const loadedMessages = loadSessionMessages(storedSessionId);
-      setMessages(loadedMessages);
+      loadSessionMessages(storedSessionId).then(msgs => {
+        if (msgs.length > 0) {
+          setMessages(msgs);
+        }
+      });
     } else {
       const newSessionId = generateSessionId();
       setSessionId(newSessionId);
       sessionStorage.setItem('chat_session_id', newSessionId);
     }
-  }, [loadChatSessions, loadSessionMessages]);
-
-  // Save messages when they change
-  useEffect(() => {
-    if (sessionId && messages.length > 0) {
-      saveSessionMessages(messages, sessionId);
-      saveCurrentSession(messages, sessionId);
-    }
-  }, [messages, sessionId, saveSessionMessages, saveCurrentSession]);
+  }, [user?.id, loadChatSessions, loadSessionMessages]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -257,7 +284,7 @@ export default function Chat() {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
-        alert('Dosya boyutu 10MB\'dan küçük olmalıdır.');
+        alert('File size must be less than 10MB.');
         return;
       }
       setSelectedFile(file);
@@ -272,7 +299,7 @@ export default function Chat() {
   };
 
   // Start new chat session
-  const handleNewChat = () => {
+  const handleNewChat = async () => {
     const newSessionId = generateSessionId();
     setSessionId(newSessionId);
     sessionStorage.setItem('chat_session_id', newSessionId);
@@ -282,24 +309,36 @@ export default function Chat() {
   };
 
   // Load a previous session
-  const handleLoadSession = (sid: string) => {
+  const handleLoadSession = async (sid: string) => {
     setSessionId(sid);
     sessionStorage.setItem('chat_session_id', sid);
-    const loadedMessages = loadSessionMessages(sid);
+    
+    const loadedMessages = await loadSessionMessages(sid);
     setMessages(loadedMessages);
     setShowHistory(false);
   };
 
   // Delete a session
-  const handleDeleteSession = (sid: string, e: React.MouseEvent) => {
+  const handleDeleteSession = async (sid: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const sessions = chatSessions.filter(s => s.id !== sid);
-    localStorage.setItem('chat_sessions', JSON.stringify(sessions));
-    localStorage.removeItem(`chat_messages_${sid}`);
-    setChatSessions(sessions);
     
-    if (sid === sessionId) {
-      handleNewChat();
+    if (!user?.id) return;
+    
+    try {
+      await fetch(`${BACKEND_URL}/api/v1/chat/history`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, sessionId: sid })
+      });
+      
+      // Update local state
+      setChatSessions(prev => prev.filter(s => s.session_id !== sid));
+      
+      if (sid === sessionId) {
+        handleNewChat();
+      }
+    } catch (error) {
+      console.error('Failed to delete session:', error);
     }
   };
 
@@ -325,17 +364,16 @@ export default function Chat() {
     }
     
     try {
-      const historyForContext = messages.map(m => ({
-        role: m.role,
-        content: m.content
-      }));
-      
       if (selectedFile) {
+        // File upload - use AI Engine directly
         const formData = new FormData();
         formData.append('message', userMsg.content);
         formData.append('userId', user?.id ?? 'anonymous');
         formData.append('provider', 'ollama');
         formData.append('file', selectedFile);
+        if (selectedModel) {
+          formData.append('model', selectedModel);
+        }
         
         const response = await fetch('http://localhost:8000/api/chat/workflow', {
           method: 'POST',
@@ -355,24 +393,23 @@ export default function Chat() {
         } else if (data && data.success === false) {
           setMessages((prev) => [...prev, { 
             role: 'assistant', 
-            content: `❌ Hata: ${data.detail || 'Bilinmeyen hata'}`
+            content: `❌ Error: ${data.detail || 'Unknown error'}`
           }]);
         }
         
         removeSelectedFile();
       } else {
-        // Show thinking animation
-        setThinkingText('Düşünüyor');
+        // Text message - use backend API (which saves to database)
+        setThinkingText('Thinking');
         
-        const response = await fetch('http://localhost:8000/api/chat', {
+        const response = await fetch(`${BACKEND_URL}/api/v1/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: userMsg.content,
-            history: historyForContext,
             userId: user?.id ?? 'anonymous',
             sessionId: sessionId,
-            use_master_agent: true
+            model: selectedModel || undefined
           }),
         });
         
@@ -386,13 +423,27 @@ export default function Chat() {
             thinking: thinking || undefined,
             metadata: data.metadata
           }]);
+          
+          // Update session ID if returned from backend
+          if (data.sessionId && data.sessionId !== sessionId) {
+            setSessionId(data.sessionId);
+            sessionStorage.setItem('chat_session_id', data.sessionId);
+          }
+          
+          // Refresh sessions list
+          loadChatSessions();
+        } else if (data && data.success === false) {
+          setMessages((prev) => [...prev, { 
+            role: 'assistant', 
+            content: `❌ Error: ${data.message || 'Unknown error'}`
+          }]);
         }
       }
     } catch (e) {
       console.error('Chat error', e);
       setMessages((prev) => [...prev, { 
         role: 'assistant', 
-        content: '❌ Sunucuya bağlanırken hata oluştu. Lütfen AI Engine\'in çalıştığından emin olun.'
+        content: '❌ Failed to connect to server. Please make sure the backend and AI Engine are running.'
       }]);
     } finally {
       setIsLoading(false);
@@ -405,7 +456,6 @@ export default function Chat() {
       e.preventDefault();
       handleSend();
     }
-    // Shift+Enter allows new line (default behavior)
   };
 
   useEffect(() => {
@@ -436,18 +486,22 @@ export default function Chat() {
       {/* Chat History Panel */}
       <div className={`${showHistory ? 'w-72' : 'w-0'} transition-all duration-300 overflow-hidden border-r border-white/5 glass-panel flex flex-col z-20`}>
         <div className="p-4 border-b border-white/5">
-          <h2 className="text-white font-medium">Sohbet Geçmişi</h2>
+          <h2 className="text-white font-medium">Chat History</h2>
         </div>
         <div className="flex-1 overflow-y-auto p-2">
-          {chatSessions.length === 0 ? (
-            <p className="text-gray-500 text-sm text-center py-4">Henüz sohbet yok</p>
+          {isLoadingSessions ? (
+            <div className="flex items-center justify-center py-4">
+              <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : chatSessions.length === 0 ? (
+            <p className="text-gray-500 text-sm text-center py-4">No chats yet</p>
           ) : (
             chatSessions.map((session) => (
               <div
-                key={session.id}
-                onClick={() => handleLoadSession(session.id)}
+                key={session.session_id}
+                onClick={() => handleLoadSession(session.session_id)}
                 className={`p-3 rounded-lg cursor-pointer mb-2 group ${
-                  session.id === sessionId 
+                  session.session_id === sessionId 
                     ? 'bg-indigo-500/20 border border-indigo-500/30' 
                     : 'bg-white/5 hover:bg-white/10 border border-transparent'
                 }`}
@@ -455,10 +509,12 @@ export default function Chat() {
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
                     <p className="text-white text-sm font-medium truncate">{session.title}</p>
-                    <p className="text-gray-400 text-xs mt-1 truncate">{session.lastMessage}</p>
+                    <p className="text-gray-400 text-xs mt-1 truncate">
+                      {new Date(session.created_at).toLocaleDateString()}
+                    </p>
                   </div>
                   <button
-                    onClick={(e) => handleDeleteSession(session.id, e)}
+                    onClick={(e) => handleDeleteSession(session.session_id, e)}
                     className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-400 transition-all"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -480,16 +536,38 @@ export default function Chat() {
             <button
               onClick={() => setShowHistory(!showHistory)}
               className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-              title="Sohbet Geçmişi"
+              title="Chat History"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </button>
             <h1 className="text-white font-medium">MindCubes AI</h1>
-            <span className="text-xs px-2 py-1 bg-indigo-500/20 text-indigo-300 rounded-full">
-              Asistan
-            </span>
+            
+            {/* Model Selector */}
+            <div className="relative">
+              <select
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                disabled={isLoadingModels || availableModels.length === 0}
+                className="appearance-none bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 pr-8 text-sm text-gray-300 focus:outline-none focus:border-indigo-500/50 cursor-pointer hover:bg-white/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoadingModels ? (
+                  <option>Loading...</option>
+                ) : availableModels.length === 0 ? (
+                  <option>No models</option>
+                ) : (
+                  availableModels.map((model) => (
+                    <option key={model.id} value={model.name} className="bg-gray-900">
+                      {model.name} ({model.parameterSize})
+                    </option>
+                  ))
+                )}
+              </select>
+              <svg className="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </div>
           <button
             onClick={handleNewChat}
@@ -498,7 +576,7 @@ export default function Chat() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Yeni Sohbet
+            New Chat
           </button>
         </header>
 
@@ -507,32 +585,32 @@ export default function Chat() {
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="text-6xl mb-4">🤖</div>
-              <h2 className="text-xl font-semibold text-white mb-2">Merhaba!</h2>
+              <h2 className="text-xl font-semibold text-white mb-2">Hello!</h2>
               <p className="text-gray-400 max-w-md mb-6">
-                Ben MindCubes AI asistanınım. Size görev oluşturma, takvim yönetimi, 
-                dosya kaydetme ve daha fazlasında yardımcı olabilirim.
+                I&apos;m your MindCubes AI assistant. I can help you with task creation, 
+                calendar management, file storage, and more.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                 <button 
-                  onClick={() => setInput('Bu dosyadan görevleri çıkar')}
+                  onClick={() => setInput('Extract tasks from this file')}
                   className="bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 transition-colors"
                 >
-                  <div className="text-indigo-400 font-medium mb-1">📋 Görev Oluştur</div>
-                  <div className="text-gray-400">&quot;Bu PDF&apos;den görev çıkar&quot;</div>
+                  <div className="text-indigo-400 font-medium mb-1">📋 Create Tasks</div>
+                  <div className="text-gray-400">&quot;Extract tasks from this PDF&quot;</div>
                 </button>
                 <button 
-                  onClick={() => setInput('Yarın saat 14:00\'da toplantı ekle')}
+                  onClick={() => setInput('Add a meeting tomorrow at 2:00 PM')}
                   className="bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 transition-colors"
                 >
-                  <div className="text-indigo-400 font-medium mb-1">📅 Takvime Ekle</div>
-                  <div className="text-gray-400">&quot;Yarın 14:00&apos;da toplantı&quot;</div>
+                  <div className="text-indigo-400 font-medium mb-1">📅 Add to Calendar</div>
+                  <div className="text-gray-400">&quot;Meeting tomorrow at 2PM&quot;</div>
                 </button>
                 <button 
-                  onClick={() => setInput('Bu dosyayı buluta kaydet')}
+                  onClick={() => setInput('Save this file to cloud')}
                   className="bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 transition-colors"
                 >
-                  <div className="text-indigo-400 font-medium mb-1">☁️ Dosya Kaydet</div>
-                  <div className="text-gray-400">&quot;Dosyayı Drive&apos;a kaydet&quot;</div>
+                  <div className="text-indigo-400 font-medium mb-1">☁️ Save File</div>
+                  <div className="text-gray-400">&quot;Save to Drive&quot;</div>
                 </button>
               </div>
             </div>
@@ -540,7 +618,7 @@ export default function Chat() {
           
           {messages.map((msg, idx) => (
             <div
-              key={idx}
+              key={msg.id || idx}
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div className={`max-w-3xl w-fit ${msg.role === 'user' ? '' : 'space-y-2'}`}>
@@ -558,7 +636,7 @@ export default function Chat() {
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                         </svg>
-                        Düşünme süreci
+                        Thinking process
                       </span>
                     </button>
                     {showThinking && (
@@ -596,7 +674,7 @@ export default function Chat() {
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
-                      Otomasyon çalıştı
+                      Automation executed
                     </div>
                   )}
                 </div>
@@ -613,7 +691,7 @@ export default function Chat() {
                     <svg className="w-5 h-5 text-indigo-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
-                    <span className="text-sm text-gray-600">{thinkingText || 'Düşünüyor'}</span>
+                    <span className="text-sm text-gray-600">{thinkingText || 'Thinking'}</span>
                   </div>
                   <div className="flex gap-1">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
@@ -665,7 +743,7 @@ export default function Chat() {
             <button
               onClick={() => fileInputRef.current?.click()}
               className="p-3 bg-white/5 border border-white/10 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0"
-              title="Dosya Ekle"
+              title="Attach File"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -677,7 +755,7 @@ export default function Chat() {
               <textarea
                 ref={textareaRef}
                 className="w-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-white/20 transition-colors resize-none overflow-hidden"
-                placeholder={selectedFile ? "Dosya hakkında ne yapmak istersiniz?" : "Bir şeyler yazın... (Shift+Enter ile alt satır)"}
+                placeholder={selectedFile ? "What would you like to do with this file?" : "Type something... (Shift+Enter for new line)"}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -711,34 +789,34 @@ export default function Chat() {
           
           {/* Hint text */}
           <div className="max-w-4xl mx-auto mt-2 text-xs text-gray-500">
-            Enter ile gönder • Shift+Enter ile alt satıra geç
+            Press Enter to send • Shift+Enter for new line
           </div>
           
           {/* Quick Actions */}
           <div className="max-w-4xl mx-auto mt-3 flex flex-wrap gap-2">
             <button
-              onClick={() => setInput('Bu dosyadan görevleri çıkar')}
+              onClick={() => setInput('Extract tasks from this file')}
               className="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
             >
-              📋 Görev Çıkar
+              📋 Extract Tasks
             </button>
             <button
-              onClick={() => setInput('Takvime etkinlik ekle')}
+              onClick={() => setInput('Add event to calendar')}
               className="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
             >
-              📅 Takvime Ekle
+              📅 Add to Calendar
             </button>
             <button
-              onClick={() => setInput('Bu dosyayı buluta kaydet')}
+              onClick={() => setInput('Save this file to cloud')}
               className="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
             >
-              ☁️ Buluta Kaydet
+              ☁️ Save to Cloud
             </button>
             <button
-              onClick={() => setInput('E-postalarımı önceliklendir')}
+              onClick={() => setInput('Prioritize my emails')}
               className="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
             >
-              📧 E-posta Önceliklendir
+              📧 Prioritize Emails
             </button>
           </div>
         </div>

@@ -15,7 +15,7 @@ const AI_ENGINE_URL = process.env.AI_ENGINE_URL || 'http://localhost:8000';
  */
 exports.sendMessage = async (req, res) => {
   try {
-    const { message, sessionId } = req.body;
+    const { message, sessionId, model } = req.body;
     const userId = req.user?.id || req.body.userId;
 
     if (!message || !message.trim()) {
@@ -49,6 +49,7 @@ exports.sendMessage = async (req, res) => {
       userId,
       sessionId: currentSessionId,
       use_master_agent: true,
+      model: model || undefined,  // Pass selected model to AI Engine
       metadata: {
         username: req.user?.username,
         timestamp: new Date().toISOString(),

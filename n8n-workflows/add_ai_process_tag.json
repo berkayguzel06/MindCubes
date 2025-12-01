@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2025-11-28T07:39:10.000Z",
+  "updatedAt": "2025-12-01T08:56:51.000Z",
   "createdAt": "2025-11-26T15:57:52.259Z",
   "id": "23Eb5BG7UmbO8qn1",
   "name": "Add AI Process Tag",
   "description": null,
   "active": false,
-  "isArchived": false,
+  "isArchived": true,
   "nodes": [
     {
       "parameters": {
@@ -158,8 +158,8 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "717b3c03-9cad-45bc-94a5-c47ff7fa625d",
-  "versionCounter": 4,
+  "versionId": "07387a24-5e9a-4416-867e-3f6636df3fa0",
+  "versionCounter": 5,
   "triggerCount": 0,
   "shared": [
     {

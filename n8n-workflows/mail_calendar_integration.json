@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2025-11-28T08:23:03.000Z",
+  "updatedAt": "2025-12-01T08:56:46.000Z",
   "createdAt": "2025-11-20T07:07:35.004Z",
   "id": "kNu54ENHUJqxAefV",
   "name": "Mail Calendar Integration",
   "description": null,
   "active": false,
-  "isArchived": false,
+  "isArchived": true,
   "nodes": [
     {
       "parameters": {
@@ -447,8 +447,8 @@
   },
   "meta": null,
   "pinData": {},
-  "versionId": "c20cd30f-e16d-4da2-8ee6-465c52f9487a",
-  "versionCounter": 87,
+  "versionId": "5c53674e-6061-4603-b713-f0478cb596f4",
+  "versionCounter": 88,
   "triggerCount": 1,
   "shared": [
     {

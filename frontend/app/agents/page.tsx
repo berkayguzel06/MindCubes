@@ -99,7 +99,7 @@ export default function Agents() {
   const fetchWorkflows = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/v1/n8n/workflows');
+      const response = await fetch(`${API_BASE_URL}/n8n/workflows`);
       const data = await response.json();
       
       if (data.success) {
@@ -150,7 +150,7 @@ export default function Agents() {
         formData.append('file', selectedFile);
       }
 
-      const response = await fetch(`http://localhost:5000/api/v1/n8n/workflows/${executeModal.workflowId}/execute`, {
+      const response = await fetch(`${API_BASE_URL}/n8n/workflows/${executeModal.workflowId}/execute`, {
         method: 'POST',
         body: formData // Don't set Content-Type, browser will set it with boundary
       });
@@ -186,7 +186,7 @@ export default function Agents() {
       const formData = new FormData();
       formData.append('userId', userId);
 
-      const response = await fetch(`http://localhost:5000/api/v1/n8n/workflows/${workflowId}/execute`, {
+      const response = await fetch(`${API_BASE_URL}/n8n/workflows/${workflowId}/execute`, {
         method: 'POST',
         body: formData
       });
@@ -209,7 +209,7 @@ export default function Agents() {
   const toggleWorkflowActive = async (workflowId: string, currentActive: boolean) => {
     try {
       const endpoint = currentActive ? 'deactivate' : 'activate';
-      const response = await fetch(`http://localhost:5000/api/v1/n8n/workflows/${workflowId}/${endpoint}`, {
+      const response = await fetch(`${API_BASE_URL}/n8n/workflows/${workflowId}/${endpoint}`, {
         method: 'POST'
       });
       
@@ -343,7 +343,7 @@ export default function Agents() {
                       >
                         {workflow.active ? 'Deactivate' : 'Activate'}
                       </button>
-                      <button 
+                      {/* <button 
                         onClick={() => {
                           if (!isActive) return;
                           if (hasDataInput) {
@@ -360,7 +360,7 @@ export default function Agents() {
                         }`}
                       >
                         ▶ Execute
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 );
