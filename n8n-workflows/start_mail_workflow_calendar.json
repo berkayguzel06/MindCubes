@@ -1,0 +1,351 @@
+{
+  "updatedAt": "2025-11-28T10:29:39.000Z",
+  "createdAt": "2025-11-28T07:52:42.951Z",
+  "id": "KT1NPTO2Q2Pjsmj6",
+  "name": "Start-Mail-Workflow Calendar",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        0
+      ],
+      "id": "202157e0-8349-4840-9f41-5e2e9fcba28a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "users",
+          "mode": "list",
+          "cachedResultName": "users"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -384,
+        -144
+      ],
+      "id": "d024825d-182d-408b-bc4b-6b0e5589073a",
+      "name": "Select rows from a table",
+      "credentials": {
+        "postgres": {
+          "id": "eeGTexNNm3ZWrmrC",
+          "name": "Postgres account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT * FROM input1 LEFT JOIN input2 ON input1.id = input2.user_id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -160,
+        -96
+      ],
+      "id": "77a1a0dc-118a-4af7-82ac-e138d87fe4fb",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "user_credentials",
+          "mode": "list",
+          "cachedResultName": "user_credentials"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -384,
+        144
+      ],
+      "id": "015275a5-ec59-4062-b277-ed74f875c8d6",
+      "name": "Select rows from a table1",
+      "credentials": {
+        "postgres": {
+          "id": "eeGTexNNm3ZWrmrC",
+          "name": "Postgres account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "79ab2920-bd16-42c8-8789-ffd8a5a415b1",
+              "leftValue": "={{ $json.access_token }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        64,
+        -96
+      ],
+      "id": "ad17ccf1-690d-4247-8244-cf59be58ad5b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "-3257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        96
+      ],
+      "id": "ac7c6968-1ac4-4b02-9eb8-15b144ac6c18",
+      "name": "Error Message",
+      "webhookId": "caa8f3c4-218f-4b78-bd1a-8e1b45b8c7d3",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "foTJVf0W9BRJbt4D",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/foTJVf0W9BRJbt4D",
+          "cachedResultName": "Mail Calendar"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        -96
+      ],
+      "id": "cc0d76a0-9116-4aa7-abb5-ebd277e2946e",
+      "name": "Mail Calendar"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Select rows from a table",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Select rows from a table1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select rows from a table": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select rows from a table1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Mail Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "12867748-5785-4b1f-a5f1-51b489e45097",
+  "versionCounter": 61,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-11-28T07:52:42.954Z",
+      "createdAt": "2025-11-28T07:52:42.954Z",
+      "role": "workflow:owner",
+      "workflowId": "KT1NPTO2Q2Pjsmj6",
+      "projectId": "Ti3JL05CSVUvJj6A",
+      "project": {
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
+        "name": "Berkay Güzel <berkayguzel43@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
+            "user": {
+              "updatedAt": "2025-12-01T05:39:44.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "email": "berkayguzel43@gmail.com",
+              "firstName": "Berkay",
+              "lastName": "Güzel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1763316240404
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-12-01",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-11-28T07:54:31.025Z",
+      "createdAt": "2025-11-28T07:54:31.025Z",
+      "id": "PdONDcNhiGyYrDss",
+      "name": "calendar"
+    },
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
+    }
+  ]
+}

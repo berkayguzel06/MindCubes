@@ -115,3 +115,7 @@ test-results/
 frontend/dist/
 frontend/build/
 
+n8n-workflows/microsoft_oauth2_auto_refresh__multi_user_.json
+n8n-workflows/oauth2_callback_listener.json
+n8n-workflows/versions/
+

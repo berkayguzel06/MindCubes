@@ -1,0 +1,392 @@
+{
+  "updatedAt": "2025-11-28T09:54:09.000Z",
+  "createdAt": "2025-11-28T08:07:10.615Z",
+  "id": "wmgfcWHCt08DQNK8",
+  "name": "Mail Categorization",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const mails = $input.all();\nconst user_mail = $input.first().json.email;\nlet emailList = []\n\nfor (const mail of mails) {\n  for (const recipient of mail.json.toRecipients) {\n    if(recipient.emailAddress.address===user_mail){\n       emailList.push(mail)\n       break;\n    }\n  }\n}\n\nreturn emailList;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2176,
+        64
+      ],
+      "id": "9eeceb50-5a1f-451a-994a-f11fed38f357",
+      "name": "Recipient Filter",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/me/mailFolders('inbox')/messages?$top=20&$categories/any(a:a eq 'Categorized') and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -2848,
+        224
+      ],
+      "id": "803df440-bae2-4407-8be0-183b9f8b0b54",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen JSON verisini $input.json'dan alın.\nconst inputData = $input.first().json;\n\n// 'value' özelliğinin var olup olmadığını kontrol edin ve varsa bu diziyi döndürün.\nif (inputData && Array.isArray(inputData.value)) {\n    return inputData.value;\n}\n\n// 'value' alanı yoksa veya dizi değilse, boş bir dizi veya orijinal veriyi döndürmeyi seçebilirsiniz.\n// Bu örnekte, beklenen 'value' dizisi yoksa boş bir dizi döndürüyoruz.\nreturn [];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2624,
+        224
+      ],
+      "id": "33976f95-4f6a-4636-a3e7-1d032f2a0bec",
+      "name": "Code in JavaScript",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.access_token,\n    input1.telegram_chat_id,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1952,
+        -16
+      ],
+      "id": "182d2c1a-3417-4abe-9e05-f81596ddfd6d",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -3072,
+        16
+      ],
+      "id": "6e6241a3-dc3a-4091-b7e6-f7faa24c360a",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6e1e1e18-52ed-470a-81cb-500e5ea87363",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1728,
+        -16
+      ],
+      "id": "500c61b4-cd94-4026-bac6-0db2cf5c191b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.user_id,\n    input1.email,\n    input1.name,\n    input1.last_name,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2400,
+        64
+      ],
+      "id": "17bde116-a427-4842-a573-638bea87cd12",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "chatId": "-3257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2400,
+        272
+      ],
+      "id": "b77dbb6a-24c4-4b97-bf47-d37e7e9f5937",
+      "name": "Error Message",
+      "webhookId": "04a2a8f3-d52f-4f68-8209-9d6f0d110af1",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "vYPXcEiszJR2yd1o",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/vYPXcEiszJR2yd1o",
+          "cachedResultName": "Add Categorized Tag"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1504,
+        -112
+      ],
+      "id": "64b17d1c-56d0-4104-8ce8-c3ecffbbb023",
+      "name": "Call 'Add Categorized Tag'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "rpTj6NRiVVAvLDLt",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/rpTj6NRiVVAvLDLt",
+          "cachedResultName": "Mail-Labeler"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1504,
+        80
+      ],
+      "id": "f1ebb396-e8ed-473b-9f5f-cca8863e70ff",
+      "name": "Call 'Mail-Labeler'"
+    }
+  ],
+  "connections": {
+    "Recipient Filter": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        []
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Call 'Add Categorized Tag'",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Call 'Mail-Labeler'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Recipient Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": null,
+  "pinData": {},
+  "versionId": "2163db5d-8241-4a24-9bdd-a58437f4b411",
+  "versionCounter": 107,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-11-28T08:07:10.619Z",
+      "createdAt": "2025-11-28T08:07:10.619Z",
+      "role": "workflow:owner",
+      "workflowId": "wmgfcWHCt08DQNK8",
+      "projectId": "Ti3JL05CSVUvJj6A",
+      "project": {
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
+        "name": "Berkay Güzel <berkayguzel43@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
+            "user": {
+              "updatedAt": "2025-12-01T05:39:44.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "email": "berkayguzel43@gmail.com",
+              "firstName": "Berkay",
+              "lastName": "Güzel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1763316240404
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-12-01",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-11-28T07:47:36.846Z",
+      "createdAt": "2025-11-28T07:47:36.846Z",
+      "id": "rFb0OIp7gOe3RUr9",
+      "name": "categorized"
+    },
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
+    }
+  ]
+}

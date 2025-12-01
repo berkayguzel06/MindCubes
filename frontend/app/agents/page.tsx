@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import Sidebar from '../components/Sidebar';
 import NotificationPanel, { NotificationType } from '../components/NotificationPanel';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:5000/api/v1';
+
 interface N8nWorkflow {
   id: string;
   name: string;
@@ -27,6 +29,7 @@ export default function Agents() {
   const [workflows, setWorkflows] = useState<N8nWorkflow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [backingUp, setBackingUp] = useState(false);
   const [executeModal, setExecuteModal] = useState<{
     isOpen: boolean;
     workflowId: string;
@@ -64,6 +67,34 @@ export default function Agents() {
   useEffect(() => {
     setUserId(user?.id ?? 'guest');
   }, [user]);
+
+  const backupWorkflows = async () => {
+    try {
+      setBackingUp(true);
+      const response = await fetch(`${API_BASE_URL}/n8n/workflows/backup`, {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showNotification(
+          data.message || `Workflow yedekleme tamamlandı. Toplam ${data.count ?? 0} workflow kaydedildi.`,
+          'success'
+        );
+      } else {
+        showNotification(
+          data.message || 'Workflow yedekleme sırasında bir hata oluştu.',
+          'error'
+        );
+      }
+    } catch (err) {
+      console.error('Error backing up workflows:', err);
+      showNotification('Workflow yedekleme sırasında bir hata oluştu. Detaylar için konsola bakın.', 'error');
+    } finally {
+      setBackingUp(false);
+    }
+  };
 
   const fetchWorkflows = async () => {
     try {
@@ -228,12 +259,21 @@ export default function Agents() {
               <h1 className="text-2xl font-bold text-white mb-1">AI Agents</h1>
               <p className="text-gray-400 text-sm">Manage and execute your agents</p>
             </div>
-            <button 
-              onClick={fetchWorkflows}
-              className="px-4 py-2 bg-white/10 text-white text-sm rounded-full font-medium hover:bg-white/20 transition-colors border border-white/20"
-            >
-              🔄 Refresh
-            </button>
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={backupWorkflows}
+                disabled={backingUp}
+                className="px-4 py-2 bg-purple-500/20 text-purple-200 text-sm rounded-full font-medium hover:bg-purple-500/30 transition-colors border border-purple-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {backingUp ? '💾 Backing up...' : '💾 Backup Workflows'}
+              </button>
+              <button 
+                onClick={fetchWorkflows}
+                className="px-4 py-2 bg-white/10 text-white text-sm rounded-full font-medium hover:bg-white/20 transition-colors border border-white/20"
+              >
+                🔄 Refresh
+              </button>
+            </div>
           </header>
 
           {loading ? (

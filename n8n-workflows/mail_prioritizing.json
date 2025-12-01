@@ -1,0 +1,912 @@
+{
+  "updatedAt": "2025-11-28T13:14:47.000Z",
+  "createdAt": "2025-11-20T07:07:08.462Z",
+  "id": "wF9RJClNrNYAlCjT",
+  "name": "Mail-Prioritizing",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Body:{{ $json.bodyPreview }}\nSubject:{{ $json.subject }}\nLink:{{ $json.webLink }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an intelligent email analysis assistant specialized in prioritizing and risk-assessing emails.\n\nYour main task: Analyze the email content and assign an AI Priority Score based on the presence and significance of specific elements.\n\nAnalysis Criteria\n\nCarefully read the email and look for the following categories:\n\nDate / Deadline\n\nMentions of specific dates, deadlines, or urgency indicators (e.g., “tomorrow,” “ASAP,” “by Friday”).\n\nThe closer or more urgent the date, the higher the priority.\n\nMoney / Invoice / Payment\n\nReferences to invoices, payments, refunds, pricing, or financial terms.\n\nThe higher the monetary involvement, the higher the importance.\n\nCommitment / Agreement\n\nMentions of obligations, approvals, deliverables, contracts, or promises.\n\nIf a response or action is required, increase priority.\n\nLegal / Compliance Risk\n\nMentions of contracts, terms, liability, regulation, privacy, or legal consequences.\n\nLegal implications significantly increase the score.\n\nCustomer Satisfaction / Relationship\n\nMentions of complaints, feedback, dissatisfaction, or key customer interactions.\n\nHigh-impact clients or sensitive tone increase the priority.\n\nOutput Format:\n{\n  \"priority_score\": \"<0-100>\",\n  \"subject\":\"<email subject>\",\n  \"overall_summary\": \"<brief explanation of why this email deserves its score>\",\n  \"link\":\"<web_link>\"\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -672,
+        464
+      ],
+      "id": "8d70f195-d3a7-4bf8-855a-d26504adec20",
+      "name": "Mail Prioritizing Agent",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"priority_score\": \"<0-100>\",\n  \"subject\":\"<email subject>\",\n  \"overall_summary\": \"<brief explanation of why this email deserves its score>\",\n  \"link\":\"<web_link>\"\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -576,
+        688
+      ],
+      "id": "ff6148c6-fc1c-4baf-996e-bc547f312b91",
+      "name": "Structured Output Parser",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "80a0e84d-4258-44f5-873c-35bf3f7800c3",
+              "leftValue": "={{ $json.priority_score }}",
+              "rightValue": 50,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        160
+      ],
+      "id": "9ceee52e-a557-4b05-99e9-91859026c660",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1152,
+        272
+      ],
+      "id": "b528ae38-99b1-43a6-aa88-57a51c5f3928",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1152,
+        896
+      ],
+      "id": "dadf94f9-61fc-47e6-9d3d-07e5c9c5ed4d",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "yohuzcpOTpBCKcFi",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1152,
+        1104
+      ],
+      "id": "f1298c4b-c450-41bc-b2b8-daa8086be188",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "yohuzcpOTpBCKcFi",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "05a8fb07-b925-4c0c-a8af-21e1f8b26491",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "eee03595-62d2-4a93-a8d3-f818db9f095f",
+              "leftValue": "={{ $json.telegram_chat_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -928,
+        272
+      ],
+      "id": "4ccc47d7-6ff2-4b25-a966-b5d13169afca",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "model": "gpt-oss:20b",
+        "options": {
+          "numCtx": 131072
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        688
+      ],
+      "id": "d73fd065-fd4d-4bb9-85a1-09bb3f3b4d28",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "HYP2LXmMoDsk2iKY",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-oss:20b",
+        "options": {
+          "numCtx": 131072
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        896
+      ],
+      "id": "1708e4a0-aad9-490d-82f8-98c01c09b936",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "HYP2LXmMoDsk2iKY",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.telegram_chat_id,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        16,
+        160
+      ],
+      "id": "3b762cbf-3203-41ad-b599-83ea45f6c7af",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -928,
+        -160
+      ],
+      "id": "892add47-c6a4-4157-97a6-ef34abad0ba8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1152,
+        -160
+      ],
+      "id": "360fa467-1f53-426b-bf87-80f398a6e697",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = [];\n\nfor (const item of $input.all()) {\n  try {\n    let rawData = item.json.output;\n\n    // EĞER VERİ BİR STRING İSE TEMİZLİK YAPALIM\n    if (typeof rawData === 'string') {\n        // 1. Regex kullanarak baştaki ```json veya ``` ifadesini ve yeni satırları siler\n        rawData = rawData.replace(/^```json\\s*/i, \"\").replace(/^```\\s*/, \"\");\n        \n        // 2. Regex kullanarak sondaki ``` ifadesini siler\n        rawData = rawData.replace(/```\\s*$/, \"\");\n    }\n\n    // Temizlenmiş veriyi parse et\n    const parsed = JSON.parse(rawData);\n    results.push({ json: parsed });\n\n  } catch (error) {\n    // Hata durumunda loglayarak devam et\n    results.push({ \n        json: { \n            error: 'Invalid JSON', \n            message: error.message,\n            original: item.json.output \n        } \n    });\n  }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        368
+      ],
+      "id": "9eb6558c-6fb4-4113-bca2-413a92dc1cb2",
+      "name": "Parse Date Data",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -576,
+        64
+      ],
+      "id": "3d0c6f35-b1ad-40ce-b847-1270dfc0cf61",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "jsCode": "let item = $input.first().json.json;\n\nreturn item;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        64
+      ],
+      "id": "6845ba54-60a7-4c7c-9e93-f7ac20536390",
+      "name": "Parse Date Data1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "-3257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -208,
+        560
+      ],
+      "id": "e529429e-f308-479a-b870-4e41f8275c45",
+      "name": "Error Message",
+      "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.telegram_chat_id }}",
+        "text": "=High Priority Mail !!!\nScore: {{ $json.priority_score }}\nSummary: {{ $json.overall_summary }}\nLink: {{ $json.link }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        160
+      ],
+      "id": "ce497b9b-42dc-40f2-83a7-054b854a304d",
+      "name": "Send Priority",
+      "webhookId": "a4527952-ea1d-4be2-8a84-8639c89c2952",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "connections": {
+    "Mail Prioritizing Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Date Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Mail Prioritizing Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send Priority",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Mail Prioritizing Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Mail Prioritizing Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Date Data": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        []
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "Parse Date Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Date Data1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Edit Fields": [
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "telegram_chat_id": "-1003315838853",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXZo\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAR0ji-MAAACmbAuzjNRkRJHPPR9ftVhgAAEtM0kqAAAA",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T14:25:50Z",
+          "hasAttachments": false,
+          "subject": "You're officially Superhuman 🤖",
+          "bodyPreview": "Welcome to the Superhuman tribe! Get your list of The Ultimate 100 AI Tools  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
+          "from": {
+            "emailAddress": {
+              "name": "Superhuman – Zain Kahn",
+              "address": "superhuman@mail.joinsuperhuman.ai"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKZXK\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWM0AAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T14:28:19Z",
+          "hasAttachments": false,
+          "subject": "🎉 Welcome! 3 quick steps to get started",
+          "bodyPreview": "PLUS: Get our free Expert ChatGPT Guide  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
+          "from": {
+            "emailAddress": {
+              "name": "The Rundown AI",
+              "address": "news@daily.therundown.ai"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKZXS\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOIAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T14:29:25Z",
+          "hasAttachments": false,
+          "subject": "🤖 Welcome to The Rundown Robotics!",
+          "bodyPreview": "Quick steps to confirm your subscription  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌",
+          "from": {
+            "emailAddress": {
+              "name": "The Rundown Robotics",
+              "address": "hi@robotics.therundown.ai"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKZXa\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOwAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T14:37:03Z",
+          "hasAttachments": false,
+          "subject": "Thanks for joining Simple AI",
+          "bodyPreview": "Quick steps to confirm your subscription  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌",
+          "from": {
+            "emailAddress": {
+              "name": "Dharmesh @ simple.ai",
+              "address": "hi@simple.ai"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKZXC\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOoAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T16:12:20Z",
+          "hasAttachments": false,
+          "subject": "Confirm Registration to Seeking Alpha (Action required)",
+          "bodyPreview": "Welcome to the Seeking Alpha Community!\r\n\r\nMarkets are moving fast—confirm your account now to stay informed.\r\n\r\nMarkets are moving fast—confirm your account now to stay informed.\r\n\r\nConfirm Registration\r\nConfirm Registration\r\n\r\nIf you’re unable to click ",
+          "from": {
+            "emailAddress": {
+              "name": "Seeking Alpha",
+              "address": "account@seekingalpha.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKZW6\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOkAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T16:24:40Z",
+          "hasAttachments": false,
+          "subject": "Welcome to Seeking Alpha!",
+          "bodyPreview": "Let’s take a quick tour of your membership.\r\n\r\n\r\nWelcome to the Community\r\n\r\n\r\n\r\nWe’re glad you’re here. Your Seeking Alpha membership is now active, so let’s dive into some of the resources you now have at your disposal.\r\n\r\nExplore Seeking Alpha\r\nExplore",
+          "from": {
+            "emailAddress": {
+              "name": "Seeking Alpha",
+              "address": "subscriptions@seekingalpha.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXZW\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPIAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T18:45:00Z",
+          "hasAttachments": false,
+          "subject": "Lennar’s (LEN) Reality Looks Ugly—But Quant Traders Are Targeting THIS Options Spread",
+          "bodyPreview": "Today's insight on high volume options activity.\r\nLennar’s (LEN) Reality Looks Ugly—But Quant Traders Are Targeting THIS Options Spread\r\nUnusual Options Report for November 25, 2025\r\n\r\n\r\nDaredevil investors looking for a massive payout in the options mark",
+          "from": {
+            "emailAddress": {
+              "name": "Barchart",
+              "address": "newsletters@barchart.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKYul\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPMAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T19:31:38Z",
+          "hasAttachments": false,
+          "subject": "9 out of 10 options trades won... here's how",
+          "bodyPreview": "While others were overthinking... this trader was banking.\r\n                Unsubscribe\r\n \r\nBelow is a message from one of our sponsors\r\n \r\n\r\n9 times out of 10.\r\n\r\nThat's how often these simple option trades won over the past two years.\r\n\r\n491 total trade",
+          "from": {
+            "emailAddress": {
+              "name": "Barchart Partner",
+              "address": "bcmembers@partners.barchart.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXou\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPQAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T19:31:48Z",
+          "hasAttachments": false,
+          "subject": "Nurgül ve diğerleri hakkında 12 bildirimin var",
+          "bodyPreview": "Berkay; Nurgül Nurgul ve Nihal Örnek hakkındaki okunmamış bildirimlerinize bakın.\r\n\r\n\r\nBerkay Güzel\r\n\r\n\r\n\r\n\r\nDeğerlendirilmesi gereken 12 okunmamış bildirimin var\r\n\r\nFacebook'a son girişinizden bu yana pek çok şey oldu. Arkadaşlarınızdan kaçırdığınız bi",
+          "from": {
+            "emailAddress": {
+              "name": "Facebook",
+              "address": "reminders@facebookmail.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "Berkay Güzel",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXwU\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPUAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T19:56:39Z",
+          "hasAttachments": false,
+          "subject": "Nvidia: We're not Enron",
+          "bodyPreview": "Plus, a few stocks that are better buys than Burry's Substack.\r\n͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏",
+          "from": {
+            "emailAddress": {
+              "name": "Barchart Brief",
+              "address": "newsletters@brief.barchart.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAT+yTjR+DNujhVVRwKamRrpzWPm+G72mswtcvvyfq0Iu0pf1fuP3e3SqEL1ofB4Bu797XUbn/0cUrKMFTKLA/OSCvSjdYThdMhmr/6cj1J9tuLYohq0twErbGmbtFrC93goT3k6m1sDVRbwJmHC0G+IAZcpCwtplujvvhb7CMRp1dsYqw1dYzJ5xLsNtivXXkhMUprW9J7tEB3fMjxKlMn+u0FhLhDEF7wl61st9epIWtqAJA3i2Z0QEnW5rxWeS73t/TowjUS7AJba/0quu19rXlmY4bDPMjPCx6975lPZWS9i3Jzl9HA3FtyQfqgPMiFgbwUtOS1mYXfaNtcxWx1cQZgAAEFKqaEffaulAJoUo2Rv2pg9QA8a+Zoy+bLQznMFMaIeoN/iqmqHlPO/jYXq0yO282bUr726Vsg7HIknubBZX3CbSXULD2IThT+StCPHY0d1xdk8zo/r/HRw2Jx002VHrn+4K/4dzRRGsmFsuXl9ZHkn7DhTJZ5VwN03C55zvGaa6cRSiot8S/m0OFxpb93bI8wTpi1h4I80bwkrU34Wwg3L+0xJlr9KOg7crotHykWdybyZJLlQv1pjeCqMCFtet9elsK34PQkGKv8zn4Nzhe3mN0NW71WD/D1ha1UDxMpeLkk9yiu2SMOHba8EP05X/CU5MWiwjW7INwhByXCYe9ZGNng0IoKP+iKSK5WFu+kRWm5wYN0vpQrLEVHrX8mLarWDgoTICebrzhExQR1VPT32/bVnjlZBTryqfRt67VMq/U9XhPXWnyuuBYfwg28UtkPFmAaW9zT0cGxhTJtIyPsJIc4uOX3ZDjxD0OAXS9WtQ64ivt0i52EX7fyHerhKXIA1+S1/ZKctLHSaSNu9iuEF2I2CZx9wzuB51gLRTfNnzyFcNRbPqpZ/W44yr32n/3/tzLxwkBHit1nTcNSbhl6k02U6bybPsULmJCk0tTMnPSC5Ul61U4frRQ6ZkTH1AuxFOEZEpzoo5NAzcmmjXeRf2b0TQ36GbjEw+yzzWtgEpK7qXGuohf5ivSBW9nWJ8EcMuueGamFouQwUPqmjwfjpvgmcraNfRUPFKhUUShVFy8Ox0LnCn7jBiceq3LQE5gNm4Sdr0x1PE1qk6FbwB4f4VDWLYuAlDZMHHJUMVONpBZdtPL4Q9mUVtbBKsJe2IF/MOJL9qhuHJqjSLyAhei3zzAVTASb73j8wK8RkOAz/CfBfy3EBNzde9OrsF85vA/wMC8er/U+YZGYX6GzGge1HPbLBsg09VuTSerE08klWmUdejXslMUhGW2F5fqC0/jrC0TJTheGSkbKpacyV3QnDszQF6m4oQmmqQJlnatOwo5qYEtzX36y4ANvkEUPiEpjBYX4HRCUYuLvsydQ9SHNlemNq0CkNkJXcVncfm7QdULfgu25X9iXwVjP58khlgMSWGGg65Z+o2nU7SAPx2MIKNxwo5PewRw4mBXTz3jsODQ0o8eLAoY+WXsAoAZNNOWue0jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKYun\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPYAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T21:19:30Z",
+          "hasAttachments": false,
+          "subject": "REITs Are Boring And Boring Is Good",
+          "bodyPreview": "REITs have underperformed since 2022 rate hikes, but Hoya Capital's David Auerbach says fundamentals are strong, especia\r\n\r\nMust Reads\r\n\r\n \r\n \r\n\r\nGet 20% off any Seeking Alpha plan during our Black Friday Sale* Claim Offer »\r\n\r\n \r\n \r\n \r\n \r\n \r\n\r\nFREE TREND",
+          "from": {
+            "emailAddress": {
+              "name": "Must Reads",
+              "address": "account@seekingalpha.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "versionId": "0f785873-5df0-4cc5-ae03-977d25e69961",
+  "versionCounter": 34,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-25T07:28:14.718Z",
+      "createdAt": "2025-11-25T07:28:14.718Z",
+      "role": "workflow:owner",
+      "workflowId": "wF9RJClNrNYAlCjT",
+      "projectId": "Ti3JL05CSVUvJj6A",
+      "project": {
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
+        "name": "Berkay Güzel <berkayguzel43@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
+            "user": {
+              "updatedAt": "2025-12-01T05:39:44.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "email": "berkayguzel43@gmail.com",
+              "firstName": "Berkay",
+              "lastName": "Güzel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1763316240404
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-12-01",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
+    }
+  ]
+}

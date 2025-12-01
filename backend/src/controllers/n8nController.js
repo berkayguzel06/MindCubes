@@ -4,6 +4,9 @@
  */
 
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+const archiver = require('archiver');
 const logger = require('../config/logger');
 
 // n8n API configuration
@@ -21,6 +24,127 @@ const n8nApi = axios.create({
     'Content-Type': 'application/json'
   }
 });
+
+// Directory where workflow backups are stored (project root / n8n-workflows)
+// __dirname = backend/src/controllers
+// -> .. = backend/src
+// -> .. = backend
+// -> .. = project root (MindCubes)
+const WORKFLOW_BACKUP_DIR = path.join(__dirname, '..', '..', '..', 'n8n-workflows');
+// Directory for old versions: n8n-workflows/versions/<workflow_name>/...
+const WORKFLOW_VERSIONS_ROOT = path.join(WORKFLOW_BACKUP_DIR, 'versions');
+
+// Ensure backup directories exist
+function ensureBackupDir() {
+  if (!fs.existsSync(WORKFLOW_BACKUP_DIR)) {
+    fs.mkdirSync(WORKFLOW_BACKUP_DIR, { recursive: true });
+  }
+  if (!fs.existsSync(WORKFLOW_VERSIONS_ROOT)) {
+    fs.mkdirSync(WORKFLOW_VERSIONS_ROOT, { recursive: true });
+  }
+}
+
+/**
+ * Zip all workflow version JSON files into a single archive:
+ * n8n-workflows/versions/all-workflows.zip
+ */
+function zipAllWorkflowVersions() {
+  if (!fs.existsSync(WORKFLOW_VERSIONS_ROOT)) {
+    return Promise.resolve();
+  }
+
+  const zipPath = path.join(WORKFLOW_VERSIONS_ROOT, 'all-workflows.zip');
+
+  return new Promise((resolve, reject) => {
+    const output = fs.createWriteStream(zipPath);
+    const archive = archiver('zip', { zlib: { level: 9 } });
+
+    output.on('close', () => resolve());
+    archive.on('error', (err) => {
+      logger.warn(`Failed to create all-workflows zip: ${err.message}`);
+      reject(err);
+    });
+
+    archive.pipe(output);
+    // Sadece JSON dosyalarını ekle, mevcut zip dosyalarını hariç tut
+    archive.glob('**/*.json', {
+      cwd: WORKFLOW_VERSIONS_ROOT
+    });
+    archive.finalize();
+  });
+}
+
+/**
+ * Rotate existing workflow backup files so we always keep up to 3 previous versions.
+ * Current file: n8n-workflows/<name>.json
+ * Old versions go under: n8n-workflows/versions/<name>/<name>.v1.json ... v3.json
+ */
+function rotateWorkflowBackups(baseName) {
+  const mainFile = path.join(WORKFLOW_BACKUP_DIR, `${baseName}.json`);
+
+  if (!fs.existsSync(mainFile)) {
+    return;
+  }
+
+  const workflowVersionsDir = path.join(WORKFLOW_VERSIONS_ROOT, baseName);
+  if (!fs.existsSync(workflowVersionsDir)) {
+    fs.mkdirSync(workflowVersionsDir, { recursive: true });
+  }
+
+  // Find existing version files in this workflow's version directory
+  const versionFiles = fs
+    .readdirSync(workflowVersionsDir)
+    .filter((file) => file.startsWith(`${baseName}.v`) && file.endsWith('.json'))
+    .map((file) => {
+      const match = file.match(/\.v(\d+)\.json$/);
+      const version = match ? parseInt(match[1], 10) : 0;
+      return { file, version };
+    })
+    .filter(({ version }) => version > 0)
+    .sort((a, b) => b.version - a.version); // newest first
+
+  // If there are already 3 or more versions, remove the oldest ones beyond v3
+  const toDelete = versionFiles.filter(({ version }) => version >= 3);
+  for (const { file } of toDelete) {
+    const filePath = path.join(workflowVersionsDir, file);
+    try {
+      fs.unlinkSync(filePath);
+    } catch (err) {
+      logger.warn(`Failed to remove old workflow version "${file}": ${err.message}`);
+    }
+  }
+
+  // Refresh version list after deletions
+  const existing = fs
+    .readdirSync(workflowVersionsDir)
+    .filter((file) => file.startsWith(`${baseName}.v`) && file.endsWith('.json'))
+    .map((file) => {
+      const match = file.match(/\.v(\d+)\.json$/);
+      const version = match ? parseInt(match[1], 10) : 0;
+      return { file, version };
+    })
+    .filter(({ version }) => version > 0)
+    .sort((a, b) => b.version - a.version); // newest first
+
+  // Shift existing backups up by 1 version (v2 -> v3, v1 -> v2, etc.)
+  for (const { file, version } of existing) {
+    const oldPath = path.join(workflowVersionsDir, file);
+    const newPath = path.join(workflowVersionsDir, `${baseName}.v${version + 1}.json`);
+    try {
+      fs.renameSync(oldPath, newPath);
+    } catch (err) {
+      logger.warn(`Failed to rotate workflow backup "${file}" -> "${path.basename(newPath)}": ${err.message}`);
+    }
+  }
+
+  // Finally, move current main file to v1 inside the versions directory
+  const v1Path = path.join(workflowVersionsDir, `${baseName}.v1.json`);
+  try {
+    fs.renameSync(mainFile, v1Path);
+  } catch (err) {
+    logger.warn(`Failed to create v1 backup for "${baseName}.json": ${err.message}`);
+  }
+}
 
 // @desc    Get all workflows from n8n
 // @route   GET /api/v1/n8n/workflows
@@ -53,6 +177,72 @@ exports.getWorkflows = async (req, res, next) => {
     res.status(error.response?.status || 500).json({
       success: false,
       message: error.response?.data?.message || 'Failed to fetch workflows from n8n'
+    });
+  }
+};
+
+// @desc    Backup all workflows from n8n into local JSON files with versioning
+// @route   POST /api/v1/n8n/workflows/backup
+// @access  Private (but currently no auth middleware attached)
+exports.backupWorkflows = async (req, res, next) => {
+  try {
+    ensureBackupDir();
+
+    // 1. Fetch all workflows (basic info)
+    const listResponse = await n8nApi.get('/workflows');
+    const workflows = listResponse.data.data || [];
+
+    let successCount = 0;
+    const savedFiles = [];
+
+    // 2. For each workflow, fetch full details and save to file
+    for (const workflow of workflows) {
+      try {
+        const detailRes = await n8nApi.get(`/workflows/${workflow.id}`);
+        const wfData = detailRes.data;
+
+        const safeName = (wfData.name || `workflow_${workflow.id}`)
+          .replace(/[^a-z0-9]/gi, '_')
+          .toLowerCase();
+
+        // Rotate existing backups so we keep up to 3 previous versions (stored in /versions/<name>/)
+        rotateWorkflowBackups(safeName);
+
+        const filename = `${safeName}.json`;
+        const fullPath = path.join(WORKFLOW_BACKUP_DIR, filename);
+
+        fs.writeFileSync(fullPath, JSON.stringify(wfData, null, 2), 'utf8');
+
+        successCount += 1;
+        savedFiles.push(filename);
+
+        logger.info(`n8n workflow backed up: ${filename}`);
+      } catch (innerErr) {
+        logger.error(`Failed to backup workflow ${workflow.id}: ${innerErr.message}`);
+      }
+    }
+
+    // Backup tamamlandıktan sonra tüm versiyonları tek zip altında topla
+    try {
+      await zipAllWorkflowVersions();
+    } catch (zipErr) {
+      // Hata olursa logla ama ana backup işlemini bozma
+      logger.warn(`Failed to build combined workflows zip: ${zipErr.message}`);
+    }
+
+    res.json({
+      success: true,
+      message: `Backup completed. ${successCount} workflows saved.`,
+      count: successCount,
+      directory: WORKFLOW_BACKUP_DIR,
+      files: savedFiles
+    });
+  } catch (error) {
+    logger.error(`Error during n8n workflows backup: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to backup n8n workflows',
+      error: error.message
     });
   }
 };

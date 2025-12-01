@@ -8,6 +8,7 @@ const upload = require('../middleware/upload');
 const {
   getWorkflows,
   getWorkflow,
+  backupWorkflows,
   activateWorkflow,
   deactivateWorkflow,
   executeWorkflow,
@@ -18,6 +19,7 @@ const {
 // Workflow management routes
 router.get('/workflows', getWorkflows);
 router.get('/workflows/:id', getWorkflow);
+router.post('/workflows/backup', backupWorkflows);
 router.post('/workflows/:id/activate', activateWorkflow);
 router.post('/workflows/:id/deactivate', deactivateWorkflow);
 // Execute workflow with optional file upload

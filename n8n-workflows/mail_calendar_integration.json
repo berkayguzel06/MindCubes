@@ -1,0 +1,514 @@
+{
+  "updatedAt": "2025-11-28T08:23:03.000Z",
+  "createdAt": "2025-11-20T07:07:35.004Z",
+  "id": "kNu54ENHUJqxAefV",
+  "name": "Mail Calendar Integration",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const mails = $input.all();\nconst user_mail = $input.first().json.email;\nlet emailList = []\n\nfor (const mail of mails) {\n  for (const recipient of mail.json.toRecipients) {\n    if(recipient.emailAddress.address===user_mail){\n       emailList.push(mail)\n       break;\n    }\n  }\n}\n\nreturn emailList;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2400,
+        752
+      ],
+      "id": "858d75e9-a87c-42cb-ba69-6780151d592c",
+      "name": "Recipient Filter",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "cbK2DhaqpErX6deF",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/cbK2DhaqpErX6deF",
+          "cachedResultName": "Mail-ToDo"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1312,
+        512
+      ],
+      "id": "f6de5683-b04a-42c8-810a-e7d0036ab015",
+      "name": "Mail-ToDo"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "NlDvdXwFHBjxGgTA",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/NlDvdXwFHBjxGgTA",
+          "cachedResultName": "Mail-Calendar"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1312,
+        704
+      ],
+      "id": "11c3ff71-e430-4be8-beba-5dbff2e9b6df",
+      "name": "Mail-Calendar"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "wF9RJClNrNYAlCjT",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/wF9RJClNrNYAlCjT",
+          "cachedResultName": "Mail-Prioritizing"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1312,
+        320
+      ],
+      "id": "701f0737-2476-4823-a693-5d350e5619de",
+      "name": "Mail-Prioritizing"
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/me/messages?$top=20&$filter=isRead eq false and not(categories/any(a:a eq 'AI_processed')) and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -2896,
+        848
+      ],
+      "id": "d1dcfd8c-5f7c-43ca-af09-28a72f2583bf",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen JSON verisini $input.json'dan alın.\nconst inputData = $input.first().json;\n\n// 'value' özelliğinin var olup olmadığını kontrol edin ve varsa bu diziyi döndürün.\nif (inputData && Array.isArray(inputData.value)) {\n    return inputData.value;\n}\n\n// 'value' alanı yoksa veya dizi değilse, boş bir dizi veya orijinal veriyi döndürmeyi seçebilirsiniz.\n// Bu örnekte, beklenen 'value' dizisi yoksa boş bir dizi döndürüyoruz.\nreturn [];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2752,
+        848
+      ],
+      "id": "17eeb2a5-7a9d-4d23-bf12-54c3aefa2b81",
+      "name": "Code in JavaScript",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.access_token,\n    input1.telegram_chat_id,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2176,
+        608
+      ],
+      "id": "d09b96fb-e443-46dd-9709-7833182d56eb",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -3072,
+        736
+      ],
+      "id": "933ae9f9-a26b-48ed-aa37-1b650069da8d",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Vxx0invazo8UfRuk",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Vxx0invazo8UfRuk",
+          "cachedResultName": "Mail-OneDrive"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1312,
+        896
+      ],
+      "id": "595489c2-c5b4-42b0-befe-4aa9ef954185",
+      "name": "Mail-OneDrive"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "rpTj6NRiVVAvLDLt",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/rpTj6NRiVVAvLDLt",
+          "cachedResultName": "Mail-Labeler"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1328,
+        1104
+      ],
+      "id": "4eb24287-f8ad-44ac-adfe-ae8f66373163",
+      "name": "Mail-Labeler"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6e1e1e18-52ed-470a-81cb-500e5ea87363",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1984,
+        608
+      ],
+      "id": "e58fa5c2-7e1d-40b6-bad1-79ba0d2ebfe6",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.user_id,\n    input1.email,\n    input1.name,\n    input1.last_name,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2576,
+        752
+      ],
+      "id": "180161e7-f3ed-42d8-824e-d3719f567527",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "chatId": "-3257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2064,
+        944
+      ],
+      "id": "b096356c-c8af-4b8b-9cf3-3f951ed4e736",
+      "name": "Error Message",
+      "webhookId": "51982885-3445-4d7e-95e6-7441f71a21be",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "23Eb5BG7UmbO8qn1",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/23Eb5BG7UmbO8qn1",
+          "cachedResultName": "Add AI Process Tag"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1312,
+        128
+      ],
+      "id": "b1a3e4a5-eefc-4e70-987f-ae122fb52288",
+      "name": "Add AI Process Tag"
+    }
+  ],
+  "connections": {
+    "Recipient Filter": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        []
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Mail-Prioritizing",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mail-ToDo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mail-Calendar",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mail-OneDrive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mail-Labeler",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Add AI Process Tag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Recipient Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": null,
+  "pinData": {},
+  "versionId": "c20cd30f-e16d-4da2-8ee6-465c52f9487a",
+  "versionCounter": 87,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-11-25T07:28:14.720Z",
+      "createdAt": "2025-11-25T07:28:14.720Z",
+      "role": "workflow:owner",
+      "workflowId": "kNu54ENHUJqxAefV",
+      "projectId": "Ti3JL05CSVUvJj6A",
+      "project": {
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
+        "name": "Berkay Güzel <berkayguzel43@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
+            "user": {
+              "updatedAt": "2025-12-01T05:39:44.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "email": "berkayguzel43@gmail.com",
+              "firstName": "Berkay",
+              "lastName": "Güzel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1763316240404
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-12-01",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
+    }
+  ]
+}

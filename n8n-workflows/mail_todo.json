@@ -1,0 +1,1247 @@
+{
+  "updatedAt": "2025-11-26T09:53:26.000Z",
+  "createdAt": "2025-11-20T07:06:58.089Z",
+  "id": "cbK2DhaqpErX6deF",
+  "name": "Mail-ToDo",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const results = [];\n\nfor (const item of $input.all()) {\n  try {\n    const data = item.json.output;\n    const parsed = JSON.parse(data);\n    results.push({ json: parsed });\n  } catch (error) {\n    // Eğer parse edilemezse hata vermeden geç\n    results.push({ json: { error: 'Invalid JSON', original: item.json.output } });\n  }\n}\n\nreturn results;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        -48
+      ],
+      "id": "a8e4a852-0a26-45d8-a73f-796d80a64b62",
+      "name": "Parse ToDo Data",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "80a0e84d-4258-44f5-873c-35bf3f7800c3",
+              "leftValue": "={{ $json }}",
+              "rightValue": 70,
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -64,
+        -112
+      ],
+      "id": "b7c8bcf4-e1ff-4c9b-8c7a-6972224f1ac1",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "80a0e84d-4258-44f5-873c-35bf3f7800c3",
+              "leftValue": "={{ $json.due_date }}",
+              "rightValue": 70,
+              "operator": {
+                "type": "dateTime",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1504,
+        -448
+      ],
+      "id": "c292c774-1698-496a-b0c5-657689dbcbc8",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"priority_score\": \"<0-100>\",\n  \"subject\": \"<email subject>\",\n  \"overall_summary\": \"<brief explanation of why this email deserves its score>\",\n  \"task\": {\n     \"title\": \"<short actionable task title>\",\n     \"description\": \"<optional longer task description>\",\n     \"due_date\": \"<ISO format if detected, otherwise null>\"\n  }\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -656,
+        256
+      ],
+      "id": "771c7051-ceeb-4205-b629-a9026f7627b8",
+      "name": "Structured Output Parser4",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Body:{{ $json.bodyPreview }}\nSubject:{{ $json.subject }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an intelligent email analysis assistant specialized in prioritizing, extracting tasks, and risk-assessing emails.\n\nYour primary goals:\n\nAnalyze the email content using the defined priority criteria.\n\nDetect if the email implies any action, deadline, follow-up, approval, or task.\n\nOutput a structured JSON including both priority scoring and actionable task extraction for Microsoft To Do.\n\nAnalysis Criteria\n\nCarefully analyze the email and identify the following:\n\n1. Date / Deadline\nDetect any time-bound expression (e.g., \"tomorrow\", “ASAP”, “before Friday”).\nCloser deadlines → higher priority.\n\n2. Money / Invoice / Payment\nReferences to invoices, payments, pricing, refunds, financial commitments.\nHigher monetary stakes → higher importance.\n\n3. Commitment / Agreement\nAnything requiring approval, delivering something, confirming, sending a file, or fulfilling an obligation.\n\n4. Legal / Compliance Risk\nMentions of contracts, terms, liability, compliance, regulations, privacy, penalties.\nLegal implications drastically raise priority.\n\n5. Customer Satisfaction / Relationships\nComplaints, dissatisfaction, VIP clients, escalations, sensitive tone.\n\nTask Extraction Rules\n\nExtract a task IF AND ONLY IF the email includes one of the following:\n\nThe sender requests an action.\n\nA deadline that implies work.\n\nA follow-up is required.\n\nA document must be sent or reviewed.\n\nSomething must be approved, fixed, confirmed, or delivered.\n\nPayment or invoice must be processed.\n\nThe extracted task must always be:\n\nActionable\n\nClear\n\nShort but informative\n\nFree of unnecessary email text\n\nIf no task is required, return \"task\": null.\n\nOutput Format\n\nReturn your final answer in the following JSON structure:\n\n{\n  \"priority_score\": \"<0-100>\",\n  \"subject\": \"<email subject>\",\n  \"overall_summary\": \"<brief explanation of why this email deserves its score>\",\n  \"task\": {\n     \"title\": \"<short actionable task title>\",\n     \"description\": \"<optional longer task description>\",\n     \"due_date\": \"<ISO format if detected, otherwise null>\"\n  }\n}\n\n\nIf there is no task, output:\n\n\"task\": null\n\n\nDo NOT add text outside the JSON output."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -864,
+        32
+      ],
+      "id": "4ccb18a2-2379-434c-93d2-fb58d3f3e622",
+      "name": "Mail Task App",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1360,
+        -160
+      ],
+      "id": "dea0c881-b399-41b7-ac0a-1aa6a74d2550",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        464
+      ],
+      "id": "53942051-4944-44c0-9504-114b4b94c63e",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "yohuzcpOTpBCKcFi",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.microsoft.com/v1.0/me/todo/lists/{{$input.first().json[\"id\"]}}/tasks",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.access_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"{{ $json.title }}\",\n  \"body\": {\n    \"content\": \"{{ $json.description }}\",\n    \"contentType\": \"text\"\n  },\n  \"dueDateTime\": {\n    \"dateTime\": \"{{ $json.due_date }}\",\n    \"timeZone\": \"Europe/Istanbul\"\n  }\n}\n",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 5
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1728,
+        -544
+      ],
+      "id": "b841253e-372a-4624-b29b-6a8219b57960",
+      "name": "Create Tasks",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/me/todo/lists?$filter=displayName eq 'Görevler'&$top=1",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{$json.access_token}}"
+            }
+          ]
+        },
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 5
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        608,
+        -384
+      ],
+      "id": "e800813d-ab8d-4d7c-8d01-d00640774c79",
+      "name": "Get ToDo Lists",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.microsoft.com/v1.0/me/todo/lists/{{$input.first().json[\"id\"]}}/tasks",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.access_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"{{ $json.title }}\",\n  \"body\": {\n    \"content\": \"{{ $json.description }}\",\n    \"contentType\": \"text\"\n  }\n}\n",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 5
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1728,
+        -352
+      ],
+      "id": "eb87f89d-7c87-4b22-8c14-c4dd573a70cb",
+      "name": "Create Tasks1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.json.access_token,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        160,
+        -304
+      ],
+      "id": "9eee5456-8a6e-420e-a444-a2c57f1884fc",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.id,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1056,
+        -448
+      ],
+      "id": "daf38516-227c-47f0-89dd-f6fe3eca3b80",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0].json.value[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        -448
+      ],
+      "id": "37eb39ce-83f3-4625-8707-ff2ae337ed14",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -64,
+        -400
+      ],
+      "id": "4b889c79-6641-4ecd-9024-9836e8099f71",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const token = $input.first().json[\"input1.json->access_token\"];\n\nreturn [\n  {\n    json: {\n      access_token: token\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        384,
+        -384
+      ],
+      "id": "b07f1bd8-5a80-4ba7-a5ed-197d6b4d084f",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = [];\n\nfor (const item of items) {\n  // 1. Task verisini al\n  const task = item.task || (item.json && item.json.task);\n  \n  // 2. Access Token verisini al\n  const accessToken = item[\"input1.json->access_token\"] || (item.json && item.json[\"input1.json->access_token\"]);\n\n  // 3. ID verisini al (Genellikle email message ID'sidir)\n  const listId = item.id || (item.json && item.json.id);\n\n  // 4. SADECE Task VARSA işlem yap (Filtreleme)\n  if (task) {\n\n    // --- Tarih Formatlama Mantığı (Aynen korundu) ---\n    if (task.due_date) {\n      let originalDateValue = task.due_date;\n      \n      if (String(originalDateValue).toLowerCase() !== \"null\" && originalDateValue !== \"\") {\n        try {\n          const dateObject = new Date(originalDateValue);\n          if (!isNaN(dateObject.getTime())) {\n            task.due_date = dateObject.toISOString();\n          } else {\n            task.due_date = null;\n          }\n        } catch (e) {\n          task.due_date = null;\n        }\n      } else {\n        task.due_date = null;\n      }\n    }\n    // ------------------------------------------------\n\n    // 5. ÇIKTI OLUŞTURMA\n    // Task verilerini yay (...task), token'ı ve id'yi ekle.\n    output.push({\n      ...task,               // title, description, due_date\n      access_token: accessToken,\n      id: listId             // İsteğiniz üzerine ID de eklendi\n    });\n  }\n}\n\nreturn output;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        -448
+      ],
+      "id": "e48aa816-65e3-4b3c-a1b4-7d07f3f8ce91",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Get Current Time",
+        "outputFieldName": "time",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTimeTool",
+      "typeVersion": 2,
+      "position": [
+        -784,
+        256
+      ],
+      "id": "7922b7e7-ee1c-440d-ba9f-3217d23762b7",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "05a8fb07-b925-4c0c-a8af-21e1f8b26491",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1136,
+        -160
+      ],
+      "id": "ef174850-2c95-4e55-b92d-7308076fd6e6",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -912,
+        256
+      ],
+      "id": "613c8085-d2e3-47f2-86c0-8a845a9b79b1",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "yohuzcpOTpBCKcFi",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-oss:20b",
+        "options": {
+          "numCtx": 131072
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        192
+      ],
+      "id": "5c077558-e164-4115-a3e2-ac605fa7405d",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "HYP2LXmMoDsk2iKY",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-oss:20b",
+        "options": {
+          "numCtx": 131072
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        448
+      ],
+      "id": "3f1ee953-9e3e-47f3-9024-d42d4be4b413",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "HYP2LXmMoDsk2iKY",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1872,
+        256
+      ],
+      "id": "b478320f-9d5e-4297-917a-09f0c140da95",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1536,
+        272
+      ],
+      "id": "9406b1d8-31f0-4552-996d-b680bf39c792",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "chatId": "-3257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1952,
+        -208
+      ],
+      "id": "4c0333ac-f5f7-41c4-8ec8-0c10f02ea963",
+      "name": "Error Message",
+      "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "connections": {
+    "Parse ToDo Data": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Create Tasks",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Tasks1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mail Task App": {
+      "main": [
+        [
+          {
+            "node": "Parse ToDo Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Structured Output Parser4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Mail Task App",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get ToDo Lists": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Get ToDo Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "ai_tool": [
+        [
+          {
+            "node": "Mail Task App",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mail Task App",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Tasks1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Tasks": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Mail Task App",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser4",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Edit Fields": [
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAcLMa/zSJzx9OYPQWMXmokFkDvnc4WVjfDNZDX7rbDuNuhnQIKW8zekVHHnbLoL4kqCVl3+t6Rdmh0pKB3/t7c8P9mbJ3fu1uW4hHg9d7ggAvw5lXR9tW1E3rAYc/Vr1lQ4wDj3nS32+19Gz2GAtX6AOWM5CgM2DCZXvr9Yo1xRMq4ZxmSLAWdTT0uawOCahvRLoSZWYTxPHaU+GDWvawejCF6ajuCZQSnAfDk6TDO2RDs+ALzPD8xfB6SKyPUS2wPy5dPulHGAG9Ib+1miCq7crmWfe6u8zXKh4Cjwf6ygLP/5R903l2pw5cqVv5WiUERuK1044W0lP+4p7O88IfT0QZgAAEHVYWJOIMbvQfoJ6V3zi9zBQA2q7dwXV4sR3rRFSnHh+xLFfstANSWmUsUTXySEbwNaZ/NLlEsGMSCXpXU/L7dnpZEyz22DeYQRrcMh+ZZWGk1N0ZiqWCMbxlFgRkNVHDINW69jFiPgpq7/EzFEh6E53KRUSI9V4d9ZtV4V1GhVEFm/L2JeUnrHqa/OF+03tK4h/YPVIMSNOkugZrhorVJ0QV8Skrkeqk2c0Y4P4JBaz+hFbCzCqlGTXQ5RrfXDpnHJ1ugl98X0itgmILU4eNhnzD4jMVAqYCSDj+AzOJAj/HOEI99MUiBEijJsDjRKq1zPRLWLVoHEI25k8+1kVrl0G7ti2fH87odxfbpX6KOeq/c/M7PsmHUr09y6I7+vzYRPBA8A1XGEPghTPH/+9ijMvJqZseIrshODMYowG46Ro1BDC5MUPd++GjrRtEfCTqUNYRXa42iO+4UiBiVvjMT4y8uGUVsY52ac++yZ9IW2SnpFC7khqC7pm2Iif4B5WTv7j0R8spIQBH3wsuYi9HwDkwoHo+XIm/vPImcRq7sPHnzEHvlTjWSUMnmSGqVSiBwGSu5cOmJvW/fMXj2DCGf9/535EKWfh8he7y4HqUWkXhTjzygGlwysSexzC60q5+I5g1c+g9OYnvBDKTkvR77m6Q6eJswFjKGS1GdYEDdoq79oxWYcYADNC84wX51s1Dqf/SCVwJUUB8z6HyiiuQWF3BPCAcigv6c6vga4IAKWbUb6IMdm9OfH5gHFsxp3zVeg/wXdANO8rnSo2AHMBlQO5PVkfJWnEAdlQRHna9//VS6cXWxrWaVm8GGNa2RR+Otq1DnTSN29tZDVB8b13zLno8y6TiovNDN0CpwFMaJwJ4Eig4w5HB57bUhVHlI3qxnGw417i9clDsfrdTfiXGhZ0LoAPkkf3/7IG/gfd/9O30YhuPHJNHyRmBbvQ+7cMs6mMEbSpP/129mAL99DybXRzExrq505rHZPnc4CiaC84+0pnXd+Xbi7Xmxzsba2QE6HZLl/q186az1am2Y/TFqCHn0fWaMWQiAju5oxBD/0FeChe4PIIGerZdf4C1Q34vBpyLs1PqDp0ZEsUmYjMT1iCHza6YBtsuh7Kfv+f2/hsQLQnCCBUTmmgy0UCVVDR+zySjAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXNj\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOcAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T14:25:50Z",
+          "hasAttachments": false,
+          "subject": "You're officially Superhuman 🤖",
+          "bodyPreview": "Welcome to the Superhuman tribe! Get your list of The Ultimate 100 AI Tools  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
+          "from": {
+            "emailAddress": {
+              "name": "Superhuman – Zain Kahn",
+              "address": "superhuman@mail.joinsuperhuman.ai"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXQU\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOUAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T14:29:42Z",
+          "hasAttachments": false,
+          "subject": "Welcome to Barchart Brief newsletter",
+          "bodyPreview": "Thank you for signing up to receive the Barchart Brief.\r\n\r\nThis free midday newsletter delivers market-moving news straight to your inbox, featuring exclusive charts, data, and insights you won’t find anywhere else.\r\n\r\nJust 5 minutes each day with the Bri",
+          "from": {
+            "emailAddress": {
+              "name": "Barchart.com",
+              "address": "newsletters@barchart.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXQM\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWO8AAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T14:29:52Z",
+          "hasAttachments": false,
+          "subject": "Welcome to Barchart Brief newsletter",
+          "bodyPreview": "Thank you for signing up to receive the Barchart Brief.\r\n\r\nThis free midday newsletter delivers market-moving news straight to your inbox, featuring exclusive charts, data, and insights you won’t find anywhere else.\r\n\r\nJust 5 minutes each day with the Bri",
+          "from": {
+            "emailAddress": {
+              "name": "Barchart.com",
+              "address": "newsletters@barchart.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXQF\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWO4AAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T14:30:09Z",
+          "hasAttachments": false,
+          "subject": "New Active Investor Subscription",
+          "bodyPreview": "Thank you for signing up to receive our Active Investor Newsletter\r\n\r\nOur records show that you have just opted in to receive email from us. If this is correct, do nothing... you will receive your first newsletter on the next scheduled send. If you did no",
+          "from": {
+            "emailAddress": {
+              "name": "Barchart",
+              "address": "newsletters@barchart.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXP9\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWO0AAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T14:30:11Z",
+          "hasAttachments": false,
+          "subject": "New Unusual Option Activity Subscription",
+          "bodyPreview": "Thank you for signing up to receive Barchart’s Unusual Options Activity Report!\r\n\r\nThis free daily e-newsletter is delivered by our expert analysts, who combine their own industry knowledge with our rich, real-time data flows to bring you exclusive - and ",
+          "from": {
+            "emailAddress": {
+              "name": "Barchart",
+              "address": "newsletters@barchart.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXP1\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWNQAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T14:30:20Z",
+          "hasAttachments": false,
+          "subject": "Artık oturum açmak için uygulama bildirimlerini kullanabilirsiniz",
+          "bodyPreview": "Microsoft hesabı\r\nMicrosoft hesabınızda oturum açmak artık daha kolay\r\nbe**6@outlook.com hesabınız için oturum açma bildirimlerini hızlı ve kolay bir şekilde onaylayın. Vivo V2247 cihazınızdaki Outlook uygulamasını kullanarak bir bildirim alacaksınız ve t",
+          "from": {
+            "emailAddress": {
+              "name": "Microsoft hesap ekibi",
+              "address": "account-security-noreply@accountprotection.microsoft.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXN5\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOsAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T15:32:45Z",
+          "hasAttachments": false,
+          "subject": "🧠 This device wiretaps your 'second brain'",
+          "bodyPreview": "PLUS: Apple axes jobs, in a rare move  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
+          "from": {
+            "emailAddress": {
+              "name": "The Rundown Tech",
+              "address": "crew@technews.therundown.ai"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPt\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOgAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T17:13:48Z",
+          "hasAttachments": false,
+          "subject": "Haftalık Proje Toplantısı – 27 Kasım 2025 / 14:00",
+          "bodyPreview": "Merhaba,\r\n\r\nBu hafta için proje durum değerlendirme toplantımızı 27 Kasım 2025 Perşembe günü saat 14:00’te gerçekleştireceğiz.\r\n\r\nToplantıda konuşulacak başlıklar:\r\n\r\n  *   Son sprint ilerlemeleri\r\n\r\n  *   Bloklayan maddeler\r\n\r\n  *   Önümüzdeki hafta göre",
+          "from": {
+            "emailAddress": {
+              "name": "Berkay Güzel",
+              "address": "berkayguzel43@gmail.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPl\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOYAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T17:14:09Z",
+          "hasAttachments": false,
+          "subject": "Hatırlatma: Dashboard Revizyonu İçin Son Teslim Tarihi – 29 Kasım",
+          "bodyPreview": "Selam,\r\n\r\nDashboard revizyonu için son teslim tarihi 29 Kasım 2025 olarak belirlenmişti.\r\nAşağıdaki maddelerin güncellenmesi gerekiyor:\r\n\r\n  *   Yeni grafik bileşeninin eklenmesi\r\n\r\n  *   API response optimizasyonu\r\n\r\n  *   Hatalı tooltip davranışının düz",
+          "from": {
+            "emailAddress": {
+              "name": "Berkay Güzel",
+              "address": "berkayguzel43@gmail.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPX\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPEAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T17:14:52Z",
+          "hasAttachments": true,
+          "subject": "İnceleme İçin Gereken Dokümanlar (Ek Mevcut)",
+          "bodyPreview": "Merhaba,\r\n\r\nBahsettiğimiz süreç analiziyle ilgili dokümanları ekte paylaşıyorum. (attachment sen ekleyeceksin)\r\n\r\nİnceledikten sonra:\r\n\r\n  *   Eksik gördüğün noktaları işaretleyebilir\r\n\r\n  *   Revizyon önerilerini yazabilir\r\n\r\n  *   Onayladığın versiyonu ",
+          "from": {
+            "emailAddress": {
+              "name": "Berkay Güzel",
+              "address": "berkayguzel43@gmail.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPO\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWN0AAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T17:15:19Z",
+          "hasAttachments": false,
+          "subject": "Bugünkü Toplantı Sonrası Aksiyon Listesi",
+          "bodyPreview": "Merhaba,\r\n\r\nBugünkü toplantıdan çıkan aksiyonları aşağıya ekledim:\r\n\r\nAksiyonlar:\r\n\r\n  1.  API rate limit konfigürasyonunun yeniden düzenlenmesi\r\n\r\n  2.  Yeni kullanıcı onboarding ekranı için taslak oluşturulması\r\n\r\n  3.  Log analizi tarafında hata oranı ",
+          "from": {
+            "emailAddress": {
+              "name": "Berkay Güzel",
+              "address": "berkayguzel43@gmail.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPC\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPAAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T17:15:32Z",
+          "hasAttachments": false,
+          "subject": "Entegrasyon Sürecine İlişkin Onay Talebi",
+          "bodyPreview": "Selam,\r\n\r\nAkinon tarafındaki entegrasyon için hazırlanan yeni yapılandırma dosyalarını test ortamına aktarmadan önce onayını talep ediyorum.\r\n\r\nKontrol etmeni istediğim noktalar:\r\n\r\n  *   Endpoint doğruluk testi\r\n\r\n  *   Timeout & retry politikaları\r\n\r\n  ",
+          "from": {
+            "emailAddress": {
+              "name": "Berkay Güzel",
+              "address": "berkayguzel43@gmail.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPL\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOQAAAA=",
+          "categories": [],
+          "receivedDateTime": "2025-11-25T17:15:44Z",
+          "hasAttachments": false,
+          "subject": "Veri Akışı Güncellemesi Hakkında Bilgilendirme",
+          "bodyPreview": "Merhaba,\r\n\r\nSon güncelleme ile birlikte veri akışında aşağıdaki değişiklikler yapıldı:\r\n\r\n  *   Order import sürecinde paralelleştirme artırıldı\r\n\r\n  *   Hatalı siparişlerin retry sayısı yükseltildi\r\n\r\n  *   Export işlerinde dosya sıkıştırma aktif hale ge",
+          "from": {
+            "emailAddress": {
+              "name": "Berkay Güzel",
+              "address": "berkayguzel43@gmail.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "versionId": "429c3cdf-d5b5-495a-9a55-d89b00bd1d83",
+  "versionCounter": 88,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-25T07:28:14.717Z",
+      "createdAt": "2025-11-25T07:28:14.717Z",
+      "role": "workflow:owner",
+      "workflowId": "cbK2DhaqpErX6deF",
+      "projectId": "Ti3JL05CSVUvJj6A",
+      "project": {
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
+        "name": "Berkay Güzel <berkayguzel43@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
+            "user": {
+              "updatedAt": "2025-12-01T05:39:44.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "email": "berkayguzel43@gmail.com",
+              "firstName": "Berkay",
+              "lastName": "Güzel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1763316240404
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-12-01",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
+    }
+  ]
+}
