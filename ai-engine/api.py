@@ -5,7 +5,8 @@ FastAPI server for handling chat requests from the backend
 
 import asyncio
 import os
-from fastapi import FastAPI, HTTPException
+import base64
+from fastapi import FastAPI, HTTPException, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Any, Optional, List, Dict, Tuple
@@ -19,8 +20,12 @@ from core import (
     ConversationMemory,
     AgentOrchestrator,
 )
-from agents import CodeAgent, DataAnalysisAgent, ResearchAgent, TaskPlannerAgent
-from tools import WebSearchTool, CodeExecutorTool, FileManagerTool, APICallerTool, DataProcessorTool
+from agents import CodeAgent, DataAnalysisAgent, ResearchAgent, TaskPlannerAgent, MasterAgent
+from tools import (
+    WebSearchTool, CodeExecutorTool, FileManagerTool, APICallerTool, DataProcessorTool,
+    TodoWorkflowTool, CalendarWorkflowTool, DriveWorkflowTool,
+    MailCategorizationTool, MailPrioritizingTool, create_workflow_tools
+)
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -41,6 +46,7 @@ app.add_middleware(
 # Global variables for agents (initialized on startup)
 orchestrator = None
 general_agent = None
+master_agent = None  # Master agent for workflow orchestration
 memory_store = {}  # Store user-specific memories
 provider_cache: Dict[str, Any] = {}
 agent_cache: Dict[str, CodeAgent] = {}
@@ -63,9 +69,14 @@ class ChatRequest(BaseModel):
     message: str
     history: Optional[List[Dict[str, Any]]] = []
     userId: Optional[str] = None
+    sessionId: Optional[str] = None  # Session ID for conversation continuity
     metadata: Optional[Dict[str, Any]] = None
     provider: Optional[str] = None
     model: Optional[str] = None
+    # File data for workflow tools
+    file_data: Optional[Dict[str, Any]] = None  # {filename, mimetype, content (base64), text}
+    # Whether to use master agent for workflow orchestration
+    use_master_agent: Optional[bool] = True
 
 
 class ChatResponse(BaseModel):
@@ -154,10 +165,21 @@ def get_or_create_agent(provider_name: str, model_name: Optional[str] = None) ->
     return agent, cache_key
 
 
+def _create_workflow_tools():
+    """Create n8n workflow tools."""
+    return [
+        TodoWorkflowTool(),
+        CalendarWorkflowTool(),
+        DriveWorkflowTool(),
+        MailCategorizationTool(),
+        MailPrioritizingTool(),
+    ]
+
+
 @app.on_event("startup")
 async def startup_event():
     """Initialize agents on startup"""
-    global orchestrator, general_agent
+    global orchestrator, general_agent, master_agent
     
     print("🚀 Initializing AI Engine...")
     
@@ -190,8 +212,12 @@ async def startup_event():
     
     llm_provider = get_llm_provider(default_provider, default_model)
     
-    # Initialize tools
+    # Initialize standard tools
     tools = _create_tools()
+    
+    # Initialize n8n workflow tools
+    workflow_tools = _create_workflow_tools()
+    print(f"🔧 Loaded {len(workflow_tools)} n8n workflow tools")
     
     # Initialize memory (shared across all agents)
     memory = ConversationMemory(max_size=100)
@@ -203,11 +229,21 @@ async def startup_event():
         memory=memory
     )
     
+    # Create Master Agent with workflow tools
+    master_agent = MasterAgent(
+        llm_provider=llm_provider,
+        tools=workflow_tools,
+        memory=ConversationMemory(max_size=100),
+        use_llm_for_intent=True
+    )
+    print(f"🤖 Master Agent initialized with {len(workflow_tools)} workflow tools")
+    
     # Create orchestrator
     orchestrator = AgentOrchestrator(max_concurrent_tasks=5)
     
     # Register specialized agents (default provider)
     orchestrator.register_agent(general_agent)
+    orchestrator.register_agent(master_agent)
     orchestrator.register_agent(DataAnalysisAgent(llm_provider, tools, memory))
     orchestrator.register_agent(ResearchAgent(llm_provider, tools, memory))
     orchestrator.register_agent(TaskPlannerAgent(llm_provider, tools, memory))
@@ -242,85 +278,75 @@ async def chat(request: ChatRequest):
     """
     Main chat endpoint
     Processes user messages and returns AI responses
+    Uses conversation history for context-aware responses
     """
-    if not general_agent:
+    if not master_agent:
         raise HTTPException(status_code=503, detail="AI Engine not initialized")
     
     try:
-        # Get or create user-specific memory
         user_id = request.userId or "default"
-        if user_id not in memory_store:
-            memory_store[user_id] = ConversationMemory(max_size=50)
+        session_id = request.sessionId or "default"
         
-        user_memory = memory_store[user_id]
+        # Get or create user-specific memory
+        memory_key = f"{user_id}:{session_id}"
+        if memory_key not in memory_store:
+            memory_store[memory_key] = ConversationMemory(max_size=50)
         
-        # Add message to memory
+        user_memory = memory_store[memory_key]
+        
+        # Add user message to memory
         user_memory.add_message("user", request.message)
         
-        # Build context from history
+        # Build conversation history from memory and request
+        memory_history = []
+        if hasattr(user_memory, 'get_messages'):
+            memory_history = user_memory.get_messages()
+        
+        # Combine with provided history (prioritize memory)
+        combined_history = memory_history if memory_history else (request.history or [])
+        
+        # Build context with full history
         context = {
-            "history": request.history[-5:] if request.history else [],
-            "metadata": request.metadata or {}
+            "history": combined_history[-10:],  # Last 10 messages for context
+            "metadata": request.metadata or {},
+            "user_id": user_id,
+            "session_id": session_id,
+            "file_data": request.file_data
         }
         
-        # Select provider/agent
-        requested_provider = (
-            (request.provider or "").strip()
-            or (request.metadata or {}).get("provider", "")
-            or "local"
-        )
-        requested_model = (
-            (request.model or "").strip()
-            or (request.metadata or {}).get("model")
-        )
-        direct_model = bool((request.metadata or {}).get("directModel"))
+        print(f"🔄 Processing message for user {user_id}: {request.message[:50]}...")
+        print(f"📚 Context history: {len(context['history'])} messages")
         
         try:
-            if direct_model:
-                provider = get_llm_provider(requested_provider, requested_model)
-                history_lines = []
-                for item in context["history"]:
-                    role = item.get("role", "user")
-                    content = item.get("content", "")
-                    history_lines.append(f"{role}: {content}")
-                prompt_parts = []
-                if history_lines:
-                    prompt_parts.append("\n".join(history_lines))
-                prompt_parts.append(f"user: {request.message}")
-                prompt = "\n".join(prompt_parts)
-                system_prompt = (
-                    (request.metadata or {}).get("systemPrompt")
-                    or "You are a friendly conversational assistant. Respond naturally and avoid writing code unless explicitly requested by the user."
-                )
-                response = await provider.generate(prompt, system_prompt=system_prompt)
-                agent_key = f"direct::{requested_provider}"
-            else:
-                if requested_provider:
-                    agent, agent_key = get_or_create_agent(requested_provider, requested_model)
-                else:
-                    agent = general_agent
-                    agent_key = "default"
-                
-                response = await agent.process(
-                    request.message,
-                    context=context
-                )
+            # Process with Master Agent - handles both workflows and conversations
+            response = await master_agent.process(
+                request.message,
+                context=context
+            )
+            
+            # Determine if workflow was triggered
+            workflow_triggered = False
+            if "✅" in response and ("görev" in response.lower() or "task" in response.lower() or 
+                                      "takvim" in response.lower() or "dosya" in response.lower()):
+                workflow_triggered = True
+            
+            # Add response to memory
+            user_memory.add_message("assistant", response)
+            
+            return ChatResponse(
+                response=response,
+                success=True,
+                metadata={
+                    "agent": "master_agent",
+                    "user_id": user_id,
+                    "session_id": session_id,
+                    "workflow_triggered": workflow_triggered,
+                    "history_length": len(context['history'])
+                }
+            )
+            
         except ValueError as provider_error:
             raise HTTPException(status_code=400, detail=str(provider_error))
-        
-        # Add response to memory
-        user_memory.add_message("assistant", response)
-        
-        return ChatResponse(
-            response=response,
-            success=True,
-            metadata={
-                "agent": agent_key,
-                "user_id": user_id,
-                "provider": requested_provider or "default",
-                "model": requested_model or ""
-            }
-        )
         
     except Exception as e:
         print(f"❌ Error processing chat: {e}")
@@ -328,6 +354,85 @@ async def chat(request: ChatRequest):
             status_code=500,
             detail=f"Error processing message: {str(e)}"
         )
+
+
+@app.post("/api/chat/workflow")
+async def chat_with_file(
+    message: str = Form(...),
+    userId: str = Form(default="anonymous"),
+    provider: str = Form(default="ollama"),
+    model: str = Form(default=None),
+    file: Optional[UploadFile] = File(default=None)
+):
+    """
+    Chat endpoint with file upload support for workflow triggers.
+    Automatically routes to appropriate n8n workflow based on intent.
+    """
+    if not master_agent:
+        raise HTTPException(status_code=503, detail="AI Engine not initialized")
+    
+    try:
+        file_data = None
+        
+        # Process uploaded file
+        if file:
+            content = await file.read()
+            file_data = {
+                "filename": file.filename,
+                "mimetype": file.content_type,
+                "content": base64.b64encode(content).decode("utf-8"),
+                "size": len(content)
+            }
+            
+            # Try to extract text from common file types
+            if file.content_type in ["text/plain", "text/csv", "text/markdown"]:
+                try:
+                    file_data["text"] = content.decode("utf-8")
+                except:
+                    pass
+            # PDF text extraction would require additional library (PyPDF2 or pdfplumber)
+            
+            print(f"📎 File uploaded: {file.filename} ({file.content_type}, {len(content)} bytes)")
+        
+        # Build context
+        context = {
+            "user_id": userId,
+            "file_data": file_data,
+            "history": []
+        }
+        
+        # Process with Master Agent
+        response = await master_agent.process(message, context=context)
+        
+        return {
+            "success": True,
+            "response": response,
+            "metadata": {
+                "agent": "master_agent",
+                "user_id": userId,
+                "file_uploaded": file is not None,
+                "filename": file.filename if file else None
+            }
+        }
+        
+    except Exception as e:
+        print(f"❌ Error in workflow chat: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error processing request: {str(e)}"
+        )
+
+
+@app.get("/api/workflows/tools")
+async def list_workflow_tools():
+    """List available workflow tools"""
+    if not master_agent:
+        raise HTTPException(status_code=503, detail="AI Engine not initialized")
+    
+    return {
+        "success": True,
+        "tools": master_agent.get_available_tools()
+    }
 
 
 @app.get("/api/agents")

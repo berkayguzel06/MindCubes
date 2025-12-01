@@ -43,6 +43,34 @@ const ensureTables = async (client) => {
     )
   `);
 
+  // Chat history table for persistent conversation memory
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS chat_history (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      session_id UUID NOT NULL,
+      role VARCHAR(20) NOT NULL,
+      content TEXT NOT NULL,
+      metadata JSONB DEFAULT '{}',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_chat_history_user_id
+    ON chat_history (user_id)
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_chat_history_session_id
+    ON chat_history (session_id)
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_chat_history_created_at
+    ON chat_history (created_at DESC)
+  `);
+
   // Backfill newly introduced / updated optional columns on already existing tables
   await client.query(`
     ALTER TABLE user_credentials

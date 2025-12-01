@@ -115,6 +115,10 @@ class ConversationMemory(Memory):
             return self.messages[-limit:]
         return self.messages.copy()
     
+    def get_messages(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+        """Alias for get_recent_messages - for API compatibility."""
+        return self.get_recent_messages(limit)
+    
     def get_history(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         """Get conversation history."""
         if limit:

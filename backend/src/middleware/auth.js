@@ -72,3 +72,41 @@ exports.authorize = (...roles) => {
   };
 };
 
+// Optional authentication - proceeds even without token
+exports.optionalAuth = async (req, res, next) => {
+  let token;
+
+  // Check for token in header
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  // Check for API key
+  if (!token && req.headers['x-api-key']) {
+    try {
+      const user = await userService.getUserByApiKey(req.headers['x-api-key']);
+      if (user) {
+        req.user = user;
+        return next();
+      }
+    } catch (error) {
+      // Continue without user
+    }
+  }
+
+  // If no token, continue without user
+  if (!token) {
+    return next();
+  }
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await userService.getUserById(decoded.id);
+    next();
+  } catch (error) {
+    // Token invalid, continue without user
+    next();
+  }
+};
+
