@@ -1,0 +1,752 @@
+{
+  "updatedAt": "2025-12-02T10:22:23.000Z",
+  "createdAt": "2025-12-02T08:26:56.003Z",
+  "id": "yGxdRtaf6wtaPdA4",
+  "name": "Save Workflows in Database",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        -144
+      ],
+      "id": "1b2414cc-19ea-4520-a64e-d54d06ec1506",
+      "name": "Get many workflows",
+      "credentials": {
+        "n8nApi": {
+          "id": "GqyMbBKQ5oN9Jd2o",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "99ed0a14-2882-4894-919a-0da20b87fc95",
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1328,
+        -144
+      ],
+      "id": "2af861cd-0602-4e1c-9cea-bfddbbf3f19e",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/api/v1/tags",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "n8nApi",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        -144
+      ],
+      "id": "11d84950-e9bf-4094-8934-0d5a240b6a24",
+      "name": "HTTP Request",
+      "credentials": {
+        "n8nApi": {
+          "id": "GqyMbBKQ5oN9Jd2o",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        -144
+      ],
+      "id": "2ee19653-bfda-4731-af4b-94178ee17b3a",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  // 1. Çıktı objesini oluştur ve ID'yi ekle\n  const output = {\n    id: item.json.id\n  };\n\n  // 2. Tag listesini al (eğer yoksa boş liste olsun)\n  const tags = item.json.tags || [];\n\n  // 3. Her bir tag'i dön ve sırasına göre kolon oluştur\n  tags.forEach((tag, index) => {\n    // index 0'dan başlar, o yüzden +1 ekliyoruz (tag_1, tag_2...)\n    // Sadece ismini (name) alıyoruz.\n    output[`tag_${index + 1}`] = tag.name;\n  });\n\n  return output;\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2448,
+        -144
+      ],
+      "id": "82da10cf-e307-4e38-b75d-863140ff0b5a",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const workflows = $input.all(); // Workflow listesi (tag_1, tag_2...)\nconst tags = $('Insert or Update Tags').all();      // Tag Referans listesi (name, id)\n\n// 1. Tag İsimlerinden ID bulmak için bir sözlük (Map) oluşturuyoruz\n// Örnek: { \"todo\": \"NCCf...\", \"executable\": \"JltU...\" }\nconst tagMap = {};\ntags.forEach(item => {\n  const t = item.json;\n  if (t.name && t.id) {\n    tagMap[t.name] = t.id;\n  }\n});\n\nconst results = [];\n\n// 2. Her bir Workflow satırını geziyoruz\nworkflows.forEach(item => {\n  const wf = item.json;\n  const wfId = wf.id;\n\n  // Workflow objesindeki tüm anahtarları (key) kontrol et\n  for (const key in wf) {\n    // Eğer anahtar 'tag_' ile başlıyorsa (örn: tag_1, tag_2, tag_3)\n    if (key.startsWith('tag_')) {\n      const tagName = wf[key];      // Tag ismini al (örn: \"todo\")\n      const tagId = tagMap[tagName]; // Referans listesinden ID'sini bul\n\n      // Eğer bu isme ait bir ID bulabildiysek listeye ekle\n      if (tagId) {\n        results.push({\n          json: {\n            workflow_id: wfId,\n            tag_id: tagId\n          }\n        });\n      }\n    }\n  }\n});\n\n// Sonucu döndür\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2672,
+        -144
+      ],
+      "id": "9242f3b7-27d9-4ff5-8761-fcc9e78fb59c",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const newItems = [];\n\n// Input'tan gelen veriyi döngüye al\nfor (const item of $input.all()) {\n  // 'data' anahtarının içindeki listeyi al\n  const innerData = item.json.data;\n\n  // Eğer bu liste varsa, içindeki her bir satırı ayır\n  if (innerData && Array.isArray(innerData)) {\n    innerData.forEach((row) => {\n      newItems.push({\n        json: row\n      });\n    });\n  }\n}\n\n// Ayrıştırılmış listeyi döndür\nreturn newItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        -144
+      ],
+      "id": "67c622f4-f0ce-4714-b5b6-b3a85ca5d654",
+      "name": "Clear Tags"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "workflows",
+          "mode": "list",
+          "cachedResultName": "workflows"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "n8n_id": "={{ $json.id }}",
+            "name": "={{ $json.name }}",
+            "is_active": "={{ $json.active }}",
+            "version_id": "={{ $json.versionId }}",
+            "created_at": "={{ $json.createdAt }}",
+            "updated_at": "={{ $json.updatedAt }}"
+          },
+          "matchingColumns": [
+            "n8n_id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "n8n_id",
+              "displayName": "n8n_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "is_active",
+              "displayName": "is_active",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "version_id",
+              "displayName": "version_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1552,
+        -72
+      ],
+      "id": "f3b76c3b-f99f-4f7a-84d1-475a94331f00",
+      "name": "Insert or update workflows",
+      "credentials": {
+        "postgres": {
+          "id": "eeGTexNNm3ZWrmrC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tags",
+          "mode": "list",
+          "cachedResultName": "tags"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.name }}",
+            "created_at": "={{ $json.createdAt }}",
+            "updated_at": "={{ $json.updatedAt }}",
+            "n8n_tag_id": "={{ $json.id }}"
+          },
+          "matchingColumns": [
+            "n8n_tag_id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "n8n_tag_id",
+              "displayName": "n8n_tag_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        656,
+        -144
+      ],
+      "id": "58b5a6b5-ff58-48be-9b79-1c894f446798",
+      "name": "Insert or Update Tags",
+      "credentials": {
+        "postgres": {
+          "id": "eeGTexNNm3ZWrmrC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2224,
+        -144
+      ],
+      "id": "989adda2-2136-45ee-b2ec-22d97bc0708c",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "15520670-4d58-4476-a05f-def083b3c827",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1776,
+        -24
+      ],
+      "id": "2d274543-f3bf-4287-b376-788cffd449ae",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        -24
+      ],
+      "id": "32f379ec-d0d5-4665-bd9f-c0d9d9e9b032",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "workflow_tags",
+          "mode": "list",
+          "cachedResultName": "workflow_tags"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "tag_id": "={{ $json.tag_id }}",
+            "workflow_id": "={{ $json.workflow_id }}"
+          },
+          "matchingColumns": [
+            "workflow_id",
+            "tag_id"
+          ],
+          "schema": [
+            {
+              "id": "workflow_id",
+              "displayName": "workflow_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tag_id",
+              "displayName": "tag_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2896,
+        -144
+      ],
+      "id": "bbac0630-0cde-494f-bbb0-50a59c0e2c54",
+      "name": "Insert or update rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "eeGTexNNm3ZWrmrC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT * FROM input1 LEFT JOIN input2 ON input1.id = input2.n8n_id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1776,
+        -240
+      ],
+      "id": "9fa4dbee-9888-4525-bafe-4366bfb33c56",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        -144
+      ],
+      "id": "71ff31b8-353c-49be-a5a5-d9d314291104",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "connections": {
+    "Get many workflows": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Insert or update workflows",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Clear Tags",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Get many workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Insert or update rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear Tags": {
+      "main": [
+        [
+          {
+            "node": "Insert or Update Tags",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert or update workflows": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Insert or Update Tags": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "54862821-5d48-49eb-8a7f-89581720b7df",
+  "versionCounter": 11,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-02T08:26:56.007Z",
+      "createdAt": "2025-12-02T08:26:56.007Z",
+      "role": "workflow:owner",
+      "workflowId": "yGxdRtaf6wtaPdA4",
+      "projectId": "Ti3JL05CSVUvJj6A",
+      "project": {
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
+        "name": "Berkay Güzel <berkayguzel43@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
+            "user": {
+              "updatedAt": "2025-12-02T05:54:34.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "email": "berkayguzel43@gmail.com",
+              "firstName": "Berkay",
+              "lastName": "Güzel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1763316240404
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-12-02",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

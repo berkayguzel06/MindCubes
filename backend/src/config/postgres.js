@@ -77,6 +77,79 @@ const ensureTables = async (client) => {
     ON chat_history (created_at DESC)
   `);
 
+  // n8n workflows table - stores workflows synced from n8n
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS workflows (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      n8n_id VARCHAR(255) UNIQUE NOT NULL,
+      name VARCHAR(255) NOT NULL,
+      is_active BOOLEAN NOT NULL DEFAULT false,
+      version_id VARCHAR(255),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_workflows_n8n_id
+    ON workflows (n8n_id)
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_workflows_is_active
+    ON workflows (is_active)
+  `);
+
+  // Global tags table - independent tag definitions
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS tags (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      name VARCHAR(100) NOT NULL UNIQUE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      n8n_tag_id VARCHAR(255) UNIQUE
+    )
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_tags_name
+    ON tags (LOWER(name))
+  `);
+
+  // Junction table between workflows and tags
+  // (many-to-many: a workflow can have many tags, a tag can belong to many workflows)
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS workflow_tags (
+      workflow_id UUID NOT NULL REFERENCES workflows(id) ON DELETE CASCADE,
+      tag_id UUID NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      PRIMARY KEY (workflow_id, tag_id)
+    )
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_workflow_tags_workflow_id
+    ON workflow_tags (workflow_id)
+  `);
+
+  // Workflow prompts table - user specific prompts for workflows
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS workflow_prompts (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      workflow_id UUID NOT NULL REFERENCES workflows(id) ON DELETE CASCADE,
+      prompt TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (user_id, workflow_id)
+    )
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_workflow_prompts_user_workflow
+    ON workflow_prompts (user_id, workflow_id)
+  `);
+
   // Backfill newly introduced / updated optional columns on already existing tables
   await client.query(`
     ALTER TABLE user_credentials

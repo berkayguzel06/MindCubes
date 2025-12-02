@@ -12,15 +12,8 @@ interface N8nWorkflow {
   id: string;
   name: string;
   active: boolean;
-  tags?: Array<{ id: string; name: string }>;
-  createdAt?: string;
-  updatedAt?: string;
-  nodes?: Array<{
-    type: string;
-    parameters?: {
-      path?: string;
-    };
-  }>;
+  version_id?: string;
+  tags?: Array<{ id: string; name: string; createdAt?: string; updatedAt?: string }>;
 }
 
 export default function Agents() {
@@ -45,6 +38,14 @@ export default function Agents() {
     type: NotificationType;
     isOpen: boolean;
   }>({ message: '', type: 'info', isOpen: false });
+  const [promptModal, setPromptModal] = useState<{
+    isOpen: boolean;
+    workflowId: string;
+    workflowName: string;
+  }>({ isOpen: false, workflowId: '', workflowName: '' });
+  const [promptText, setPromptText] = useState('');
+  const [promptLoading, setPromptLoading] = useState(false);
+  const [selectedTagFilter, setSelectedTagFilter] = useState<string>('all');
 
   const showNotification = (message: string, type: NotificationType = 'info') => {
     setNotification({ message, type, isOpen: true });
@@ -68,6 +69,12 @@ export default function Agents() {
     setUserId(user?.id ?? 'guest');
   }, [user]);
 
+  const allTags = Array.from(
+    new Set(
+      workflows.flatMap((wf) => (wf.tags || []).map((t) => t.name))
+    )
+  ).sort((a, b) => a.localeCompare(b));
+
   const backupWorkflows = async () => {
     try {
       setBackingUp(true);
@@ -79,18 +86,18 @@ export default function Agents() {
 
       if (data.success) {
         showNotification(
-          data.message || `Workflow yedekleme tamamlandı. Toplam ${data.count ?? 0} workflow kaydedildi.`,
+          data.message || `Workflow backup completed. Total ${data.count ?? 0} workflows saved.`,
           'success'
         );
       } else {
         showNotification(
-          data.message || 'Workflow yedekleme sırasında bir hata oluştu.',
+          data.message || 'An error occurred while backing up workflows.',
           'error'
         );
       }
     } catch (err) {
       console.error('Error backing up workflows:', err);
-      showNotification('Workflow yedekleme sırasında bir hata oluştu. Detaylar için konsola bakın.', 'error');
+      showNotification('An error occurred while backing up workflows. Check console for details.', 'error');
     } finally {
       setBackingUp(false);
     }
@@ -109,9 +116,73 @@ export default function Agents() {
       }
     } catch (err) {
       console.error('Error fetching workflows:', err);
-      setError('Failed to connect to n8n. Make sure n8n is running and API key is configured.');
+      setError('Failed to connect to n8n. Make sure n8n is running and the API key is configured.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const openPromptModal = async (workflowId: string, workflowName: string) => {
+    if (!userId) return;
+
+    setPromptModal({ isOpen: true, workflowId, workflowName });
+    setPromptText('');
+    setPromptLoading(true);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/n8n/workflows/${workflowId}/prompt?userId=${encodeURIComponent(userId)}`
+      );
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        setPromptText(data.data.prompt || '');
+      } else {
+        setPromptText('');
+      }
+    } catch (err) {
+      console.error('Error fetching workflow prompt:', err);
+      showNotification('An error occurred while loading the prompt.', 'error');
+    } finally {
+      setPromptLoading(false);
+    }
+  };
+
+  const closePromptModal = () => {
+    setPromptModal({ isOpen: false, workflowId: '', workflowName: '' });
+    setPromptText('');
+    setPromptLoading(false);
+  };
+
+  const savePrompt = async () => {
+    if (!userId || !promptModal.workflowId) return;
+
+    try {
+      setPromptLoading(true);
+      const response = await fetch(`${API_BASE_URL}/n8n/workflows/${promptModal.workflowId}/prompt`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId,
+          prompt: promptText
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showNotification('Prompt saved successfully.', 'success');
+        closePromptModal();
+      } else {
+        showNotification(data.message || 'An error occurred while saving the prompt.', 'error');
+      }
+    } catch (err) {
+      console.error('Error saving prompt:', err);
+      showNotification('An error occurred while saving the prompt.', 'error');
+    } finally {
+      setPromptLoading(false);
     }
   };
 
@@ -254,7 +325,7 @@ export default function Agents() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative z-10 overflow-y-auto">
         <div className="p-8">
-          <header className="flex items-center justify-between mb-8">
+          <header className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-2xl font-bold text-white mb-1">AI Agents</h1>
               <p className="text-gray-400 text-sm">Manage and execute your agents</p>
@@ -276,6 +347,27 @@ export default function Agents() {
             </div>
           </header>
 
+          {/* Filters */}
+          <div className="flex items-center gap-4 mb-8">
+            <div>
+              <span className="text-sm text-gray-400 mr-2">Filter by tag:</span>
+              <select
+                value={selectedTagFilter}
+                onChange={(e) => setSelectedTagFilter(e.target.value)}
+                className="bg-slate-900/70 border border-white/20 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-purple-500/60 backdrop-blur-sm"
+              >
+                <option className="text-gray-900" value="all">
+                  All
+                </option>
+                {allTags.map((tag) => (
+                  <option key={tag} value={tag} className="text-gray-900">
+                    {tag}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <div className="text-white">Loading workflows...</div>
@@ -296,18 +388,25 @@ export default function Agents() {
                 </svg>
               </div>
               <h3 className="text-white font-medium mb-2">No Workflows Found</h3>
-              <p className="text-gray-400 text-sm">Create workflows in n8n to see them here</p>
+              <p className="text-gray-400 text-sm">Create workflows in n8n to see them here.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {workflows.map((workflow) => {
+              {workflows
+                .filter((workflow) => {
+                  if (selectedTagFilter === 'all') return true;
+                  const tagNames = (workflow.tags || []).map((t) => t.name.toLowerCase());
+                  return tagNames.includes(selectedTagFilter.toLowerCase());
+                })
+                .map((workflow) => {
                 const tagNames = (workflow.tags || []).map((t) => t.name.toLowerCase());
                 const hasDataInput = tagNames.includes('data-input');
+                const hasEditable = tagNames.includes('editable');
                 const isActive = workflow.active;
 
                 return (
-                  <div 
-                    key={workflow.id} 
+                  <div
+                    key={workflow.id}
                     className="glass-panel p-6 rounded-xl border border-white/5 hover:border-white/20 transition-colors group"
                   >
                     <div className="flex items-start justify-between mb-4">
@@ -337,30 +436,22 @@ export default function Agents() {
                     </p>
                     
                     <div className="flex items-center justify-between pt-4 border-t border-white/5 gap-2">
-                      <button 
+                    {/*
+                      <button
                         onClick={() => toggleWorkflowActive(workflow.id, workflow.active)}
                         className="text-xs text-white hover:underline px-2 py-1 rounded hover:bg-white/5 transition-colors"
                       >
                         {workflow.active ? 'Deactivate' : 'Activate'}
                       </button>
-                      {/* <button 
-                        onClick={() => {
-                          if (!isActive) return;
-                          if (hasDataInput) {
-                            openExecuteModal(workflow.id, workflow.name);
-                          } else {
-                            executeWorkflowDirect(workflow.id);
-                          }
-                        }}
-                        disabled={!isActive}
-                        className={`text-xs px-3 py-1 rounded-full border transition-colors ${
-                          isActive
-                            ? 'bg-purple-500/20 text-purple-400 border-purple-500/30 hover:bg-purple-500/30'
-                            : 'bg-gray-700/40 text-gray-500 border-gray-600/50 cursor-not-allowed'
-                        }`}
-                      >
-                        ▶ Execute
-                      </button> */}
+                    */}
+                      {hasEditable && (
+                        <button
+                          onClick={() => openPromptModal(workflow.id, workflow.name)}
+                          className="text-xs px-3 py-1 rounded-full border border-purple-500/40 bg-purple-500/10 text-purple-200 hover:bg-purple-500/20 transition-colors"
+                        >
+                          ✏️ Edit Prompt
+                        </button>
+                      )}
                     </div>
                   </div>
                 );
@@ -503,6 +594,65 @@ export default function Agents() {
                     ▶ Execute Workflow
                   </>
                 )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Prompt Modal */}
+      {promptModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="glass-panel border border-white/10 rounded-2xl p-6 w-full max-w-lg mx-4">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-white">Edit Workflow Prompt</h2>
+              <button
+                onClick={closePromptModal}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-sm text-gray-400 mb-2">
+                Workflow: <span className="text-white font-medium">{promptModal.workflowName}</span>
+              </p>
+              <p className="text-xs text-gray-500">
+                This prompt is stored per user and can be used when executing this workflow.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Prompt
+                </label>
+                <textarea
+                  value={promptText}
+                  onChange={(e) => setPromptText(e.target.value)}
+                  rows={6}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 transition-colors resize-none"
+                  placeholder="Write the default prompt you want to use for this workflow..."
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={closePromptModal}
+                className="flex-1 px-4 py-2 bg-white/5 text-white rounded-lg hover:bg-white/10 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={savePrompt}
+                disabled={promptLoading}
+                className="flex-1 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {promptLoading ? 'Saving...' : 'Save Prompt'}
               </button>
             </div>
           </div>

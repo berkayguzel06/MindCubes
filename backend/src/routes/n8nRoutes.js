@@ -13,7 +13,9 @@ const {
   deactivateWorkflow,
   executeWorkflow,
   triggerWebhook,
-  getWorkflowExecutions
+  getWorkflowExecutions,
+  getWorkflowPrompt,
+  upsertWorkflowPrompt
 } = require('../controllers/n8nController');
 
 // Workflow management routes
@@ -25,6 +27,10 @@ router.post('/workflows/:id/deactivate', deactivateWorkflow);
 // Execute workflow with optional file upload
 router.post('/workflows/:id/execute', upload.single('file'), executeWorkflow);
 router.get('/workflows/:id/executions', getWorkflowExecutions);
+
+// Workflow prompt routes (user specific prompts stored in PostgreSQL)
+router.get('/workflows/:id/prompt', getWorkflowPrompt);
+router.post('/workflows/:id/prompt', express.json(), upsertWorkflowPrompt);
 
 // Webhook trigger route
 router.post('/webhook/:path', triggerWebhook);

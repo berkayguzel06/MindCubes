@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-01T08:55:53.000Z",
+  "updatedAt": "2025-12-02T08:40:51.000Z",
   "createdAt": "2025-11-20T07:07:08.462Z",
   "id": "wF9RJClNrNYAlCjT",
   "name": "Mail-Prioritizing",
@@ -845,8 +845,8 @@
       }
     ]
   },
-  "versionId": "2d9a332d-e844-48ac-9238-72f2ede6236f",
-  "versionCounter": 35,
+  "versionId": "6aee0e96-504b-4867-96d9-d9b5fddf106f",
+  "versionCounter": 36,
   "triggerCount": 0,
   "shared": [
     {
@@ -907,6 +907,12 @@
       "createdAt": "2025-11-28T13:09:42.645Z",
       "id": "3n3E42nvx4sr4k1N",
       "name": "prioritizing"
+    },
+    {
+      "updatedAt": "2025-12-02T08:40:18.627Z",
+      "createdAt": "2025-12-02T08:40:18.627Z",
+      "id": "NCCf83voH9D7wxJ0",
+      "name": "editable"
     },
     {
       "updatedAt": "2025-11-25T07:28:56.435Z",

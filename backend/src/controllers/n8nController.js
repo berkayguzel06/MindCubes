@@ -8,6 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
 const logger = require('../config/logger');
+const { query } = require('../config/postgres');
 
 // n8n API configuration
 const N8N_API_URL = process.env.N8N_API_URL || 'http://localhost:5678/api/v1';
@@ -146,27 +147,51 @@ function rotateWorkflowBackups(baseName) {
   }
 }
 
-// @desc    Get all workflows from n8n
+// @desc    Get all workflows from PostgreSQL (synced from n8n)
 // @route   GET /api/v1/n8n/workflows
 // @access  Public
 exports.getWorkflows = async (req, res, next) => {
   try {
-    const response = await n8nApi.get('/workflows');
-    
+    const result = await query(
+      `
+      SELECT 
+        w.n8n_id AS id,
+        w.name,
+        w.is_active AS active,
+        w.version_id,
+        COALESCE(
+          JSON_AGG(
+            JSON_BUILD_OBJECT(
+              'id', t.id,
+              'name', t.name,
+              'createdAt', t.created_at,
+              'updatedAt', t.updated_at
+            )
+          ) FILTER (WHERE t.id IS NOT NULL),
+          '[]'::JSON
+        ) AS tags
+      FROM workflows w
+      LEFT JOIN workflow_tags wt ON wt.workflow_id = w.id
+      LEFT JOIN tags t ON t.id = wt.tag_id
+      GROUP BY w.id
+      ORDER BY w.created_at DESC
+      `
+    );
+
+    const allWorkflows = result.rows || [];
+
     // Filter workflows: only include those with 'executable' tag and exclude 'archive' tag
-    const allWorkflows = response.data.data || [];
-    const filteredWorkflows = allWorkflows.filter(workflow => {
+    const filteredWorkflows = allWorkflows.filter((workflow) => {
       const tags = workflow.tags || [];
-      const tagNames = tags.map(tag => tag.name.toLowerCase());
-      
-      // Must have 'executable' tag
+      const tagNames = tags.map((tag) => (tag.name || '').toLowerCase());
+
       const hasExecutable = tagNames.includes('executable');
-      // Must NOT have 'archive' tag
+      const editable = tagNames.includes('editable');
       const hasArchive = tagNames.includes('archive');
-      
-      return hasExecutable && !hasArchive;
+
+      return hasExecutable || editable && !hasArchive;
     });
-    
+
     res.json({
       success: true,
       count: filteredWorkflows.length,
@@ -182,6 +207,7 @@ exports.getWorkflows = async (req, res, next) => {
 };
 
 // @desc    Backup all workflows from n8n into local JSON files with versioning
+//          and sync basic metadata into PostgreSQL (workflows + workflow_tags)
 // @route   POST /api/v1/n8n/workflows/backup
 // @access  Private (but currently no auth middleware attached)
 exports.backupWorkflows = async (req, res, next) => {
@@ -195,7 +221,7 @@ exports.backupWorkflows = async (req, res, next) => {
     let successCount = 0;
     const savedFiles = [];
 
-    // 2. For each workflow, fetch full details and save to file
+    // 2. For each workflow, fetch full details, save to file and sync to PostgreSQL
     for (const workflow of workflows) {
       try {
         const detailRes = await n8nApi.get(`/workflows/${workflow.id}`);
@@ -213,10 +239,69 @@ exports.backupWorkflows = async (req, res, next) => {
 
         fs.writeFileSync(fullPath, JSON.stringify(wfData, null, 2), 'utf8');
 
+        // Sync workflow basic metadata into PostgreSQL
+        const workflowResult = await query(
+          `
+          INSERT INTO workflows (n8n_id, name, is_active, version_id)
+          VALUES ($1, $2, $3, $4)
+          ON CONFLICT (n8n_id)
+          DO UPDATE SET
+            name = EXCLUDED.name,
+            is_active = EXCLUDED.is_active,
+            version_id = EXCLUDED.version_id,
+            updated_at = NOW()
+          RETURNING id
+          `,
+          [
+            wfData.id,
+            wfData.name || `workflow_${workflow.id}`,
+            Boolean(wfData.active),
+            wfData.versionId || null
+          ]
+        );
+
+        const dbWorkflowId = workflowResult.rows[0].id;
+
+        // Sync tags
+        const tags = wfData.tags || [];
+
+        // Remove old tag relations for this workflow
+        await query('DELETE FROM workflow_tags WHERE workflow_id = $1', [dbWorkflowId]);
+
+        for (const tag of tags) {
+          const tagName = (tag.name || '').trim();
+          if (!tagName) continue;
+
+          // Ensure tag exists in global tags table
+          const tagResult = await query(
+            `
+            INSERT INTO tags (name)
+            VALUES ($1)
+            ON CONFLICT (name)
+            DO UPDATE SET
+              updated_at = NOW()
+            RETURNING id
+            `,
+            [tagName]
+          );
+
+          const tagId = tagResult.rows[0].id;
+
+          // Create relation between workflow and tag
+          await query(
+            `
+            INSERT INTO workflow_tags (workflow_id, tag_id)
+            VALUES ($1, $2)
+            ON CONFLICT DO NOTHING
+            `,
+            [dbWorkflowId, tagId]
+          );
+        }
+
         successCount += 1;
         savedFiles.push(filename);
 
-        logger.info(`n8n workflow backed up: ${filename}`);
+        logger.info(`n8n workflow backed up and synced: ${filename}`);
       } catch (innerErr) {
         logger.error(`Failed to backup workflow ${workflow.id}: ${innerErr.message}`);
       }
@@ -281,6 +366,17 @@ exports.activateWorkflow = async (req, res, next) => {
       ...workflow,
       active: true
     });
+
+    // Also update PostgreSQL record if it exists
+    await query(
+      `
+      UPDATE workflows
+      SET is_active = TRUE,
+          updated_at = NOW()
+      WHERE n8n_id = $1
+      `,
+      [req.params.id]
+    );
     
     logger.info(`Workflow activated: ${req.params.id}`);
     
@@ -312,6 +408,17 @@ exports.deactivateWorkflow = async (req, res, next) => {
       ...workflow,
       active: false
     });
+
+    // Also update PostgreSQL record if it exists
+    await query(
+      `
+      UPDATE workflows
+      SET is_active = FALSE,
+          updated_at = NOW()
+      WHERE n8n_id = $1
+      `,
+      [req.params.id]
+    );
     
     logger.info(`Workflow deactivated: ${req.params.id}`);
     
@@ -325,6 +432,123 @@ exports.deactivateWorkflow = async (req, res, next) => {
     res.status(error.response?.status || 500).json({
       success: false,
       message: error.response?.data?.message || 'Failed to deactivate workflow'
+    });
+  }
+};
+
+// @desc    Get user specific prompt for a workflow
+// @route   GET /api/v1/n8n/workflows/:id/prompt?userId=...
+// @access  Private
+exports.getWorkflowPrompt = async (req, res, next) => {
+  try {
+    const { id } = req.params; // n8n workflow id
+    const { userId } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: 'userId is required'
+      });
+    }
+
+    // Find workflow in PostgreSQL
+    const workflowResult = await query(
+      'SELECT id FROM workflows WHERE n8n_id = $1',
+      [id]
+    );
+
+    if (workflowResult.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Workflow not found in database'
+      });
+    }
+
+    const dbWorkflowId = workflowResult.rows[0].id;
+
+    const promptResult = await query(
+      `
+      SELECT prompt
+      FROM workflow_prompts
+      WHERE user_id = $1 AND workflow_id = $2
+      `,
+      [userId, dbWorkflowId]
+    );
+
+    if (promptResult.rowCount === 0) {
+      return res.json({
+        success: true,
+        data: {
+          prompt: ''
+        }
+      });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        prompt: promptResult.rows[0].prompt
+      }
+    });
+  } catch (error) {
+    logger.error(`Error fetching workflow prompt: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch workflow prompt'
+    });
+  }
+};
+
+// @desc    Create / update user specific prompt for a workflow
+// @route   POST /api/v1/n8n/workflows/:id/prompt
+// @access  Private
+exports.upsertWorkflowPrompt = async (req, res, next) => {
+  try {
+    const { id } = req.params; // n8n workflow id
+    const { userId, prompt } = req.body;
+
+    if (!userId || typeof prompt !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'userId and prompt are required'
+      });
+    }
+
+    const workflowResult = await query(
+      'SELECT id FROM workflows WHERE n8n_id = $1',
+      [id]
+    );
+
+    if (workflowResult.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Workflow not found in database'
+      });
+    }
+
+    const dbWorkflowId = workflowResult.rows[0].id;
+
+    await query(
+      `
+      INSERT INTO workflow_prompts (user_id, workflow_id, prompt)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (user_id, workflow_id)
+      DO UPDATE SET
+        prompt = EXCLUDED.prompt,
+        updated_at = NOW()
+      `,
+      [userId, dbWorkflowId, prompt]
+    );
+
+    res.json({
+      success: true,
+      message: 'Prompt saved successfully'
+    });
+  } catch (error) {
+    logger.error(`Error saving workflow prompt: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to save workflow prompt'
     });
   }
 };
