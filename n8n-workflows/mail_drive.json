@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-01T08:03:18.000Z",
+  "updatedAt": "2025-12-02T06:56:15.000Z",
   "createdAt": "2025-12-01T08:02:13.560Z",
   "id": "yF5RpEu8IPfTJpWp",
   "name": "Mail Drive",
@@ -15,7 +15,7 @@
       "typeVersion": 2,
       "position": [
         -1920,
-        -72
+        -80
       ],
       "id": "4505e3f4-09a0-4e0b-b41e-2cb5b1932fef",
       "name": "Recipient Filter",
@@ -23,7 +23,7 @@
     },
     {
       "parameters": {
-        "url": "=https://graph.microsoft.com/v1.0/me/messages?$top=20&$filter=parentFolderId ne '{{ $json.json.id }}' and categories/any(a:a eq 'Categorized') and not(categories/any(a:a eq 'drive')) and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview\n",
+        "url": "=https://graph.microsoft.com/v1.0/me/messages?$top=20&$filter=parentFolderId ne '{{ $json.json.id }}' and categories/any(a:a eq 'Categorized') and not(categories/any(a:a eq 'drive')) and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview,body\n",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -46,7 +46,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Gelen JSON verisini $input.json'dan alın.\nconst inputData = $input.first().json;\n\n// 'value' özelliğinin var olup olmadığını kontrol edin ve varsa bu diziyi döndürün.\nif (inputData && Array.isArray(inputData.value)) {\n    return inputData.value;\n}\n\n// 'value' alanı yoksa veya dizi değilse, boş bir dizi veya orijinal veriyi döndürmeyi seçebilirsiniz.\n// Bu örnekte, beklenen 'value' dizisi yoksa boş bir dizi döndürüyoruz.\nreturn [];"
+        "jsCode": "// Gelen JSON verisini $input.json'dan alın.\nconst inputData = $input.first().json;\n\n// HTML temizleme fonksiyonu\nfunction cleanHtmlContent(html) {\n    if (!html) return \"\";\n    \n    let text = html;\n    \n    // 1. Blok bitiş etiketlerini (p, div, br, li) yeni satıra çevir\n    text = text.replace(/<\\/p>|<\\/div>|<br>|<\\/br>|<\\/li>/gi, '\\n');\n\n    // 2. Geriye kalan tüm HTML etiketlerini sil\n    text = text.replace(/<[^>]+>/g, '');\n\n    // 3. HTML entity'lerini (örneğin &nbsp;) boşluk ile değiştir\n    text = text.replace(/&nbsp;/g, ' ');\n\n    // 4. Fazla boş satırları ve baştaki/sondaki boşlukları temizle\n    text = text.replace(/\\n\\s*\\n/g, '\\n').trim();\n\n    return text;\n}\n\n// 'value' özelliğinin var olup olmadığını kontrol edin\nif (inputData && Array.isArray(inputData.value)) {\n    // Dizideki her bir öğeyi dön\n    return inputData.value.map(item => {\n        if (item.body && item.body.content) {\n            // Önce HTML içeriği temizle\n            const cleanedText = cleanHtmlContent(item.body.content);\n\n            // Temizlenen metni 'bodyPreview' alanına ata\n            item.bodyPreview = cleanedText;\n\n            // (Opsiyonel) Body'nin kendisini de temizlenmiş haliyle güncellemek istersen:\n            item.body.content = cleanedText;\n            item.body.contentType = \"text\";\n        }\n        return item;\n    });\n}\n\n// Veri yoksa boş dizi döndür\nreturn [];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -82,7 +82,7 @@
       "typeVersion": 1.1,
       "position": [
         -3488,
-        -72
+        -80
       ],
       "id": "7ada79bf-99d8-4330-a047-f2e606096b9c",
       "name": "When Executed by Another Workflow"
@@ -131,7 +131,7 @@
       "typeVersion": 3.2,
       "position": [
         -2144,
-        -72
+        -80
       ],
       "id": "abcc1f19-06fe-45d0-8639-5485dd17fce8",
       "name": "Merge1"
@@ -176,7 +176,7 @@
       "typeVersion": 4.3,
       "position": [
         -3264,
-        168
+        176
       ],
       "id": "b62f5b80-6dde-4ea2-a1d5-57ddcfea29dc",
       "name": "HTTP Request1"
@@ -204,7 +204,7 @@
       "typeVersion": 2,
       "position": [
         -3040,
-        168
+        176
       ],
       "id": "d0330808-e743-46c6-8195-1994d68a8285",
       "name": "Code in JavaScript2"
@@ -411,8 +411,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "b8300b68-180c-4202-b6c6-66627dbcbe43",
-  "versionCounter": 123,
+  "versionId": "39c77877-58cb-48d8-b441-348da7463666",
+  "versionCounter": 124,
   "triggerCount": 1,
   "shared": [
     {
@@ -436,7 +436,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-01T05:39:44.000Z",
+              "updatedAt": "2025-12-02T05:54:34.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -459,7 +459,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-01",
+              "lastActiveAt": "2025-12-02",
               "isPending": false
             }
           }

@@ -1162,7 +1162,7 @@
     ]
   },
   "versionId": "52f70ca3-8f3b-4d01-b04c-480790cde3b1",
-  "versionCounter": 113,
+  "versionCounter": 114,
   "triggerCount": 1,
   "shared": [
     {
@@ -1186,7 +1186,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-01T05:39:44.000Z",
+              "updatedAt": "2025-12-02T05:54:34.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -1209,7 +1209,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-01",
+              "lastActiveAt": "2025-12-02",
               "isPending": false
             }
           }

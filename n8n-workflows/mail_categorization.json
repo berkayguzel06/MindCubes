@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-28T09:54:09.000Z",
+  "updatedAt": "2025-12-02T06:57:55.000Z",
   "createdAt": "2025-11-28T08:07:10.615Z",
   "id": "wmgfcWHCt08DQNK8",
   "name": "Mail Categorization",
@@ -15,7 +15,7 @@
       "typeVersion": 2,
       "position": [
         -2176,
-        64
+        104
       ],
       "id": "9eeceb50-5a1f-451a-994a-f11fed38f357",
       "name": "Recipient Filter",
@@ -23,7 +23,7 @@
     },
     {
       "parameters": {
-        "url": "https://graph.microsoft.com/v1.0/me/mailFolders('inbox')/messages?$top=20&$categories/any(a:a eq 'Categorized') and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview",
+        "url": "https://graph.microsoft.com/v1.0/me/mailFolders('inbox')/messages?$top=20&$categories/any(a:a eq 'Categorized') and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview,body",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -39,20 +39,20 @@
       "typeVersion": 4.3,
       "position": [
         -2848,
-        224
+        248
       ],
       "id": "803df440-bae2-4407-8be0-183b9f8b0b54",
       "name": "HTTP Request"
     },
     {
       "parameters": {
-        "jsCode": "// Gelen JSON verisini $input.json'dan alın.\nconst inputData = $input.first().json;\n\n// 'value' özelliğinin var olup olmadığını kontrol edin ve varsa bu diziyi döndürün.\nif (inputData && Array.isArray(inputData.value)) {\n    return inputData.value;\n}\n\n// 'value' alanı yoksa veya dizi değilse, boş bir dizi veya orijinal veriyi döndürmeyi seçebilirsiniz.\n// Bu örnekte, beklenen 'value' dizisi yoksa boş bir dizi döndürüyoruz.\nreturn [];"
+        "jsCode": "// Gelen JSON verisini $input.json'dan alın.\nconst inputData = $input.first().json;\n\n// HTML temizleme fonksiyonu\nfunction cleanHtmlContent(html) {\n    if (!html) return \"\";\n    \n    let text = html;\n    \n    // 1. Blok bitiş etiketlerini (p, div, br, li) yeni satıra çevir\n    text = text.replace(/<\\/p>|<\\/div>|<br>|<\\/br>|<\\/li>/gi, '\\n');\n\n    // 2. Geriye kalan tüm HTML etiketlerini sil\n    text = text.replace(/<[^>]+>/g, '');\n\n    // 3. HTML entity'lerini (örneğin &nbsp;) boşluk ile değiştir\n    text = text.replace(/&nbsp;/g, ' ');\n\n    // 4. Fazla boş satırları ve baştaki/sondaki boşlukları temizle\n    text = text.replace(/\\n\\s*\\n/g, '\\n').trim();\n\n    return text;\n}\n\n// 'value' özelliğinin var olup olmadığını kontrol edin\nif (inputData && Array.isArray(inputData.value)) {\n    // Dizideki her bir öğeyi dön\n    return inputData.value.map(item => {\n        if (item.body && item.body.content) {\n            // Önce HTML içeriği temizle\n            const cleanedText = cleanHtmlContent(item.body.content);\n\n            // Temizlenen metni 'bodyPreview' alanına ata\n            item.bodyPreview = cleanedText;\n\n            // (Opsiyonel) Body'nin kendisini de temizlenmiş haliyle güncellemek istersen:\n            item.body.content = cleanedText;\n            item.body.contentType = \"text\";\n        }\n        return item;\n    });\n}\n\n// Veri yoksa boş dizi döndür\nreturn [];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         -2624,
-        224
+        248
       ],
       "id": "33976f95-4f6a-4636-a3e7-1d032f2a0bec",
       "name": "Code in JavaScript",
@@ -82,7 +82,7 @@
       "typeVersion": 1.1,
       "position": [
         -3072,
-        16
+        56
       ],
       "id": "6e6241a3-dc3a-4091-b7e6-f7faa24c360a",
       "name": "When Executed by Another Workflow"
@@ -131,7 +131,7 @@
       "typeVersion": 3.2,
       "position": [
         -2400,
-        64
+        104
       ],
       "id": "17bde116-a427-4842-a573-638bea87cd12",
       "name": "Merge1"
@@ -145,8 +145,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -2400,
-        272
+        -1952,
+        248
       ],
       "id": "b77dbb6a-24c4-4b97-bf47-d37e7e9f5937",
       "name": "Error Message",
@@ -217,7 +217,13 @@
             "index": 1
           }
         ],
-        []
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "HTTP Request": {
@@ -319,8 +325,8 @@
   },
   "meta": null,
   "pinData": {},
-  "versionId": "2163db5d-8241-4a24-9bdd-a58437f4b411",
-  "versionCounter": 107,
+  "versionId": "d214c3c3-da58-4545-8782-17ad82b26d68",
+  "versionCounter": 109,
   "triggerCount": 1,
   "shared": [
     {
@@ -344,7 +350,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-01T05:39:44.000Z",
+              "updatedAt": "2025-12-02T05:54:34.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -367,7 +373,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-01",
+              "lastActiveAt": "2025-12-02",
               "isPending": false
             }
           }

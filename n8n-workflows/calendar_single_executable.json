@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-01T11:32:00.000Z",
+  "updatedAt": "2025-12-02T07:26:18.000Z",
   "createdAt": "2025-11-24T08:10:37.211Z",
   "id": "bT2dZGPQfQmYcuTZ",
   "name": "Calendar Single Executable",
@@ -10,14 +10,14 @@
     {
       "parameters": {
         "mode": "combineBySql",
-        "query": "SELECT\n    input1.access_token,\n    input1.telegram_chat_id,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "query": "SELECT\n    input1.access_token,\n    input1.telegram_chat_id,\n    input1.email,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
         "options": {}
       },
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
         -2512,
-        -768
+        -896
       ],
       "id": "dfc96370-1469-4f78-a1df-72fe580e8d3f",
       "name": "Merge2"
@@ -51,7 +51,7 @@
       "typeVersion": 2.6,
       "position": [
         -2960,
-        -840
+        -976
       ],
       "id": "fffd4913-3e57-4f28-99ca-5be9613e34a6",
       "name": "Select rows from a table",
@@ -72,7 +72,7 @@
       "typeVersion": 3.2,
       "position": [
         -2736,
-        -840
+        -976
       ],
       "id": "bd73d7f2-1e7b-4228-9f7d-e75c6440b411",
       "name": "Merge4"
@@ -106,7 +106,7 @@
       "typeVersion": 2.6,
       "position": [
         -2960,
-        -552
+        -688
       ],
       "id": "6af705d1-d031-460a-82a7-5a4a36afb6e8",
       "name": "Select rows from a table1",
@@ -127,7 +127,7 @@
       "typeVersion": 2.1,
       "position": [
         -3184,
-        -696
+        -832
       ],
       "id": "3256413c-7edc-40d5-bd85-4d0f01ca2082",
       "name": "Webhook1",
@@ -146,8 +146,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -1328,
-        -640
+        -1344,
+        -752
       ],
       "id": "73e794b8-cc8a-43ac-8473-e5888db4cab6",
       "name": "Email Calendar Agent",
@@ -161,7 +161,7 @@
       "typeVersion": 2,
       "position": [
         -768,
-        -528
+        -656
       ],
       "id": "4cfab766-0553-4f03-85f8-a5fe4cf5d1af",
       "name": "Parse Date Data",
@@ -176,7 +176,7 @@
       "typeVersion": 2,
       "position": [
         -320,
-        -408
+        -544
       ],
       "id": "2f5da3fe-5102-4600-ac02-a7690a9526c0",
       "name": "Adjust Date Data",
@@ -221,7 +221,7 @@
       "typeVersion": 2.2,
       "position": [
         -544,
-        -408
+        -544
       ],
       "id": "9f85d5ca-de59-45fe-8a87-2e6456a9f304",
       "name": "Date Filter"
@@ -235,7 +235,7 @@
       "typeVersion": 1.3,
       "position": [
         -1136,
-        -400
+        -528
       ],
       "id": "ef10e457-4014-4282-b00c-2f5c48bf8043",
       "name": "Structured Output Parser1",
@@ -251,7 +251,7 @@
       "typeVersion": 2,
       "position": [
         -1264,
-        -400
+        -528
       ],
       "id": "de32a022-5b32-4525-9843-630e152acf85",
       "name": "Date & Time"
@@ -265,8 +265,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1472,
-        -768
+        2368,
+        -896
       ],
       "id": "975ba2eb-f078-4c85-90e1-c070b9535668",
       "name": "Send a text message",
@@ -289,7 +289,7 @@
       "typeVersion": 3.2,
       "position": [
         800,
-        -1104
+        -1312
       ],
       "id": "101c579f-14c3-465d-b8e8-e0d876e934c3",
       "name": "Merge1"
@@ -312,7 +312,7 @@
       "typeVersion": 4.3,
       "position": [
         352,
-        -912
+        -1040
       ],
       "id": "d7b673ea-ee67-4adc-bd2e-65e1638462f6",
       "name": "Get Calendar Lists",
@@ -326,7 +326,7 @@
       "typeVersion": 2,
       "position": [
         576,
-        -960
+        -1168
       ],
       "id": "30a16dbf-516a-4e14-add6-ee3a73a1d029",
       "name": "Code in JavaScript1"
@@ -356,8 +356,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1248,
-        -984
+        2144,
+        -1120
       ],
       "id": "dc463c0f-7bcb-4ce4-ad46-c16eeb0d9983",
       "name": "Calendar Event",
@@ -366,14 +366,14 @@
     {
       "parameters": {
         "mode": "combineBySql",
-        "query": "SELECT\n    input1.json.access_token,\n    input1.json.telegram_chat_id,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "query": "SELECT\n    input1.json.access_token,\n    input1.json.telegram_chat_id,\n    input1.json.email,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
         "options": {}
       },
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
         -96,
-        -1056
+        -1184
       ],
       "id": "dc2d2da5-eb48-42a8-9f84-d03a9f23cf0a",
       "name": "Merge"
@@ -386,7 +386,7 @@
       "typeVersion": 2,
       "position": [
         -320,
-        -1056
+        -1184
       ],
       "id": "c25b37ba-312f-4451-8c38-528a5541b090",
       "name": "Code in JavaScript2"
@@ -399,7 +399,7 @@
       "typeVersion": 2,
       "position": [
         128,
-        -912
+        -1040
       ],
       "id": "b9fc5257-901b-4f97-8f74-a4361c304f90",
       "name": "Code in JavaScript3"
@@ -415,7 +415,7 @@
       "typeVersion": 1,
       "position": [
         -1392,
-        -400
+        -528
       ],
       "id": "6e7ee4f0-ee9d-4378-8a57-e2c47d8d57a2",
       "name": "Ollama Chat Model",
@@ -437,7 +437,7 @@
       "typeVersion": 1,
       "position": [
         -1056,
-        -192
+        -320
       ],
       "id": "65f65376-7075-4409-ae17-440b861fc0e3",
       "name": "Ollama Model",
@@ -487,7 +487,7 @@
       "typeVersion": 2.2,
       "position": [
         1024,
-        -1104
+        -1312
       ],
       "id": "bc0274f8-4da9-4664-9776-3f0915609dc9",
       "name": "If1"
@@ -500,7 +500,7 @@
       "typeVersion": 3.4,
       "position": [
         -2960,
-        -184
+        -320
       ],
       "id": "7f2e6ce1-e681-47a0-b741-c631872017cb",
       "name": "Edit Fields"
@@ -511,7 +511,7 @@
       "typeVersion": 1,
       "position": [
         -3184,
-        -184
+        -320
       ],
       "id": "8c0b9b70-23d6-41fc-b5ea-a6209c39236e",
       "name": "When clicking ‘Execute workflow’"
@@ -524,7 +524,7 @@
       "typeVersion": 2,
       "position": [
         -2288,
-        -552
+        -688
       ],
       "id": "da4fee63-5684-470c-aa03-40c760c80bc0",
       "name": "Code in JavaScript4"
@@ -538,7 +538,7 @@
       "typeVersion": 1,
       "position": [
         -1840,
-        -768
+        -896
       ],
       "id": "9fbaf224-3744-4349-add7-f0a199630817",
       "name": "Extract from File1",
@@ -554,7 +554,7 @@
       "typeVersion": 3.2,
       "position": [
         -1616,
-        -624
+        -752
       ],
       "id": "831563d5-46c7-4c37-ba32-1420b13e614c",
       "name": "Merge3"
@@ -588,7 +588,7 @@
       "typeVersion": 2.2,
       "position": [
         -2064,
-        -624
+        -752
       ],
       "id": "546625a2-cd8a-45d9-a0fb-62dd26b5f429",
       "name": "If"
@@ -602,8 +602,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1696,
-        -1104
+        2592,
+        -1232
       ],
       "id": "ab511fed-4b98-4fa0-927f-246af3ec3226",
       "name": "Send a text message1",
@@ -625,11 +625,128 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        1472,
-        -1104
+        2368,
+        -1232
       ],
       "id": "fed93806-35d6-4a5c-9a2b-c8e0647060ba",
       "name": "Merge5"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.microsoft.com/v1.0/me/calendar/getSchedule",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$input.first().json[\"input1.json->access_token\"]}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"schedules\": [\"{{ $json['input1.json->email'] }}\"],\n  \"startTime\": {\n    \"dateTime\": \"{{$json.startdate}}\",\n    \"timeZone\": \"Europe/Istanbul\"\n  },\n  \"endTime\": {\n    \"dateTime\": \"{{$json.enddate}}\",\n    \"timeZone\": \"Europe/Istanbul\"\n  },\n  \"availabilityViewInterval\": 30\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1248,
+        -1408
+      ],
+      "id": "5005dea4-1b73-4afb-9156-5646697c703e",
+      "name": "Get Schedule",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const view = $json.value[0].availabilityView;\n\n// Eğer availabilityView tamamen 0 ise zaman boş\nif (/^0+$/.test(view)) {\n  return [{ canCreate: true }];\n}\n\nreturn [{ canCreate: false }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        -1408
+      ],
+      "id": "858d0c7c-7b46-4296-b733-428e43cda5bd",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a2e5e601-43c3-401f-b685-e8bff79217ca",
+              "leftValue": "={{ $json.canCreate }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1920,
+        -1312
+      ],
+      "id": "dac8c4a1-5b09-4f43-9097-c34976cfb6bc",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$input.first().json[\"input1.json->telegram_chat_id\"]}}",
+        "text": "=We cannot add event to calendar interval\nTitle:{{ $json.title }}\nStart Date:{{ $json.startdate }}\nEnd Date:{{ $json.enddate }}\nDue to time collision",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2144,
+        -1424
+      ],
+      "id": "357e7e03-0c8d-4929-8a8a-a43980fc3535",
+      "name": "Send a text message2",
+      "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.*,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1696,
+        -1312
+      ],
+      "id": "054debf2-9038-4fe5-8cf9-c7cea9bd037d",
+      "name": "Merge6"
     }
   ],
   "connections": {
@@ -912,12 +1029,12 @@
       "main": [
         [
           {
-            "node": "Calendar Event",
+            "node": "Merge6",
             "type": "main",
-            "index": 0
+            "index": 1
           },
           {
-            "node": "Merge5",
+            "node": "Get Schedule",
             "type": "main",
             "index": 0
           }
@@ -1006,6 +1123,62 @@
           }
         ]
       ]
+    },
+    "Get Schedule": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Calendar Event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge6": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1041,8 +1214,8 @@
       }
     ]
   },
-  "versionId": "8a20c6d1-75e4-4973-a257-e92f953d1d09",
-  "versionCounter": 68,
+  "versionId": "9dd69619-b89d-4e6b-ac41-d3d3ad7c308f",
+  "versionCounter": 75,
   "triggerCount": 1,
   "shared": [
     {
@@ -1066,7 +1239,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-01T05:39:44.000Z",
+              "updatedAt": "2025-12-02T05:54:34.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -1089,7 +1262,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-01",
+              "lastActiveAt": "2025-12-02",
               "isPending": false
             }
           }

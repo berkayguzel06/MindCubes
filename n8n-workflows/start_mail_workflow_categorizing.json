@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-01T06:04:00.000Z",
+  "updatedAt": "2025-12-02T06:58:32.000Z",
   "createdAt": "2025-11-28T07:40:14.483Z",
   "id": "bMBProeCGZYrfkU4",
   "name": "Start-Mail-Workflow Categorizing",
@@ -283,7 +283,7 @@
   },
   "pinData": {},
   "versionId": "90218fde-1b79-46e6-8aa5-1c9ce0ad63a1",
-  "versionCounter": 46,
+  "versionCounter": 50,
   "triggerCount": 1,
   "shared": [
     {
@@ -307,7 +307,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-01T05:39:44.000Z",
+              "updatedAt": "2025-12-02T05:54:34.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -330,7 +330,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-01",
+              "lastActiveAt": "2025-12-02",
               "isPending": false
             }
           }
