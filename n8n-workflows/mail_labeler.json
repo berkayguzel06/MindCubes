@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-02T08:40:27.000Z",
+  "updatedAt": "2025-12-02T11:28:59.000Z",
   "createdAt": "2025-11-20T07:17:40.839Z",
   "id": "rpTj6NRiVVAvLDLt",
   "name": "Mail-Labeler",
@@ -1315,8 +1315,8 @@
       }
     ]
   },
-  "versionId": "369dad86-bc8d-49ec-8e3e-c9dec94370b2",
-  "versionCounter": 107,
+  "versionId": "64b93462-badc-46d4-a52e-1c29577df10b",
+  "versionCounter": 108,
   "triggerCount": 0,
   "shared": [
     {
@@ -1372,12 +1372,6 @@
     }
   ],
   "tags": [
-    {
-      "updatedAt": "2025-12-02T08:40:18.627Z",
-      "createdAt": "2025-12-02T08:40:18.627Z",
-      "id": "NCCf83voH9D7wxJ0",
-      "name": "editable"
-    },
     {
       "updatedAt": "2025-11-28T07:47:36.846Z",
       "createdAt": "2025-11-28T07:47:36.846Z",

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-02T08:41:02.000Z",
+  "updatedAt": "2025-12-02T11:28:44.000Z",
   "createdAt": "2025-11-20T07:06:58.089Z",
   "id": "cbK2DhaqpErX6deF",
   "name": "Mail-ToDo",
@@ -1180,8 +1180,8 @@
       }
     ]
   },
-  "versionId": "e4657411-468e-42ba-bc9d-2535dc20d731",
-  "versionCounter": 90,
+  "versionId": "132af629-17bb-402d-8bfe-3496e65b5b5b",
+  "versionCounter": 91,
   "triggerCount": 0,
   "shared": [
     {
@@ -1242,12 +1242,6 @@
       "createdAt": "2025-12-01T06:23:06.670Z",
       "id": "0cbLQ4Aipx5LSkSX",
       "name": "todo"
-    },
-    {
-      "updatedAt": "2025-12-02T08:40:18.627Z",
-      "createdAt": "2025-12-02T08:40:18.627Z",
-      "id": "NCCf83voH9D7wxJ0",
-      "name": "editable"
     },
     {
       "updatedAt": "2025-11-25T07:28:56.435Z",

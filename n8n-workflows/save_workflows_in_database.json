@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-02T10:22:23.000Z",
+  "updatedAt": "2025-12-02T11:31:02.000Z",
   "createdAt": "2025-12-02T08:26:56.003Z",
   "id": "yGxdRtaf6wtaPdA4",
   "name": "Save Workflows in Database",
@@ -16,7 +16,7 @@
       "typeVersion": 1,
       "position": [
         1104,
-        -144
+        -256
       ],
       "id": "1b2414cc-19ea-4520-a64e-d54d06ec1506",
       "name": "Get many workflows",
@@ -56,7 +56,7 @@
       "typeVersion": 2.2,
       "position": [
         1328,
-        -144
+        -256
       ],
       "id": "2af861cd-0602-4e1c-9cea-bfddbbf3f19e",
       "name": "Filter"
@@ -72,7 +72,7 @@
       "typeVersion": 4.3,
       "position": [
         208,
-        -144
+        -256
       ],
       "id": "11d84950-e9bf-4094-8934-0d5a240b6a24",
       "name": "HTTP Request",
@@ -91,7 +91,7 @@
       "typeVersion": 2,
       "position": [
         880,
-        -144
+        -256
       ],
       "id": "2ee19653-bfda-4731-af4b-94178ee17b3a",
       "name": "Code in JavaScript2"
@@ -104,7 +104,7 @@
       "typeVersion": 2,
       "position": [
         2448,
-        -144
+        -256
       ],
       "id": "82da10cf-e307-4e38-b75d-863140ff0b5a",
       "name": "Code in JavaScript3"
@@ -117,7 +117,7 @@
       "typeVersion": 2,
       "position": [
         2672,
-        -144
+        -256
       ],
       "id": "9242f3b7-27d9-4ff5-8761-fcc9e78fb59c",
       "name": "Code in JavaScript1"
@@ -130,7 +130,7 @@
       "typeVersion": 2,
       "position": [
         432,
-        -144
+        -256
       ],
       "id": "67c622f4-f0ce-4714-b5b6-b3a85ca5d654",
       "name": "Clear Tags"
@@ -243,7 +243,7 @@
       "typeVersion": 2.6,
       "position": [
         1552,
-        -72
+        -184
       ],
       "id": "f3b76c3b-f99f-4f7a-84d1-475a94331f00",
       "name": "Insert or update workflows",
@@ -337,7 +337,7 @@
       "typeVersion": 2.6,
       "position": [
         656,
-        -144
+        -256
       ],
       "id": "58b5a6b5-ff58-48be-9b79-1c894f446798",
       "name": "Insert or Update Tags",
@@ -356,7 +356,7 @@
       "typeVersion": 3.2,
       "position": [
         2224,
-        -144
+        -256
       ],
       "id": "989adda2-2136-45ee-b2ec-22d97bc0708c",
       "name": "Merge"
@@ -390,7 +390,7 @@
       "typeVersion": 2.2,
       "position": [
         1776,
-        -24
+        -136
       ],
       "id": "2d274543-f3bf-4287-b376-788cffd449ae",
       "name": "If"
@@ -403,7 +403,7 @@
       "typeVersion": 2,
       "position": [
         2000,
-        -24
+        -136
       ],
       "id": "32f379ec-d0d5-4665-bd9f-c0d9d9e9b032",
       "name": "Code in JavaScript"
@@ -471,8 +471,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        2896,
-        -144
+        3568,
+        -256
       ],
       "id": "bbac0630-0cde-494f-bbb0-50a59c0e2c54",
       "name": "Insert or update rows in a table",
@@ -493,7 +493,7 @@
       "typeVersion": 3.2,
       "position": [
         1776,
-        -240
+        -352
       ],
       "id": "9fa4dbee-9888-4525-bafe-4366bfb33c56",
       "name": "Merge1"
@@ -512,10 +512,68 @@
       "typeVersion": 1.2,
       "position": [
         -16,
-        -144
+        -256
       ],
       "id": "71ff31b8-353c-49be-a5a5-d9d314291104",
       "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "workflow_tags",
+          "mode": "list",
+          "cachedResultName": "workflow_tags"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3120,
+        -328
+      ],
+      "id": "bf174d3c-13e4-40c3-88f2-e8b12b0a4ae4",
+      "name": "Delete table or rows",
+      "credentials": {
+        "postgres": {
+          "id": "eeGTexNNm3ZWrmrC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2896,
+        -328
+      ],
+      "id": "57927560-8b22-453a-9743-43546631550c",
+      "name": "Code in JavaScript4"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        3344,
+        -256
+      ],
+      "id": "52aaa190-e658-46bc-ac73-6399f6c1f418",
+      "name": "Merge2"
     }
   ],
   "connections": {
@@ -583,9 +641,14 @@
       "main": [
         [
           {
-            "node": "Insert or update rows in a table",
+            "node": "Code in JavaScript4",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
           }
         ]
       ]
@@ -682,6 +745,39 @@
           }
         ]
       ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "Delete table or rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete table or rows": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Insert or update rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -692,8 +788,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "54862821-5d48-49eb-8a7f-89581720b7df",
-  "versionCounter": 11,
+  "versionId": "ea65cb28-2af5-495f-b8d7-e436bb6d0f16",
+  "versionCounter": 12,
   "triggerCount": 0,
   "shared": [
     {
