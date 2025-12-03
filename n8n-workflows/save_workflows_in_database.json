@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-02T11:31:02.000Z",
+  "updatedAt": "2025-12-03T07:17:38.000Z",
   "createdAt": "2025-12-02T08:26:56.003Z",
   "id": "yGxdRtaf6wtaPdA4",
   "name": "Save Workflows in Database",
@@ -72,7 +72,7 @@
       "typeVersion": 4.3,
       "position": [
         208,
-        -256
+        -472
       ],
       "id": "11d84950-e9bf-4094-8934-0d5a240b6a24",
       "name": "HTTP Request",
@@ -81,7 +81,8 @@
           "id": "GqyMbBKQ5oN9Jd2o",
           "name": "n8n account"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -104,10 +105,11 @@
       "typeVersion": 2,
       "position": [
         2448,
-        -256
+        -448
       ],
       "id": "82da10cf-e307-4e38-b75d-863140ff0b5a",
-      "name": "Code in JavaScript3"
+      "name": "Code in JavaScript3",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -117,10 +119,11 @@
       "typeVersion": 2,
       "position": [
         2672,
-        -256
+        -328
       ],
       "id": "9242f3b7-27d9-4ff5-8761-fcc9e78fb59c",
-      "name": "Code in JavaScript1"
+      "name": "Code in JavaScript1",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -130,10 +133,11 @@
       "typeVersion": 2,
       "position": [
         432,
-        -256
+        -400
       ],
       "id": "67c622f4-f0ce-4714-b5b6-b3a85ca5d654",
-      "name": "Clear Tags"
+      "name": "Clear Tags",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -243,7 +247,7 @@
       "typeVersion": 2.6,
       "position": [
         1552,
-        -184
+        104
       ],
       "id": "f3b76c3b-f99f-4f7a-84d1-475a94331f00",
       "name": "Insert or update workflows",
@@ -252,7 +256,8 @@
           "id": "eeGTexNNm3ZWrmrC",
           "name": "Postgres account"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -337,7 +342,7 @@
       "typeVersion": 2.6,
       "position": [
         656,
-        -256
+        -328
       ],
       "id": "58b5a6b5-ff58-48be-9b79-1c894f446798",
       "name": "Insert or Update Tags",
@@ -346,7 +351,8 @@
           "id": "eeGTexNNm3ZWrmrC",
           "name": "Postgres account"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -356,7 +362,7 @@
       "typeVersion": 3.2,
       "position": [
         2224,
-        -256
+        -448
       ],
       "id": "989adda2-2136-45ee-b2ec-22d97bc0708c",
       "name": "Merge"
@@ -390,7 +396,7 @@
       "typeVersion": 2.2,
       "position": [
         1776,
-        -136
+        176
       ],
       "id": "2d274543-f3bf-4287-b376-788cffd449ae",
       "name": "If"
@@ -403,7 +409,7 @@
       "typeVersion": 2,
       "position": [
         2000,
-        -136
+        176
       ],
       "id": "32f379ec-d0d5-4665-bd9f-c0d9d9e9b032",
       "name": "Code in JavaScript"
@@ -472,7 +478,7 @@
       "typeVersion": 2.6,
       "position": [
         3568,
-        -256
+        -184
       ],
       "id": "bbac0630-0cde-494f-bbb0-50a59c0e2c54",
       "name": "Insert or update rows in a table",
@@ -481,7 +487,8 @@
           "id": "eeGTexNNm3ZWrmrC",
           "name": "Postgres account"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -493,7 +500,7 @@
       "typeVersion": 3.2,
       "position": [
         1776,
-        -352
+        -448
       ],
       "id": "9fa4dbee-9888-4525-bafe-4366bfb33c56",
       "name": "Merge1"
@@ -512,7 +519,7 @@
       "typeVersion": 1.2,
       "position": [
         -16,
-        -256
+        -472
       ],
       "id": "71ff31b8-353c-49be-a5a5-d9d314291104",
       "name": "Schedule Trigger"
@@ -546,7 +553,8 @@
           "id": "eeGTexNNm3ZWrmrC",
           "name": "Postgres account"
         }
-      }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -570,10 +578,33 @@
       "typeVersion": 3.2,
       "position": [
         3344,
-        -256
+        -184
       ],
       "id": "52aaa190-e658-46bc-ac73-6399f6c1f418",
       "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "chatId": "-13257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3792,
+        -544
+      ],
+      "id": "598698fe-40cb-4efe-a7bd-e116bad85e84",
+      "name": "Error Message",
+      "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
     }
   ],
   "connections": {
@@ -612,6 +643,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -634,6 +672,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -650,6 +695,13 @@
             "type": "main",
             "index": 1
           }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -658,6 +710,13 @@
         [
           {
             "node": "Insert or Update Tags",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
             "type": "main",
             "index": 0
           }
@@ -677,6 +736,13 @@
             "type": "main",
             "index": 1
           }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -685,6 +751,13 @@
         [
           {
             "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
             "type": "main",
             "index": 0
           }
@@ -765,6 +838,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -773,6 +853,18 @@
         [
           {
             "node": "Insert or update rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert or update rows in a table": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Error Message",
             "type": "main",
             "index": 0
           }
@@ -788,8 +880,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "ea65cb28-2af5-495f-b8d7-e436bb6d0f16",
-  "versionCounter": 12,
+  "versionId": "39e56caa-b793-4f9e-a7ac-8dca5f24a5c0",
+  "versionCounter": 14,
   "triggerCount": 0,
   "shared": [
     {
@@ -813,7 +905,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-02T05:54:34.000Z",
+              "updatedAt": "2025-12-03T05:43:07.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -836,7 +928,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-02",
+              "lastActiveAt": "2025-12-03",
               "isPending": false
             }
           }

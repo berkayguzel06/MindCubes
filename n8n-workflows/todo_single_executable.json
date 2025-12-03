@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-02T11:19:08.000Z",
+  "updatedAt": "2025-12-03T08:36:17.000Z",
   "createdAt": "2025-11-24T12:33:39.686Z",
   "id": "svveFOQKZRrz6g1q",
   "name": "ToDo Single Executable",
@@ -637,7 +637,9 @@
       "parameters": {
         "chatId": "={{$input.first().json[\"input1.json->telegram_chat_id\"]}}",
         "text": "New Tasks Added - You can check from your outlook",
-        "additionalFields": {}
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -806,6 +808,27 @@
       ],
       "id": "efe6a19c-001e-4dae-8953-fb7a19fee918",
       "name": "Merge8"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO error_logs (user_id, error_message, workflow_name, workflow_id, execution_id, status, metadata)\nVALUES (\n  NULLIF('{{ $json.user_id || $json.id || \"\" }}', '')::uuid,\n  '{{ ($json.error?.message || \"Unknown error\").replace(/'/g, \"''\") }}',\n  '{{ $workflow.name.replace(/'/g, \"''\") }}',\n  '{{ $workflow.id }}',\n  '{{ $execution.id }}',\n  'error',\n  '{{ JSON.stringify($json).replace(/'/g, \"''\") }}'::jsonb\n)",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1536,
+        -64
+      ],
+      "id": "6aac5f89-3f9c-42f2-a700-76986baa9071",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "eeGTexNNm3ZWrmrC",
+          "name": "Postgres account"
+        }
+      }
     }
   ],
   "connections": {
@@ -1286,6 +1309,17 @@
           }
         ]
       ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1320,8 +1354,8 @@
       }
     ]
   },
-  "versionId": "324025d6-8530-493f-9e1c-09a378dfde47",
-  "versionCounter": 128,
+  "versionId": "beeb2f8b-5df2-4426-b26c-e090dbfab6ed",
+  "versionCounter": 137,
   "triggerCount": 1,
   "shared": [
     {
@@ -1345,7 +1379,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-02T05:54:34.000Z",
+              "updatedAt": "2025-12-03T05:43:07.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -1368,7 +1402,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-02",
+              "lastActiveAt": "2025-12-03",
               "isPending": false
             }
           }

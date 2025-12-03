@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-02T11:28:44.000Z",
+  "updatedAt": "2025-12-03T10:31:02.000Z",
   "createdAt": "2025-11-20T07:06:58.089Z",
   "id": "cbK2DhaqpErX6deF",
   "name": "Mail-ToDo",
@@ -14,8 +14,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -288,
-        -48
+        -800,
+        352
       ],
       "id": "a8e4a852-0a26-45d8-a73f-796d80a64b62",
       "name": "Parse ToDo Data",
@@ -50,8 +50,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -64,
-        -112
+        -576,
+        368
       ],
       "id": "b7c8bcf4-e1ff-4c9b-8c7a-6972224f1ac1",
       "name": "If3"
@@ -85,8 +85,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1504,
-        -448
+        1216,
+        -528
       ],
       "id": "c292c774-1698-496a-b0c5-657689dbcbc8",
       "name": "If4"
@@ -99,8 +99,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        -656,
-        256
+        -1168,
+        496
       ],
       "id": "771c7051-ceeb-4205-b629-a9026f7627b8",
       "name": "Structured Output Parser4",
@@ -118,8 +118,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -864,
-        32
+        -1376,
+        272
       ],
       "id": "4ccb18a2-2379-434c-93d2-fb58d3f3e622",
       "name": "Mail Task App",
@@ -132,8 +132,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -1360,
-        -160
+        -1872,
+        -192
       ],
       "id": "dea0c881-b399-41b7-ac0a-1aa6a74d2550",
       "name": "When Executed by Another Workflow"
@@ -145,8 +145,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -576,
-        464
+        -1872,
+        1136
       ],
       "id": "53942051-4944-44c0-9504-114b4b94c63e",
       "name": "Google Gemini Chat Model1",
@@ -184,8 +184,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1728,
-        -544
+        1440,
+        -624
       ],
       "id": "b841253e-372a-4624-b29b-6a8219b57960",
       "name": "Create Tasks",
@@ -214,8 +214,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        608,
-        -384
+        96,
+        -192
       ],
       "id": "e800813d-ab8d-4d7c-8d01-d00640774c79",
       "name": "Get ToDo Lists",
@@ -252,8 +252,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1728,
-        -352
+        1440,
+        -432
       ],
       "id": "eb87f89d-7c87-4b22-8c14-c4dd573a70cb",
       "name": "Create Tasks1",
@@ -262,14 +262,14 @@
     {
       "parameters": {
         "mode": "combineBySql",
-        "query": "SELECT\n    input1.json.access_token,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "query": "SELECT\n    input1.json.access_token,\n    input1.json.telegram_chat_id,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
         "options": {}
       },
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        160,
-        -304
+        -352,
+        -384
       ],
       "id": "9eee5456-8a6e-420e-a444-a2c57f1884fc",
       "name": "Merge"
@@ -283,8 +283,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        1056,
-        -448
+        544,
+        -592
       ],
       "id": "daf38516-227c-47f0-89dd-f6fe3eca3b80",
       "name": "Merge1"
@@ -296,11 +296,12 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        832,
-        -448
+        320,
+        -304
       ],
       "id": "37eb39ce-83f3-4625-8707-ff2ae337ed14",
-      "name": "Code in JavaScript"
+      "name": "Code in JavaScript",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -309,8 +310,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -64,
-        -400
+        -576,
+        -384
       ],
       "id": "4b889c79-6641-4ecd-9024-9836e8099f71",
       "name": "Code in JavaScript2"
@@ -322,11 +323,12 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        384,
-        -384
+        -128,
+        -112
       ],
       "id": "b07f1bd8-5a80-4ba7-a5ed-197d6b4d084f",
-      "name": "Code in JavaScript3"
+      "name": "Code in JavaScript3",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -335,11 +337,12 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1280,
-        -448
+        -1504,
+        -672
       ],
       "id": "e48aa816-65e3-4b3c-a1b4-7d07f3f8ce91",
-      "name": "Code in JavaScript1"
+      "name": "Code in JavaScript1",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -351,8 +354,8 @@
       "type": "n8n-nodes-base.dateTimeTool",
       "typeVersion": 2,
       "position": [
-        -784,
-        256
+        -1296,
+        496
       ],
       "id": "7922b7e7-ee1c-440d-ba9f-3217d23762b7",
       "name": "Date & Time"
@@ -385,8 +388,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1136,
-        -160
+        -1648,
+        -192
       ],
       "id": "ef174850-2c95-4e55-b92d-7308076fd6e6",
       "name": "If"
@@ -398,8 +401,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -912,
-        256
+        -1872,
+        928
       ],
       "id": "613c8085-d2e3-47f2-86c0-8a845a9b79b1",
       "name": "Google Gemini Chat Model",
@@ -420,8 +423,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -1088,
-        192
+        -1424,
+        496
       ],
       "id": "5c077558-e164-4115-a3e2-ac605fa7405d",
       "name": "Ollama Chat Model",
@@ -442,8 +445,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
       "position": [
-        -768,
-        448
+        -1088,
+        704
       ],
       "id": "3f1ee953-9e3e-47f3-9024-d42d4be4b413",
       "name": "Ollama Model",
@@ -460,7 +463,7 @@
       "typeVersion": 1,
       "position": [
         -1872,
-        256
+        704
       ],
       "id": "b478320f-9d5e-4297-917a-09f0c140da95",
       "name": "When clicking ‘Execute workflow’"
@@ -472,23 +475,23 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1536,
-        272
+        -1648,
+        704
       ],
       "id": "9406b1d8-31f0-4552-996d-b680bf39c792",
       "name": "Edit Fields"
     },
     {
       "parameters": {
-        "chatId": "-3257168516",
+        "chatId": "-1003257168516",
         "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1952,
-        -208
+        1664,
+        -144
       ],
       "id": "4c0333ac-f5f7-41c4-8ec8-0c10f02ea963",
       "name": "Error Message",
@@ -499,6 +502,118 @@
           "name": "Telegram account"
         }
       },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$input.first().json[\"telegram_chat_id\"]}}",
+        "text": "New Tasks Added - You can check from your outlook",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2336,
+        -640
+      ],
+      "id": "4ab9f391-5a68-4d9a-80de-af2e27ce8f3d",
+      "name": "Send a text message1",
+      "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.*,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2112,
+        -640
+      ],
+      "id": "8c10f3ed-f52a-40f4-a203-230e1a8d08c9",
+      "name": "Merge5"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1888,
+        -576
+      ],
+      "id": "94941bfd-6048-4e79-b64d-7d8f47e43b63",
+      "name": "Code in JavaScript6"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1664,
+        -576
+      ],
+      "id": "3796eba6-2231-4693-bf57-932017ea29a9",
+      "name": "Merge6"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO error_logs (user_id, error_message, workflow_name, workflow_id, execution_id, status, metadata)\nVALUES (\n  NULLIF('{{ $json.user_id || $json.id || \"\" }}', '')::uuid,\n  '{{ ($json.error?.message || \"Unknown error\").replace(/'/g, \"''\") }}',\n  '{{ $workflow.name.replace(/'/g, \"''\") }}',\n  '{{ $workflow.id }}',\n  '{{ $execution.id }}',\n  'error',\n  '{{ JSON.stringify($json).replace(/'/g, \"''\") }}'::jsonb\n)",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1888,
+        -144
+      ],
+      "id": "7bdb2f51-72d9-4326-a247-eb573aeb7db0",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "eeGTexNNm3ZWrmrC",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen veriyi al\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  // 1. Ana verideki ID'yi ve Token'ı al\n  const originalId = item.json.id;\n  const accessToken = item.json[\"input1.json->access_token\"];\n  \n  // 2. Task listesini al\n  const tasks = item.json.tasks || [];\n  \n  // 3. Her bir task'i işle\n  for (const task of tasks) {\n    \n    // Temel objeyi oluştur (Due Date HARİÇ)\n    const taskObject = {\n        todoListId: originalId,\n        title: task.title,\n        description: task.description,\n        access_token: accessToken,\n        parent_subject: item.json.subject\n    };\n\n    // KONTROL: \n    // 1. task.due_date var mı?\n    // 2. \"null\" yazısı (string) DEĞİL mi?\n    // 3. Boş tırnak \"\" DEĞİL mi?\n    if (task.due_date && task.due_date !== \"null\" && task.due_date !== \"\") {\n        taskObject.due_date = task.due_date;\n    }\n\n    results.push({\n      json: taskObject\n    });\n  }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        -784
+      ],
+      "id": "f5745c12-980c-4598-beb3-0977c1f0c0b1",
+      "name": "Code in JavaScript5"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen veriyi al\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  // 1. Ana verideki ID, Token ve Telegram Chat ID'yi al\n  const originalId = item.json.id;\n  const accessToken = item.json[\"input1.json->access_token\"];\n  \n  // EKLENEN KISIM: Telegram ID'yi alıyoruz\n  const telegramChatId = item.json[\"input1.json->telegram_chat_id\"];\n  \n  // 2. Task verisini al\n  const task = item.json.task;\n\n  // Eğer task verisi yoksa atla\n  if (!task) {\n    continue; \n  }\n\n  // 3. Task objesini oluştur\n  const taskObject = {\n      id: originalId,                    // Sonraki node için gerekli ID\n      telegram_chat_id: telegramChatId,  // EKLENDİ: Telegram ID artık çıktıya dahil\n      title: task.title,\n      description: task.description,\n      access_token: accessToken,\n      parent_subject: item.json.subject\n  };\n\n  // --- TARİH İŞLEME MANTIĞI ---\n  let processedDueDate = null;\n  const originalDateValue = task.due_date;\n\n  if (originalDateValue && String(originalDateValue).toLowerCase() !== \"null\" && originalDateValue !== \"\") {\n    try {\n      const dateObject = new Date(originalDateValue);\n      if (!isNaN(dateObject.getTime())) {\n        processedDueDate = dateObject.toISOString();\n      } \n    } catch (e) {\n      console.error(\"Tarih dönüşüm hatası:\", e);\n    }\n  }\n\n  if (processedDueDate) {\n      taskObject.due_date = processedDueDate;\n  }\n  // ----------------------------\n\n  results.push({\n    json: taskObject\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        -592
+      ],
+      "id": "1f919d2e-6600-4a5b-bc62-6268d68d0723",
+      "name": "Code in JavaScript4",
       "onError": "continueErrorOutput"
     }
   ],
@@ -633,7 +748,7 @@
       "main": [
         [
           {
-            "node": "Code in JavaScript1",
+            "node": "Code in JavaScript4",
             "type": "main",
             "index": 0
           }
@@ -645,6 +760,13 @@
         [
           {
             "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
             "type": "main",
             "index": 0
           }
@@ -670,18 +792,20 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
     "Code in JavaScript1": {
       "main": [
-        [
-          {
-            "node": "If4",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [],
+        []
       ]
     },
     "Date & Time": {
@@ -713,7 +837,13 @@
     },
     "Create Tasks1": {
       "main": [
-        [],
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 1
+          }
+        ],
         [
           {
             "node": "Error Message",
@@ -725,7 +855,13 @@
     },
     "Create Tasks": {
       "main": [
-        [],
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Error Message",
@@ -774,6 +910,78 @@
       ]
     },
     "Edit Fields": {
+      "main": [
+        []
+      ]
+    },
+    "Merge5": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript6": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge6": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Message": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript5": {
       "main": [
         []
       ]
@@ -1180,8 +1388,8 @@
       }
     ]
   },
-  "versionId": "132af629-17bb-402d-8bfe-3496e65b5b5b",
-  "versionCounter": 91,
+  "versionId": "7c559392-88e0-4f6f-9f85-0864730b94e1",
+  "versionCounter": 102,
   "triggerCount": 0,
   "shared": [
     {
@@ -1205,7 +1413,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-02T05:54:34.000Z",
+              "updatedAt": "2025-12-03T05:43:07.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -1228,7 +1436,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-02",
+              "lastActiveAt": "2025-12-03",
               "isPending": false
             }
           }

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-02T11:28:59.000Z",
+  "updatedAt": "2025-12-03T07:15:51.000Z",
   "createdAt": "2025-11-20T07:17:40.839Z",
   "id": "rpTj6NRiVVAvLDLt",
   "name": "Mail-Labeler",
@@ -25,7 +25,7 @@
       "typeVersion": 3.2,
       "position": [
         -2464,
-        464
+        592
       ],
       "id": "fcfe0fe8-f397-40d7-8c45-dca51141f456",
       "name": "Merge Mail and Id"
@@ -43,10 +43,11 @@
       "typeVersion": 2.2,
       "position": [
         -2240,
-        208
+        336
       ],
       "id": "97e6b222-a7d6-4c76-8d96-793ff17ee5e5",
-      "name": "Mail Draft"
+      "name": "Mail Draft",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -56,7 +57,7 @@
       "typeVersion": 1.3,
       "position": [
         -2112,
-        432
+        560
       ],
       "id": "1e74172c-d100-49ee-b7a0-90abaa7cd16d",
       "name": "Structured Output Parser3"
@@ -98,7 +99,7 @@
       "typeVersion": 2.2,
       "position": [
         -3136,
-        336
+        464
       ],
       "id": "df4e719f-934d-400b-a42f-b0f0d2f80d1c",
       "name": "Filter1"
@@ -112,7 +113,7 @@
       "typeVersion": 1.3,
       "position": [
         -3952,
-        1120
+        1232
       ],
       "id": "5594e54a-c1b1-4764-9ad2-0a0ede5239eb",
       "name": "Structured Output Parser2",
@@ -135,7 +136,7 @@
       "typeVersion": 1,
       "position": [
         -2912,
-        336
+        464
       ],
       "id": "774ee4fd-d8d5-4cc0-98af-2d10edb1d147",
       "name": "Collect Urgen and Important Mails"
@@ -153,7 +154,7 @@
       "typeVersion": 2.2,
       "position": [
         -4048,
-        896
+        1008
       ],
       "id": "49e3ae0a-30fb-44fd-8dc5-a3e2e74b00a7",
       "name": "Email Labeler Agent",
@@ -170,7 +171,7 @@
       "typeVersion": 1,
       "position": [
         -2688,
-        336
+        464
       ],
       "id": "b84d1a07-ccb4-4523-a063-557ae1c31fab",
       "name": "Split Urgen and Important Mails"
@@ -183,7 +184,7 @@
       "typeVersion": 1.1,
       "position": [
         -4528,
-        400
+        512
       ],
       "id": "16fd1db4-a222-46fb-a13b-a61f475bf4f2",
       "name": "Get many messages"
@@ -196,7 +197,7 @@
       "typeVersion": 1,
       "position": [
         -4528,
-        1760
+        1872
       ],
       "id": "953e678b-2636-4429-947d-7ce2561a5b94",
       "name": "Google Gemini Chat Model1",
@@ -215,7 +216,7 @@
       "typeVersion": 1,
       "position": [
         -4528,
-        1552
+        1664
       ],
       "id": "f04433c5-b0e4-417b-9adc-e227037c7af4",
       "name": "Google Gemini Chat Model2",
@@ -236,7 +237,7 @@
       "typeVersion": 3.2,
       "position": [
         -3360,
-        272
+        384
       ],
       "id": "aa18af97-eb34-4286-81be-06deca339dee",
       "name": "Merge"
@@ -249,7 +250,7 @@
       "typeVersion": 2,
       "position": [
         -3584,
-        272
+        384
       ],
       "id": "d1dfd585-bdd7-49dc-8a16-9f4e5bfc3a92",
       "name": "Code in JavaScript2"
@@ -286,7 +287,7 @@
       "typeVersion": 4.3,
       "position": [
         -1664,
-        464
+        720
       ],
       "id": "683e2b80-d8ca-485a-983d-fc50f2a99f1a",
       "name": "Create Draft",
@@ -310,7 +311,7 @@
       "typeVersion": 4.3,
       "position": [
         -2464,
-        -16
+        64
       ],
       "id": "19ac7e8f-3d8b-4063-b1d7-bf88982951c2",
       "name": "Get Mail Folders",
@@ -324,7 +325,7 @@
       "typeVersion": 2,
       "position": [
         -2688,
-        -16
+        64
       ],
       "id": "ea7ad3b4-92ed-4408-9859-eab0387247e4",
       "name": "Code in JavaScript4"
@@ -335,7 +336,7 @@
       "typeVersion": 3.2,
       "position": [
         -2176,
-        -80
+        -16
       ],
       "id": "aee74b81-c994-4402-9d70-eafacb5ea47b",
       "name": "Merge1"
@@ -348,10 +349,11 @@
       "typeVersion": 2,
       "position": [
         -1888,
-        -80
+        -16
       ],
       "id": "a0697fc5-f0a0-4b8a-a6bc-be4b872c5223",
-      "name": "Code in JavaScript1"
+      "name": "Code in JavaScript1",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -363,7 +365,7 @@
       "typeVersion": 3.2,
       "position": [
         -1888,
-        464
+        720
       ],
       "id": "1f0dedd2-2cfa-4710-9e9f-9f770aeda34d",
       "name": "Merge2"
@@ -436,7 +438,7 @@
       "typeVersion": 2.2,
       "position": [
         -4304,
-        400
+        512
       ],
       "id": "a6d5de9a-2aae-4d9d-952e-2c22efa6baec",
       "name": "If"
@@ -449,7 +451,7 @@
       "typeVersion": 2,
       "position": [
         -2176,
-        640
+        768
       ],
       "id": "867f4bd3-66c2-433f-92c3-4e43d2e4480e",
       "name": "Code in JavaScript"
@@ -465,7 +467,7 @@
       "typeVersion": 1,
       "position": [
         -4080,
-        1120
+        1232
       ],
       "id": "24d5c48e-4768-4106-8e33-b560b9438c03",
       "name": "Ollama Chat Model",
@@ -487,7 +489,7 @@
       "typeVersion": 1,
       "position": [
         -3872,
-        1328
+        1440
       ],
       "id": "9f0360fb-6d36-4740-b1ca-fd62e75ac66c",
       "name": "Ollama Model",
@@ -509,7 +511,7 @@
       "typeVersion": 1,
       "position": [
         -2240,
-        432
+        560
       ],
       "id": "9c5cac9a-8d33-46b8-b0b2-7d66668a5b63",
       "name": "Ollama Chat Model1",
@@ -528,7 +530,7 @@
       "typeVersion": 3.4,
       "position": [
         -4304,
-        1328
+        1440
       ],
       "id": "a2db4fd4-c2a8-4ebc-9e83-b7db866f6259",
       "name": "Edit Fields"
@@ -539,7 +541,7 @@
       "typeVersion": 1,
       "position": [
         -4528,
-        1328
+        1440
       ],
       "id": "04681a9f-8289-43a0-9203-35a19c23e152",
       "name": "When clicking ‘Execute workflow’"
@@ -552,7 +554,7 @@
       "typeVersion": 2,
       "position": [
         -3584,
-        960
+        1088
       ],
       "id": "c9558593-f6ed-468d-96a5-49df6435e46b",
       "name": "Parse Date Data",
@@ -560,7 +562,7 @@
     },
     {
       "parameters": {
-        "chatId": "-3257168516",
+        "chatId": "-1003257168516",
         "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
         "additionalFields": {}
       },
@@ -568,7 +570,7 @@
       "typeVersion": 1.2,
       "position": [
         -1440,
-        336
+        368
       ],
       "id": "0d95e995-ed75-443d-9d16-596b2ce7a242",
       "name": "Error Message",
@@ -606,6 +608,13 @@
             "node": "Merge2",
             "type": "main",
             "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -779,6 +788,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -910,6 +926,13 @@
             "node": "Merge",
             "type": "main",
             "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -1315,8 +1338,8 @@
       }
     ]
   },
-  "versionId": "64b93462-badc-46d4-a52e-1c29577df10b",
-  "versionCounter": 108,
+  "versionId": "f324eb1c-ff91-450b-9ee4-9f4e8082776a",
+  "versionCounter": 112,
   "triggerCount": 0,
   "shared": [
     {
@@ -1340,7 +1363,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-02T05:54:34.000Z",
+              "updatedAt": "2025-12-03T05:43:07.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -1363,7 +1386,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-02",
+              "lastActiveAt": "2025-12-03",
               "isPending": false
             }
           }

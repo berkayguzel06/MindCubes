@@ -279,7 +279,7 @@
   },
   "pinData": {},
   "versionId": "3c8ac649-800d-4931-9a62-fa764bf36a81",
-  "versionCounter": 55,
+  "versionCounter": 56,
   "triggerCount": 1,
   "shared": [
     {
@@ -303,7 +303,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-02T05:54:34.000Z",
+              "updatedAt": "2025-12-03T05:43:07.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -326,7 +326,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-02",
+              "lastActiveAt": "2025-12-03",
               "isPending": false
             }
           }

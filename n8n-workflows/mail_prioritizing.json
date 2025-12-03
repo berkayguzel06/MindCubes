@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-02T11:28:51.000Z",
+  "updatedAt": "2025-12-03T07:34:06.000Z",
   "createdAt": "2025-11-20T07:07:08.462Z",
   "id": "wF9RJClNrNYAlCjT",
   "name": "Mail-Prioritizing",
@@ -20,7 +20,7 @@
       "typeVersion": 2.2,
       "position": [
         -672,
-        464
+        480
       ],
       "id": "8d70f195-d3a7-4bf8-855a-d26504adec20",
       "name": "Mail Prioritizing Agent",
@@ -35,7 +35,7 @@
       "typeVersion": 1.3,
       "position": [
         -576,
-        688
+        704
       ],
       "id": "ff6148c6-fc1c-4baf-996e-bc547f312b91",
       "name": "Structured Output Parser",
@@ -70,7 +70,7 @@
       "typeVersion": 2.2,
       "position": [
         240,
-        160
+        112
       ],
       "id": "9ceee52e-a557-4b05-99e9-91859026c660",
       "name": "If"
@@ -83,7 +83,7 @@
       "typeVersion": 1.1,
       "position": [
         -1152,
-        272
+        288
       ],
       "id": "b528ae38-99b1-43a6-aa88-57a51c5f3928",
       "name": "When Executed by Another Workflow"
@@ -96,7 +96,7 @@
       "typeVersion": 1,
       "position": [
         -1152,
-        896
+        912
       ],
       "id": "dadf94f9-61fc-47e6-9d3d-07e5c9c5ed4d",
       "name": "Google Gemini Chat Model",
@@ -115,7 +115,7 @@
       "typeVersion": 1,
       "position": [
         -1152,
-        1104
+        1120
       ],
       "id": "f1298c4b-c450-41bc-b2b8-daa8086be188",
       "name": "Google Gemini Chat Model1",
@@ -165,7 +165,7 @@
       "typeVersion": 2.2,
       "position": [
         -928,
-        272
+        288
       ],
       "id": "4ccc47d7-6ff2-4b25-a966-b5d13169afca",
       "name": "If1"
@@ -181,7 +181,7 @@
       "typeVersion": 1,
       "position": [
         -704,
-        688
+        704
       ],
       "id": "d73fd065-fd4d-4bb9-85a1-09bb3f3b4d28",
       "name": "Ollama Chat Model",
@@ -203,7 +203,7 @@
       "typeVersion": 1,
       "position": [
         -496,
-        896
+        912
       ],
       "id": "1708e4a0-aad9-490d-82f8-98c01c09b936",
       "name": "Ollama Model",
@@ -224,7 +224,7 @@
       "typeVersion": 3.2,
       "position": [
         16,
-        160
+        112
       ],
       "id": "3b762cbf-3203-41ad-b599-83ea45f6c7af",
       "name": "Merge"
@@ -261,7 +261,7 @@
       "typeVersion": 2,
       "position": [
         -208,
-        368
+        384
       ],
       "id": "9eb6558c-6fb4-4113-bca2-413a92dc1cb2",
       "name": "Parse Date Data",
@@ -296,15 +296,15 @@
     },
     {
       "parameters": {
-        "chatId": "-3257168516",
+        "chatId": "-1003257168516",
         "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -208,
-        560
+        16,
+        464
       ],
       "id": "e529429e-f308-479a-b870-4e41f8275c45",
       "name": "Error Message",
@@ -321,13 +321,15 @@
       "parameters": {
         "chatId": "={{ $json.telegram_chat_id }}",
         "text": "=High Priority Mail !!!\nScore: {{ $json.priority_score }}\nSummary: {{ $json.overall_summary }}\nLink: {{ $json.link }}",
-        "additionalFields": {}
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
         464,
-        160
+        112
       ],
       "id": "ce497b9b-42dc-40f2-83a7-054b854a304d",
       "name": "Send Priority",
@@ -477,7 +479,13 @@
             "index": 1
           }
         ],
-        []
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Code in JavaScript4": {
@@ -496,6 +504,13 @@
         [
           {
             "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
             "type": "main",
             "index": 0
           }
@@ -845,8 +860,8 @@
       }
     ]
   },
-  "versionId": "dd20613e-a17b-4ff5-9569-aa2d13b6cc98",
-  "versionCounter": 37,
+  "versionId": "5fc29e49-645b-46e0-9441-ca1742d3902c",
+  "versionCounter": 40,
   "triggerCount": 0,
   "shared": [
     {
@@ -870,7 +885,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-02T05:54:34.000Z",
+              "updatedAt": "2025-12-03T05:43:07.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -893,7 +908,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-02",
+              "lastActiveAt": "2025-12-03",
               "isPending": false
             }
           }

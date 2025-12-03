@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-02T07:26:18.000Z",
+  "updatedAt": "2025-12-03T07:34:52.000Z",
   "createdAt": "2025-11-24T08:10:37.211Z",
   "id": "bT2dZGPQfQmYcuTZ",
   "name": "Calendar Single Executable",
@@ -597,7 +597,9 @@
       "parameters": {
         "chatId": "={{$input.first().json[\"input1.json->telegram_chat_id\"]}}",
         "text": "=A new activity added to calendar\nSubject: {{ $json.subject }}\nSummary: {{ $json.bodyPreview }}\nLink: {{ $json.webLink }}\nStart Date: {{ $json.start.dateTime }}\nEnd Date: {{ $json.end.dateTime }}",
-        "additionalFields": {}
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -714,7 +716,9 @@
       "parameters": {
         "chatId": "={{$input.first().json[\"input1.json->telegram_chat_id\"]}}",
         "text": "=We cannot add event to calendar interval\nTitle:{{ $json.title }}\nStart Date:{{ $json.startdate }}\nEnd Date:{{ $json.enddate }}\nDue to time collision",
-        "additionalFields": {}
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
@@ -1214,8 +1218,8 @@
       }
     ]
   },
-  "versionId": "9dd69619-b89d-4e6b-ac41-d3d3ad7c308f",
-  "versionCounter": 75,
+  "versionId": "e7cbe073-3286-4b7b-80df-bde708bea239",
+  "versionCounter": 78,
   "triggerCount": 1,
   "shared": [
     {
@@ -1239,7 +1243,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-02T05:54:34.000Z",
+              "updatedAt": "2025-12-03T05:43:07.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -1262,7 +1266,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-02",
+              "lastActiveAt": "2025-12-03",
               "isPending": false
             }
           }
