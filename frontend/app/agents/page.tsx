@@ -23,6 +23,7 @@ export default function Agents() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [backingUp, setBackingUp] = useState(false);
+  const [importing, setImporting] = useState(false);
   const [executeModal, setExecuteModal] = useState<{
     isOpen: boolean;
     workflowId: string;
@@ -100,6 +101,36 @@ export default function Agents() {
       showNotification('An error occurred while backing up workflows. Check console for details.', 'error');
     } finally {
       setBackingUp(false);
+    }
+  };
+
+  const importWorkflows = async () => {
+    try {
+      setImporting(true);
+      const response = await fetch(`${API_BASE_URL}/n8n/workflows/import`, {
+        method: 'POST',
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showNotification(
+          data.message || `Workflow import completed. Total ${data.importedCount ?? 0} workflows imported.`,
+          'success'
+        );
+        // Import sonrası listeleri güncelle
+        fetchWorkflows();
+      } else {
+        showNotification(
+          data.message || 'An error occurred while importing workflows.',
+          'error'
+        );
+      }
+    } catch (err) {
+      console.error('Error importing workflows:', err);
+      showNotification('An error occurred while importing workflows. Check console for details.', 'error');
+    } finally {
+      setImporting(false);
     }
   };
 
@@ -337,6 +368,13 @@ export default function Agents() {
                 className="px-4 py-2 bg-purple-500/20 text-purple-200 text-sm rounded-full font-medium hover:bg-purple-500/30 transition-colors border border-purple-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {backingUp ? '💾 Backing up...' : '💾 Backup Workflows'}
+              </button>
+              <button 
+                onClick={importWorkflows}
+                disabled={importing}
+                className="px-4 py-2 bg-emerald-500/20 text-emerald-200 text-sm rounded-full font-medium hover:bg-emerald-500/30 transition-colors border border-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {importing ? '↩ Importing...' : '↩ Import Workflows'}
               </button>
               <button 
                 onClick={fetchWorkflows}

@@ -9,6 +9,7 @@ const {
   getWorkflows,
   getWorkflow,
   backupWorkflows,
+  importWorkflows,
   activateWorkflow,
   deactivateWorkflow,
   executeWorkflow,
@@ -22,6 +23,7 @@ const {
 router.get('/workflows', getWorkflows);
 router.get('/workflows/:id', getWorkflow);
 router.post('/workflows/backup', backupWorkflows);
+router.post('/workflows/import', importWorkflows);
 router.post('/workflows/:id/activate', activateWorkflow);
 router.post('/workflows/:id/deactivate', deactivateWorkflow);
 // Execute workflow with optional file upload

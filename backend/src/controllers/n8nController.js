@@ -700,3 +700,93 @@ exports.getWorkflowExecutions = async (req, res, next) => {
   }
 };
 
+/**
+ * Import workflows from local JSON backup files into n8n.
+ * Only JSON files directly under n8n-workflows/ are imported (versions/* are ignored).
+ *
+ * This mirrors the behaviour of the root-level import-workflows.sh script.
+ *
+ * @route   POST /api/v1/n8n/workflows/import
+ * @access  Private (but currently no auth middleware attached)
+ */
+exports.importWorkflows = async (req, res, next) => {
+  try {
+    ensureBackupDir();
+
+    if (!fs.existsSync(WORKFLOW_BACKUP_DIR)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Workflow backup directory not found. Please run a backup first.'
+      });
+    }
+
+    const allFiles = fs.readdirSync(WORKFLOW_BACKUP_DIR);
+    const jsonFiles = allFiles.filter(
+      (file) =>
+        file.toLowerCase().endsWith('.json') &&
+        file !== 'package.json'
+    );
+
+    if (jsonFiles.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No workflow JSON files found to import. Please run a backup first.'
+      });
+    }
+
+    let importedCount = 0;
+    const imported = [];
+    const errors = [];
+
+    for (const file of jsonFiles) {
+      const fullPath = path.join(WORKFLOW_BACKUP_DIR, file);
+
+      try {
+        const raw = fs.readFileSync(fullPath, 'utf8');
+        const parsed = JSON.parse(raw);
+
+        // Only send the fields that n8n API expects
+        const payload = {
+          name: parsed.name,
+          nodes: parsed.nodes,
+          connections: parsed.connections,
+          settings: parsed.settings ?? {}
+        };
+
+        const response = await n8nApi.post('/workflows', payload);
+        const created = response.data;
+
+        importedCount += 1;
+        imported.push({
+          file,
+          id: created.id,
+          name: created.name
+        });
+
+        logger.info(`Imported n8n workflow from backup: ${file} -> ${created.name} (${created.id})`);
+      } catch (err) {
+        logger.error(`Failed to import workflow from file "${file}": ${err.message}`);
+        errors.push({
+          file,
+          message: err.response?.data?.message || err.message
+        });
+      }
+    }
+
+    res.json({
+      success: true,
+      message: `Import completed. ${importedCount} workflows imported from backups.`,
+      importedCount,
+      imported,
+      errors
+    });
+  } catch (error) {
+    logger.error(`Error during n8n workflows import: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to import n8n workflows from backups',
+      error: error.message
+    });
+  }
+};
+

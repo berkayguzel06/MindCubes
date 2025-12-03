@@ -11,6 +11,10 @@ from core.base_tool import BaseTool
 from core.llm_provider import LLMProvider
 from core.memory import Memory
 from core.task import Task
+from core.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 
 # Intent detection keywords and patterns
@@ -370,7 +374,10 @@ Görevlerin:
                                 base += f" Şu an saat {time_val}."
                             return base
                 except Exception as e:
-                    print(f"Error while using current_datetime tool: {e}")
+                    logger.exception(
+                        "Error while using current_datetime tool",
+                        extra={"error": str(e)},
+                    )
             # If tool is missing or fails, we fall through to normal behavior
 
         # Detect intent
@@ -490,7 +497,10 @@ Kurallar:
             return response
             
         except Exception as e:
-            print(f"Error generating response: {e}")
+            logger.exception(
+                "Error generating organic response",
+                extra={"error": str(e), "tool_name": tool_name},
+            )
             return f"✅ İşlem tamamlandı - {action}."
     
     async def _generate_conversation_response(
@@ -531,7 +541,10 @@ Kurallar:
             return response
             
         except Exception as e:
-            print(f"Error generating conversation: {e}")
+            logger.exception(
+                "Error generating conversation",
+                extra={"error": str(e)},
+            )
             return "Size nasıl yardımcı olabilirim? Görev oluşturma, takvim yönetimi veya dosya kaydetme konularında yardımcı olabilirim."
     
     async def execute_task(self, task: Task) -> Dict[str, Any]:

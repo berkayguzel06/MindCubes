@@ -7,6 +7,11 @@ from pathlib import Path
 import json
 from datetime import datetime
 
+from core.logger import get_logger
+
+
+logger = get_logger(__name__)
+
 
 class ModelTrainer:
     """
@@ -62,7 +67,7 @@ class ModelTrainer:
             from transformers import AutoModelForCausalLM, AutoTokenizer
             import torch
             
-            print(f"Loading model: {self.model_name}")
+            logger.info("Loading model", extra={"model_name": self.model_name})
             
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
             
@@ -76,7 +81,7 @@ class ModelTrainer:
                 torch_dtype=torch.float16 if self.config["fp16"] else torch.float32
             )
             
-            print(f"Model loaded successfully")
+            logger.info("Model loaded successfully", extra={"model_name": self.model_name})
             
         except ImportError:
             raise ImportError("transformers and torch required. Install with: pip install transformers torch")
@@ -101,7 +106,7 @@ class ModelTrainer:
         try:
             from datasets import load_dataset
             
-            print(f"Loading dataset: {dataset_path}")
+            logger.info("Loading dataset", extra={"dataset_path": dataset_path})
             
             # Load dataset
             if Path(dataset_path).exists():
@@ -136,7 +141,13 @@ class ModelTrainer:
                 remove_columns=dataset["train"].column_names
             )
             
-            print(f"Dataset prepared: {len(tokenized_dataset['train'])} train, {len(tokenized_dataset.get('validation', []))} val")
+            logger.info(
+                "Dataset prepared",
+                extra={
+                    "train_size": len(tokenized_dataset["train"]),
+                    "val_size": len(tokenized_dataset.get("validation", [])),
+                },
+            )
             
             return tokenized_dataset
             
@@ -205,7 +216,14 @@ class ModelTrainer:
                 callbacks=callbacks
             )
             
-            print("Starting training...")
+            logger.info(
+                "Starting training",
+                extra={
+                    "run_name": run_name,
+                    "output_dir": str(run_output_dir),
+                    "config": self.config,
+                },
+            )
             
             # Train
             train_result = trainer.train()
@@ -232,7 +250,14 @@ class ModelTrainer:
             with open(run_output_dir / "training_history.json", "w") as f:
                 json.dump(history, f, indent=2)
             
-            print(f"Training completed! Model saved to {run_output_dir}")
+            logger.info(
+                "Training completed",
+                extra={
+                    "run_name": run_name,
+                    "output_dir": str(run_output_dir),
+                    "train_loss": train_result.training_loss,
+                },
+            )
             
             return history
             
@@ -273,10 +298,10 @@ class ModelTrainer:
                 data_collator=data_collator
             )
             
-            print("Evaluating model...")
+            logger.info("Evaluating model", extra={"output_dir": str(self.output_dir / "eval")})
             metrics = trainer.evaluate()
             
-            print(f"Evaluation results: {metrics}")
+            logger.info("Evaluation results", extra={"metrics": metrics})
             
             return metrics
             
@@ -299,7 +324,7 @@ class ModelTrainer:
         self.model.save_pretrained(str(save_path))
         self.tokenizer.save_pretrained(str(save_path))
         
-        print(f"Model saved to {save_path}")
+        logger.info("Model saved", extra={"save_path": str(save_path)})
     
     def get_training_history(self) -> List[Dict[str, Any]]:
         """Get training history."""

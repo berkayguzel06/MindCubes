@@ -9,6 +9,10 @@ import asyncio
 import aiohttp
 from typing import Any, Dict, Optional, List
 from core.base_tool import BaseTool, ToolParameter
+from core.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 
 class N8nWorkflowTool(BaseTool):
@@ -104,8 +108,11 @@ class N8nWorkflowTool(BaseTool):
         payload.update(kwargs)
         
         # Debug logging
-        print(f"🔗 Webhook URL: {self.webhook_url}")
-        print(f"📤 Payload keys: {list(payload.keys())}")
+        logger.debug("Triggering n8n webhook", extra={
+            "webhook_url": self.webhook_url,
+            "payload_keys": list(payload.keys()),
+            "workflow": self.name,
+        })
         
         try:
             async with aiohttp.ClientSession() as session:
@@ -116,8 +123,11 @@ class N8nWorkflowTool(BaseTool):
                     timeout=aiohttp.ClientTimeout(total=120)  # 2 minutes timeout
                 ) as response:
                     response_text = await response.text()
-                    print(f"📥 Response status: {response.status}")
-                    print(f"📥 Response preview: {response_text[:200] if response_text else 'empty'}")
+                    logger.debug("n8n response received", extra={
+                        "status": response.status,
+                        "preview": response_text[:200] if response_text else "empty",
+                        "workflow": self.name,
+                    })
                     
                     # Check for HTTP errors
                     if response.status >= 400:

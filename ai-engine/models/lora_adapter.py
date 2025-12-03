@@ -7,6 +7,11 @@ from pathlib import Path
 from datetime import datetime
 import json
 
+from core.logger import get_logger
+
+
+logger = get_logger(__name__)
+
 
 class LoRAAdapter:
     """
@@ -59,7 +64,7 @@ class LoRAAdapter:
             from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
             import torch
             
-            print(f"Loading base model: {self.base_model}")
+            logger.info("Loading base model for LoRA", extra={"base_model": self.base_model})
             
             # Load tokenizer
             self.tokenizer = AutoTokenizer.from_pretrained(self.base_model)
@@ -92,7 +97,7 @@ class LoRAAdapter:
             # Print trainable parameters
             self.peft_model.print_trainable_parameters()
             
-            print("Model loaded with LoRA adapters")
+            logger.info("Model loaded with LoRA adapters", extra={"base_model": self.base_model})
             
         except ImportError:
             raise ImportError("peft, transformers, and torch required. Install with: pip install peft transformers torch")
@@ -117,7 +122,7 @@ class LoRAAdapter:
         try:
             from datasets import load_dataset
             
-            print(f"Loading dataset: {dataset_path}")
+            logger.info("Loading dataset for LoRA", extra={"dataset_path": dataset_path})
             
             # Load dataset
             if Path(dataset_path).exists():
@@ -145,7 +150,10 @@ class LoRAAdapter:
                 remove_columns=dataset["train"].column_names
             )
             
-            print(f"Dataset prepared: {len(tokenized_dataset['train'])} samples")
+            logger.info(
+                "LoRA dataset prepared",
+                extra={"train_size": len(tokenized_dataset["train"])},
+            )
             
             return tokenized_dataset
             
@@ -216,7 +224,16 @@ class LoRAAdapter:
                 data_collator=data_collator
             )
             
-            print("Starting LoRA training...")
+            logger.info(
+                "Starting LoRA training",
+                extra={
+                    "run_name": run_name,
+                    "output_dir": str(run_output_dir),
+                    "num_epochs": num_epochs,
+                    "batch_size": batch_size,
+                    "learning_rate": learning_rate,
+                },
+            )
             
             # Train
             train_result = trainer.train()
@@ -246,7 +263,14 @@ class LoRAAdapter:
             with open(run_output_dir / "training_info.json", "w") as f:
                 json.dump(training_info, f, indent=2)
             
-            print(f"LoRA training completed! Adapter saved to {run_output_dir}")
+            logger.info(
+                "LoRA training completed",
+                extra={
+                    "run_name": run_name,
+                    "output_dir": str(run_output_dir),
+                    "train_loss": train_result.training_loss,
+                },
+            )
             
             return training_info
             
@@ -265,7 +289,7 @@ class LoRAAdapter:
             from transformers import AutoModelForCausalLM, AutoTokenizer
             import torch
             
-            print(f"Loading LoRA adapter from: {adapter_path}")
+            logger.info("Loading LoRA adapter", extra={"adapter_path": adapter_path})
             
             # Load base model
             self.tokenizer = AutoTokenizer.from_pretrained(adapter_path)
@@ -278,7 +302,7 @@ class LoRAAdapter:
             # Load adapter
             self.peft_model = PeftModel.from_pretrained(base_model, adapter_path)
             
-            print("LoRA adapter loaded successfully")
+            logger.info("LoRA adapter loaded successfully", extra={"adapter_path": adapter_path})
             
         except ImportError:
             raise ImportError("peft and transformers required")
@@ -293,7 +317,7 @@ class LoRAAdapter:
         if self.peft_model is None:
             raise ValueError("No adapter loaded")
         
-        print("Merging LoRA adapter with base model...")
+        logger.info("Merging LoRA adapter with base model", extra={"output_path": output_path})
         
         # Merge adapter with base model
         merged_model = self.peft_model.merge_and_unload()
@@ -305,5 +329,5 @@ class LoRAAdapter:
         merged_model.save_pretrained(str(output_path))
         self.tokenizer.save_pretrained(str(output_path))
         
-        print(f"Merged model saved to {output_path}")
+        logger.info("Merged model saved", extra={"output_path": str(output_path)})
 

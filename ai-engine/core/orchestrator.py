@@ -9,6 +9,10 @@ import asyncio
 
 from .base_agent import BaseAgent
 from .task import Task, TaskStatus, TaskQueue
+from .logger import get_logger
+
+
+logger = get_logger(__name__)
 
 
 class AgentOrchestrator:
@@ -37,7 +41,7 @@ class AgentOrchestrator:
             agent: Agent instance to register
         """
         self.agents[agent.name] = agent
-        print(f"Agent '{agent.name}' registered successfully")
+        logger.info("Agent registered", extra={"agent_name": agent.name})
     
     def unregister_agent(self, agent_name: str) -> None:
         """
@@ -48,7 +52,7 @@ class AgentOrchestrator:
         """
         if agent_name in self.agents:
             del self.agents[agent_name]
-            print(f"Agent '{agent_name}' unregistered")
+            logger.info("Agent unregistered", extra={"agent_name": agent_name})
     
     def get_agent(self, agent_name: str) -> Optional[BaseAgent]:
         """Get an agent by name."""
@@ -77,7 +81,15 @@ class AgentOrchestrator:
             Task ID
         """
         self.task_queue.add_task(task)
-        print(f"Task '{task.title}' submitted (ID: {task.task_id[:8]}...)")
+        logger.info(
+            "Task submitted",
+            extra={
+                "task_id": task.task_id,
+                "title": task.title,
+                "agent_name": task.agent_name,
+                "priority": task.priority.name if hasattr(task, "priority") else None,
+            },
+        )
         return task.task_id
     
     async def execute_task(self, task: Task) -> Dict[str, Any]:
@@ -105,7 +117,7 @@ class AgentOrchestrator:
             task.agent_name = agent.name
         
         # Start the task
-        task.start()
+            task.start()
         
         try:
             # Execute with the agent
@@ -115,16 +127,39 @@ class AgentOrchestrator:
             # Add to agent's history
             agent.task_history.append(task)
             
-            print(f"Task '{task.title}' completed successfully")
+            logger.info(
+                "Task completed",
+                extra={
+                    "task_id": task.task_id,
+                    "title": task.title,
+                    "agent_name": task.agent_name,
+                    "status": task.status.name if hasattr(task, "status") else None,
+                },
+            )
             
         except Exception as e:
             error_msg = f"Task execution failed: {str(e)}"
             task.fail(error_msg)
-            print(f"Task '{task.title}' failed: {error_msg}")
+            logger.exception(
+                "Task failed",
+                extra={
+                    "task_id": task.task_id,
+                    "title": task.title,
+                    "agent_name": task.agent_name,
+                },
+            )
             
             # Retry if allowed
             if task.retry():
-                print(f"Retrying task '{task.title}' (attempt {task.retry_count}/{task.max_retries})")
+                logger.warning(
+                    "Retrying task",
+                    extra={
+                        "task_id": task.task_id,
+                        "title": task.title,
+                        "retry_count": task.retry_count,
+                        "max_retries": task.max_retries,
+                    },
+                )
                 await self.submit_task(task)
         
         return task.to_dict()
@@ -132,11 +167,11 @@ class AgentOrchestrator:
     async def start(self) -> None:
         """Start the orchestrator to process tasks."""
         if self._running:
-            print("Orchestrator is already running")
+            logger.info("Orchestrator is already running")
             return
         
         self._running = True
-        print("Orchestrator started")
+        logger.info("Orchestrator started")
         
         while self._running:
             # Check if we can process more tasks
@@ -169,10 +204,13 @@ class AgentOrchestrator:
         
         # Wait for active tasks to complete
         if self._active_tasks:
-            print(f"Waiting for {len(self._active_tasks)} active tasks to complete...")
+            logger.info(
+                "Waiting for active tasks to complete",
+                extra={"active_task_count": len(self._active_tasks)},
+            )
             await asyncio.gather(*self._active_tasks.values(), return_exceptions=True)
         
-        print("Orchestrator stopped")
+        logger.info("Orchestrator stopped")
     
     async def get_task_status(self, task_id: str) -> Optional[Dict[str, Any]]:
         """
