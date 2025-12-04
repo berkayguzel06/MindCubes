@@ -1,0 +1,544 @@
+{
+  "updatedAt": "2025-12-04T20:19:02.000Z",
+  "createdAt": "2025-11-28T07:54:12.220Z",
+  "id": "foTJVf0W9BRJbt4D",
+  "name": "Mail Calendar Fetch",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const mails = $input.all();\nconst user_mail = $input.first().json.email;\nlet emailList = []\n\nfor (const mail of mails) {\n  for (const recipient of mail.json.toRecipients) {\n    if(recipient.emailAddress.address===user_mail){\n       emailList.push(mail)\n       break;\n    }\n  }\n}\n\nreturn emailList;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3232,
+        128
+      ],
+      "id": "0571c834-dbde-45e7-9df6-edce0946a9b3",
+      "name": "Recipient Filter",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.microsoft.com/v1.0/me/messages?$top=20&$filter=parentFolderId ne '{{ $json.json.id }}' and categories/any(a:a eq 'Categorized') and not(categories/any(a:a eq 'Calendar')) and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview,body\n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -3904,
+        288
+      ],
+      "id": "3e8ed9ef-ac32-47e6-9ff9-c9c132f0f3d7",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen JSON verisini $input.json'dan alın.\nconst inputData = $input.first().json;\n\n// HTML temizleme fonksiyonu\nfunction cleanHtmlContent(html) {\n    if (!html) return \"\";\n    \n    let text = html;\n    \n    // 1. Blok bitiş etiketlerini (p, div, br, li) yeni satıra çevir\n    text = text.replace(/<\\/p>|<\\/div>|<br>|<\\/br>|<\\/li>/gi, '\\n');\n\n    // 2. Geriye kalan tüm HTML etiketlerini sil\n    text = text.replace(/<[^>]+>/g, '');\n\n    // 3. HTML entity'lerini (örneğin &nbsp;) boşluk ile değiştir\n    text = text.replace(/&nbsp;/g, ' ');\n\n    // 4. Fazla boş satırları ve baştaki/sondaki boşlukları temizle\n    text = text.replace(/\\n\\s*\\n/g, '\\n').trim();\n\n    return text;\n}\n\n// 'value' özelliğinin var olup olmadığını kontrol edin\nif (inputData && Array.isArray(inputData.value)) {\n    // Dizideki her bir öğeyi dön\n    return inputData.value.map(item => {\n        if (item.body && item.body.content) {\n            // Önce HTML içeriği temizle\n            const cleanedText = cleanHtmlContent(item.body.content);\n\n            // Temizlenen metni 'bodyPreview' alanına ata\n            item.bodyPreview = cleanedText;\n\n            // (Opsiyonel) Body'nin kendisini de temizlenmiş haliyle güncellemek istersen:\n            item.body.content = cleanedText;\n            item.body.contentType = \"text\";\n        }\n        return item;\n    });\n}\n\n// Veri yoksa boş dizi döndür\nreturn [];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3680,
+        288
+      ],
+      "id": "578325b1-26cb-451d-890e-77d298f36cc7",
+      "name": "Code in JavaScript",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.access_token,\n    input1.telegram_chat_id,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -3008,
+        48
+      ],
+      "id": "e7294b9d-6058-4f01-a0fa-c0a955272bd2",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -4800,
+        128
+      ],
+      "id": "45cc8447-625c-4773-bdef-c56d0fa2c201",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6e1e1e18-52ed-470a-81cb-500e5ea87363",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2784,
+        48
+      ],
+      "id": "1e17b293-a223-4a82-9301-4422b9b3c626",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.user_id,\n    input1.email,\n    input1.name,\n    input1.last_name,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -3456,
+        128
+      ],
+      "id": "92e27429-3bc7-4bf1-b685-a7e6c4b13894",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "chatId": "-3257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -3456,
+        336
+      ],
+      "id": "4464e3e4-b988-4ffd-9db0-a336f95c5958",
+      "name": "Error Message",
+      "webhookId": "6d3dda81-081c-43e9-811a-9867f8dea51a",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "tSPod95IBfOEZxwy",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/tSPod95IBfOEZxwy",
+          "cachedResultName": "Add Calendar Tag"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -2560,
+        -48
+      ],
+      "id": "cecf41dd-fe7b-4fbb-879a-bc745e6d9bf3",
+      "name": "Add Calendar Tag"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "NlDvdXwFHBjxGgTA",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/NlDvdXwFHBjxGgTA",
+          "cachedResultName": "Mail-Calendar"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -2560,
+        144
+      ],
+      "id": "0c362bdc-d442-4a74-ab1e-8e388e92c735",
+      "name": "Mail-Calendar"
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/me/mailFolders('deleteditems')?$select=id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -4576,
+        368
+      ],
+      "id": "ec0b17ac-0816-4c35-b80c-739a57df6cb3",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT * FROM input1 LEFT JOIN input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -4128,
+        288
+      ],
+      "id": "c6cbb3d0-012b-4659-8af4-3f71908d5ecc",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4352,
+        368
+      ],
+      "id": "c4a2030d-f056-44aa-8605-0f7c73560b03",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -4800,
+        592
+      ],
+      "id": "3a9f0710-42f1-485b-9774-b64d877d8443",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4576,
+        592
+      ],
+      "id": "7c916818-5373-4fae-9b20-8a28e9000d48",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "Recipient Filter": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        []
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Add Calendar Tag",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mail-Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Recipient Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": null,
+  "pinData": {
+    "Edit Fields": [
+      {
+        "json": {
+          "id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "email": "berkayguzel06@outlook.com",
+          "password_hash": "$2a$10$BeuHt4T6S5cEKqydoeZU7u8vsCZbvwtMtor.csLhDL9XunQrGSFwS",
+          "role": "user",
+          "api_key": null,
+          "last_login": "2025-12-02T05:55:26.800Z",
+          "created_at": "2025-12-01T11:35:53.535Z",
+          "updated_at": "2025-12-02T05:55:26.800Z",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "refresh_token": "M.C551_BL2.0.U.-CknJALezOHUkd6ARxAezS1UNYhMww6R8PCC1nhVRul8WuWs!8Iap!qHpNwvrv2d19MeuiSxwHmfKAgb9fjNtAL9b7V0syW6nyJzY44D0SF7kt6tpN5VlznI!WO472ZhgtzJ4YaMFpF*2Q27J6!QSt9Bl!AI80T2Tu14lHEY4pg1Yuq6Rw1uxUjG!jB!a5K12MADtGi3rZCT7nyr2yEFtM5h*ysHxutpbZAyFkenVdeiEK!BRZ*AGd1bvmFYXePRq3xvrVSmer73str5FpWaP!ywGt5I4rSKU!yqTk!I!c3S6v1*p8vQ3sOglNf0EL0qM210!l1LWW46In6LmsPBv6Pi1OqCUyHYYYiJYCuQ2Ou!cpcwDoS3llf23SZXmnppOBDDXGnIY9unU5xWZnSBhX*VkTveBbaHLXxpzHB2j9fge",
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeBPDw0DajT2yJT15lR8tmgIkwrasHIm/ZacXQt53ib10Hrj9KwaUjz7qLL1kYAx5rkSx32c8wQBxX0Nx9MM4J8vAfWyav7HteV8w34JC3RRDy9FlgqrtGOwRx4ZnAIDa+v/guZLcmdPWJQlxgWNSISpob9ii1m1vsa/6kBWl1l9oAR96T2xwikFHoYNzpGTI3IkVpmmTfC0zQeTrc0Fr2oIBzkAc9d9nnQKpsJZeqv40/FF33p7r7YvXDK7D/epdYIrWKYX8PbPzTj0jD/nGVkvo9V4K4g8jjGcoReNF66z7gUISvLYN+KeqOoasLxhRA8J0d4PGmmpCUmBN0gWITMQZgAAEE+8txuzD0/ekanHp3gsf95QAzJHn43Bj8aQmDejsuDu5f8ylsPRNNp5KHiinsXdXMze27Tfsmt9PKVQtbYoYMK+PUVWL6AENQRKo5FvATLGG41ihezBqLWp0e9BIWoDsUiUm/SIYiutBcVXbAkKboG6/qnDZV9kV39SAKP+BRhLW+vnJ8qL5dLPvd4gYH0Afotj8qowHOEXJEHTX7dYgl3CdRiHrih0/soJy4ZB23xu+Pu3WnSBk9oU95MMjjkw/fXDrE+oYe65iPBOHpIz7cS1PSwvm66DpZEl/dsd53qU5xorONFRvfmHefMUYjvSYI5NR8Xn4n/UyrO4XSbOMuIfs0gvkr4SEuhy+nxCXSJijiUkRzmLX78H7AcXhx6F9LgGSjAufuvy1pHIZWtvv98TrRd1FU5LPsKDoUrZYMsUpBSRSKyIr3hQlkZBaYXOByWFLVpp7QmyQ2CPE1m17p3Xc+X9kQta3lUUUeGJVaQ/wrIj0n0JrCK423x5N0/vA2t+qzrZp3+0gp76JZmdmnCPTM5IHUPHkmc/zE2iVdT8zzxeNxIImJZEhJEvmIjRQYZ50kVIsNZnrnsS5fEnQRBbGKWxbdvrkDicXVzW8u9y62+b6ECr+KJ752mV6+qeDq7L1H64e7I/kGB3Ge+4ZjwMfcs95AlPm8ztzvsOYdEiUSlGR8V4dxjkcy040rnJ0kYYoFzG/uo/NknJB67ner8EDWd9iRPR2g3+Kn+UlOo7ZIWILdzjWhtbV+SKPePDonmYO8F4dK/sqGELbSdjyxPNIJvMqb7fn3RQdL8NuLbzS0pLPt2hMSaxgR1J/wpuZi5EVhgrYfgemZK5N19BLzven//rqECJLReLH/ZPwH2E9JBX39W/dEfC4OFWUvLwpYaMeH/MDb+Y1+sNq7Wo7rhAbqFWjExJZQTKeO5UNbc2afrOvr5sExOTXiBjq/piuemkJGRezFj7IWiqQR5R3c4ciuntDNg9BQCcWnp9aU2kVejsurwv/bLURWvkVQREhR7p4VUwVc77ttw5CgeN+pt4CFrQOVJ5Viu5IoeetmR0HMxRX4sFHxps9eoC7hqG7ohP0Ehqs08W1YN9PDAb4UEpR1XUVAc3yVqWvRmBxqB+tgui3Xwbn+3GDG4DBfri3gD7jAM=",
+          "expires_at": "2025-12-02T07:30:32.518Z",
+          "ctelegram_chat_id": null,
+          "telegram_chat_id": "-1003315838853"
+        }
+      }
+    ]
+  },
+  "versionId": "3089fe08-14dd-48fe-aaef-6d53cf0e96f0",
+  "versionCounter": 121,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-11-28T07:54:12.222Z",
+      "createdAt": "2025-11-28T07:54:12.222Z",
+      "role": "workflow:owner",
+      "workflowId": "foTJVf0W9BRJbt4D",
+      "projectId": "Ti3JL05CSVUvJj6A",
+      "project": {
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
+        "name": "Berkay Güzel <berkayguzel43@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
+            "user": {
+              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "email": "berkayguzel43@gmail.com",
+              "firstName": "Berkay",
+              "lastName": "Güzel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1763316240404
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-12-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-11-28T07:54:31.025Z",
+      "createdAt": "2025-11-28T07:54:31.025Z",
+      "id": "PdONDcNhiGyYrDss",
+      "name": "calendar"
+    },
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
+    }
+  ]
+}

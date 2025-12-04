@@ -1,91 +1,60 @@
 {
-  "updatedAt": "2025-12-02T06:52:32.000Z",
-  "createdAt": "2025-11-28T07:54:12.220Z",
-  "id": "foTJVf0W9BRJbt4D",
-  "name": "Mail Calendar",
+  "updatedAt": "2025-12-02T06:54:38.000Z",
+  "createdAt": "2025-11-20T07:07:24.418Z",
+  "id": "NlDvdXwFHBjxGgTA",
+  "name": "Mail-Calendar",
   "description": null,
   "active": false,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
-        "jsCode": "const mails = $input.all();\nconst user_mail = $input.first().json.email;\nlet emailList = []\n\nfor (const mail of mails) {\n  for (const recipient of mail.json.toRecipients) {\n    if(recipient.emailAddress.address===user_mail){\n       emailList.push(mail)\n       break;\n    }\n  }\n}\n\nreturn emailList;"
+        "promptType": "define",
+        "text": "=Body:{{ $json.bodyPreview }}\nSubject:{{ $json.subject }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a helpful mail assistant focused on Calendar Management.\n\n**TOOLS & CONTEXT:**\nYou have access to a tool designed to fetch the **Current Date and Time**.\n- BEFORE processing relative dates (e.g., \"tomorrow\", \"next Friday\", \"this afternoon\"), you MUST use this tool to establish the current reference time.\n- Use this reference to accurately calculate the `startdate` and `enddate`.\n\n**TASK:**\nAnalyze the email’s subject and body. If specific date or time information related to meetings, events, or important deadlines is found:\n\n1. **Extract Date/Time:** Use the content from the email (not the mail’s sent metadata) to determine the event time.\n2. **Extract Title:** Use the subject or main context as the event title.\n3. **Calculate Duration:** If `startdate` is found but no `enddate` is specified, add exactly 30 minutes to the `startdate` for the `enddate`.\n\n**FORMATTING RULES:**\n- **Format:** Dates must be strictly RFC3339 format: `YYYY-MM-DDTHH:mm:ss+03:00`.\n- **Strict Output:** NEVER return conversational text, comments, or Markdown (like ```json). Return ONLY the raw JSON structure.\n- **No Guessing:** If date information is ambiguous or missing, do not fabricate a date.\n\n**OUTPUT STRUCTURES:**\n\nIf a date is found:\n{\n  \"startdate\": \"YYYY-MM-DDTHH:mm:ss+03:00\",\n  \"enddate\": \"YYYY-MM-DDTHH:mm:ss+03:00\",\n  \"title\": \"Extracted Event Name\",\n  \"description\": \"<ult,file_links,task_description>\"\n}\n\nIf NO date information is found:\n{\n  \"startdate\": \"\",\n  \"enddate\": \"\",\n  \"title\": \"\"\n}",
+          "returnIntermediateSteps": true
+        }
       },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
       "position": [
-        -3232,
-        120
+        -3160,
+        8
       ],
-      "id": "0571c834-dbde-45e7-9df6-edce0946a9b3",
-      "name": "Recipient Filter",
+      "id": "3f35deb7-2336-422a-90ec-a9ebefa78bda",
+      "name": "Email Calendar Agent",
       "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "url": "=https://graph.microsoft.com/v1.0/me/messages?$top=20&$filter=parentFolderId ne '{{ $json.json.id }}' and categories/any(a:a eq 'Categorized') and not(categories/any(a:a eq 'Calendar')) and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview,body\n",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $json.access_token }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        -3904,
-        288
-      ],
-      "id": "3e8ed9ef-ac32-47e6-9ff9-c9c132f0f3d7",
-      "name": "HTTP Request"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Gelen JSON verisini $input.json'dan alın.\nconst inputData = $input.first().json;\n\n// HTML temizleme fonksiyonu\nfunction cleanHtmlContent(html) {\n    if (!html) return \"\";\n    \n    let text = html;\n    \n    // 1. Blok bitiş etiketlerini (p, div, br, li) yeni satıra çevir\n    text = text.replace(/<\\/p>|<\\/div>|<br>|<\\/br>|<\\/li>/gi, '\\n');\n\n    // 2. Geriye kalan tüm HTML etiketlerini sil\n    text = text.replace(/<[^>]+>/g, '');\n\n    // 3. HTML entity'lerini (örneğin &nbsp;) boşluk ile değiştir\n    text = text.replace(/&nbsp;/g, ' ');\n\n    // 4. Fazla boş satırları ve baştaki/sondaki boşlukları temizle\n    text = text.replace(/\\n\\s*\\n/g, '\\n').trim();\n\n    return text;\n}\n\n// 'value' özelliğinin var olup olmadığını kontrol edin\nif (inputData && Array.isArray(inputData.value)) {\n    // Dizideki her bir öğeyi dön\n    return inputData.value.map(item => {\n        if (item.body && item.body.content) {\n            // Önce HTML içeriği temizle\n            const cleanedText = cleanHtmlContent(item.body.content);\n\n            // Temizlenen metni 'bodyPreview' alanına ata\n            item.bodyPreview = cleanedText;\n\n            // (Opsiyonel) Body'nin kendisini de temizlenmiş haliyle güncellemek istersen:\n            item.body.content = cleanedText;\n            item.body.contentType = \"text\";\n        }\n        return item;\n    });\n}\n\n// Veri yoksa boş dizi döndür\nreturn [];"
+        "jsCode": "const results = [];\n\nfor (const item of $input.all()) {\n  try {\n    const data = item.json.output;\n    const parsed = JSON.parse(data);\n    results.push({ json: parsed });\n  } catch (error) {\n    // Eğer parse edilemezse hata vermeden geç\n    results.push({ json: { error: 'Invalid JSON', original: item.json.output } });\n  }\n}\n\nreturn results;\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3680,
-        288
+        -2592,
+        80
       ],
-      "id": "578325b1-26cb-451d-890e-77d298f36cc7",
-      "name": "Code in JavaScript",
-      "alwaysOutputData": false,
+      "id": "3e8d3b30-07af-4a2d-bad3-e3c56ca36169",
+      "name": "Parse Date Data",
       "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "mode": "combineBySql",
-        "query": "SELECT\n    input1.access_token,\n    input1.telegram_chat_id,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
-        "options": {}
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Each item in input is processed separately\nconst item = $input.item;\n\n// Copy the JSON content\nconst data = { ...item.json };\n\n// Parse the enddate\nconst date = new Date(data.enddate);\n\n// Add 10 minutes\ndate.setMinutes(date.getMinutes() + 10);\n\n// Format back to YYYY-MM-DDTHH:mm:ss\nconst year = date.getFullYear();\nconst month = String(date.getMonth() + 1).padStart(2, '0');\nconst day = String(date.getDate()).padStart(2, '0');\nconst hours = String(date.getHours()).padStart(2, '0');\nconst minutes = String(date.getMinutes()).padStart(2, '0');\nconst seconds = String(date.getSeconds()).padStart(2, '0');\n\n// Update the enddate\ndata.enddate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;\n\n// ✅ Return a single object for this item\nreturn {\n  json: data\n};\n"
       },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        -3008,
-        48
+        -2144,
+        8
       ],
-      "id": "e7294b9d-6058-4f01-a0fa-c0a955272bd2",
-      "name": "Merge"
-    },
-    {
-      "parameters": {
-        "inputSource": "passthrough"
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        -4800,
-        120
-      ],
-      "id": "45cc8447-625c-4773-bdef-c56d0fa2c201",
-      "name": "When Executed by Another Workflow"
+      "id": "158fffbd-8be0-4c11-a403-7afda0b0a432",
+      "name": "Adjust Date Data",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -98,7 +67,261 @@
           },
           "conditions": [
             {
-              "id": "6e1e1e18-52ed-470a-81cb-500e5ea87363",
+              "id": "6bf1892c-da1e-46f4-b5da-8c4399e4d917",
+              "leftValue": "={{ $json.startdate }}",
+              "rightValue": "empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "71f15cdb-6f58-4b33-8bfd-4cd9fd5deeff",
+              "leftValue": "={{ $json.enddate }}",
+              "rightValue": "empty",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2368,
+        8
+      ],
+      "id": "4f6fa076-3028-4735-bc4c-eb9e6c9f9e49",
+      "name": "Date Filter"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"startdate\":\"2025-09-01T10:00:00\",\n  \"enddate\":\"2025-09-01T11:00:00\",\n  \"title\":\"Fishing Time\",\n  \"description\":\"<ult,file_links,task_description>\"\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -2960,
+        232
+      ],
+      "id": "c5032a5f-ee3e-4d5e-a72b-e2027bf8a5f0",
+      "name": "Structured Output Parser1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "includeTime": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Include_Current_Time', ``, 'boolean') }}",
+        "outputFieldName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Output_Field_Name', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTimeTool",
+      "typeVersion": 2,
+      "position": [
+        -3088,
+        232
+      ],
+      "id": "9daab5f2-e809-4ea7-a41a-21ab28ba1b3e",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -3664,
+        -232
+      ],
+      "id": "d98b2222-be9e-4cd8-8ba1-37d38fb6c93c",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "chatId": "-1003257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        544,
+        -160
+      ],
+      "id": "26cc4ebb-5a28-4b95-93bc-5d3bef06f298",
+      "name": "Send a text message",
+      "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -3664,
+        664
+      ],
+      "id": "3f1cf16c-c603-4103-b164-1b67cdd49262",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "yohuzcpOTpBCKcFi",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.*,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1024,
+        -640
+      ],
+      "id": "8f255d9e-078b-4601-b42e-f40f9ee64fda",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/me/calendars?$top=1",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{$json.access_token}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1472,
+        -352
+      ],
+      "id": "cf5c8367-00e6-49b7-bd02-63f3b1c4c5b1",
+      "name": "Get Calendar Lists",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Tüm takvim listesini al\nconst items = $input.all();\n\n// Hangi takvimi istiyorsun\nconst targetName = \"Calendar\"; // İstersen burayı değiştir\n\n// Flatten edilmiş JSON'ların birleşmiş halini istiyoruz\nconst allCalendars = [];\nfor (const item of items) {\n  if (Array.isArray(item.json.value)) {\n    allCalendars.push(...item.json.value);\n  }\n}\n\n// İstenen takvimi bul\nconst found = allCalendars.find(c => c.name === targetName);\n\nif (!found) {\n  return []; // bulunamazsa boş dön\n}\n\n// Yeni bir JSON nesnesi oluştur ve ID'yi calendar_id olarak ata\nconst resultJson = {\n  calendar_id: found.id // 'id' alanını 'calendar_id' olarak yeniden adlandır\n};\n\n// n8n her zaman array bekler\nreturn [\n  {\n    json: resultJson // Yeniden adlandırılmış ID'yi içeren nesneyi döndür\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1248,
+        -424
+      ],
+      "id": "e94a2552-7692-4733-874a-80fbe2a5988c",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.microsoft.com/v1.0/me/calendars/{{$json.calendar_id}}/events",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$input.first().json[\"input1.json->access_token\"]}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"subject\": \"{{$json.title}}\",\n  \"body\": {\n    \"contentType\": \"HTML\",\n    \"content\": \"Açıklama: {{$json.description}}\"\n  },\n  \"start\": {\n    \"dateTime\": \"{{$json.startdate}}\",\n    \"timeZone\": \"UTC\"\n  },\n  \"end\": {\n    \"dateTime\": \"{{$json.enddate}}\",\n    \"timeZone\": \"UTC\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        320,
+        -448
+      ],
+      "id": "e7d78914-23f7-44c3-acc3-6802d358c473",
+      "name": "Calendar Event",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.json.access_token,\n    input1.json.telegram_chat_id,\n    input1.json.email,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1920,
+        -472
+      ],
+      "id": "ad6da840-c2dd-4e15-8d5f-a48be1800d43",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2144,
+        -472
+      ],
+      "id": "fa24bc3d-d6ba-4f26-a272-938a27eafa7c",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const token = $input.first().json[\"input1.json->access_token\"];\n\nreturn [\n  {\n    json: {\n      access_token: token\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1696,
+        -352
+      ],
+      "id": "418aaf44-15af-4ff3-bddf-47c7a59639e3",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "05a8fb07-b925-4c0c-a8af-21e1f8b26491",
               "leftValue": "={{ $json.id }}",
               "rightValue": "",
               "operator": {
@@ -115,158 +338,55 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2784,
-        48
+        -3440,
+        -232
       ],
-      "id": "1e17b293-a223-4a82-9301-4422b9b3c626",
+      "id": "7cda8f6e-f918-4c54-9361-116cf253acdb",
       "name": "If"
     },
     {
       "parameters": {
-        "mode": "combineBySql",
-        "query": "SELECT\n    input1.user_id,\n    input1.email,\n    input1.name,\n    input1.last_name,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
-        "options": {}
+        "model": "gpt-oss:20b",
+        "options": {
+          "numCtx": 131072
+        }
       },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
       "position": [
-        -3456,
-        120
+        -3216,
+        232
       ],
-      "id": "92e27429-3bc7-4bf1-b685-a7e6c4b13894",
-      "name": "Merge1"
-    },
-    {
-      "parameters": {
-        "chatId": "-3257168516",
-        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -3456,
-        336
-      ],
-      "id": "4464e3e4-b988-4ffd-9db0-a336f95c5958",
-      "name": "Error Message",
-      "webhookId": "6d3dda81-081c-43e9-811a-9867f8dea51a",
+      "id": "40253a14-eb59-4ee3-81aa-aa0fb3c4f578",
+      "name": "Ollama Chat Model",
       "credentials": {
-        "telegramApi": {
-          "id": "JG4HCYCvUBrFrjrG",
-          "name": "Telegram account"
+        "ollamaApi": {
+          "id": "HYP2LXmMoDsk2iKY",
+          "name": "Ollama account"
         }
       }
     },
     {
       "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "tSPod95IBfOEZxwy",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/tSPod95IBfOEZxwy",
-          "cachedResultName": "Add Calendar Tag"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {}
-        },
-        "options": {}
+        "model": "gpt-oss:20b",
+        "options": {
+          "numCtx": 131072
+        }
       },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        -2560,
-        -48
-      ],
-      "id": "cecf41dd-fe7b-4fbb-879a-bc745e6d9bf3",
-      "name": "Add Calendar Tag"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "NlDvdXwFHBjxGgTA",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/NlDvdXwFHBjxGgTA",
-          "cachedResultName": "Mail-Calendar"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {}
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        -2560,
-        144
-      ],
-      "id": "0c362bdc-d442-4a74-ab1e-8e388e92c735",
-      "name": "Mail-Calendar"
-    },
-    {
-      "parameters": {
-        "url": "https://graph.microsoft.com/v1.0/me/mailFolders('deleteditems')?$select=id",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $json.access_token }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        -4576,
-        360
-      ],
-      "id": "ec0b17ac-0816-4c35-b80c-739a57df6cb3",
-      "name": "HTTP Request1"
-    },
-    {
-      "parameters": {
-        "mode": "combineBySql",
-        "query": "SELECT * FROM input1 LEFT JOIN input2",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        -4128,
-        288
-      ],
-      "id": "c6cbb3d0-012b-4659-8af4-3f71908d5ecc",
-      "name": "Merge2"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -4352,
-        360
-      ],
-      "id": "c4a2030d-f056-44aa-8605-0f7c73560b03",
-      "name": "Code in JavaScript2"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
+      "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
       "position": [
-        -4800,
-        584
+        -2880,
+        440
       ],
-      "id": "3a9f0710-42f1-485b-9774-b64d877d8443",
-      "name": "When clicking ‘Execute workflow’"
+      "id": "9ec1750c-fbd6-4eaf-82cf-9ed507909b0b",
+      "name": "Ollama Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "HYP2LXmMoDsk2iKY",
+          "name": "Ollama account"
+        }
+      }
     },
     {
       "parameters": {
@@ -275,15 +395,261 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -4576,
-        584
+        -3440,
+        440
       ],
-      "id": "7c916818-5373-4fae-9b20-8a28e9000d48",
+      "id": "4ea41324-f371-4713-8ecd-e78c50836ac7",
       "name": "Edit Fields"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3664,
+        440
+      ],
+      "id": "f4234f60-0b5d-4050-b49a-8ffd92aaaec1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ed15af07-85e1-405a-b773-94c66df29f04",
+              "leftValue": "={{ $json.startdate }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "564e1d13-94a1-4989-9198-b10e4f101718",
+              "leftValue": "={{ $json.enddate }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -800,
+        -640
+      ],
+      "id": "97c86911-30b7-413c-8de0-6872df1697b8",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$input.first().json[\"input1.json->telegram_chat_id\"]}}",
+        "text": "=A new activity added to calendar\nSubject: {{ $json.subject }}\nSummary: {{ $json.bodyPreview }}\nLink: {{ $json.webLink }}\nStart Date: {{ $json.start.dateTime }}\nEnd Date: {{ $json.end.dateTime }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        768,
+        -736
+      ],
+      "id": "e436e3c6-27ac-4250-ade7-074ff1aacb92",
+      "name": "Send a text message1",
+      "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.*,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        544,
+        -736
+      ],
+      "id": "6acd4713-62d7-4cbe-b6f5-9b757950a7fe",
+      "name": "Merge5"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.microsoft.com/v1.0/me/calendar/getSchedule",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$input.first().json[\"input1.json->access_token\"]}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"schedules\": [\"{{ $json['input1.json->email'] }}\"],\n  \"startTime\": {\n    \"dateTime\": \"{{$json.startdate}}\",\n    \"timeZone\": \"Europe/Istanbul\"\n  },\n  \"endTime\": {\n    \"dateTime\": \"{{$json.enddate}}\",\n    \"timeZone\": \"Europe/Istanbul\"\n  },\n  \"availabilityViewInterval\": 30\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -576,
+        -712
+      ],
+      "id": "c873c6ac-474c-4f46-aec4-17ba76a6aa56",
+      "name": "Get Schedule",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const view = $json.value[0].availabilityView;\n\n// Eğer availabilityView tamamen 0 ise zaman boş\nif (/^0+$/.test(view)) {\n  return [{ canCreate: true }];\n}\n\nreturn [{ canCreate: false }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        -712
+      ],
+      "id": "bfbeaf85-dc55-4082-b834-8932c65a4ec9",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a2e5e601-43c3-401f-b685-e8bff79217ca",
+              "leftValue": "={{ $json.canCreate }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        96,
+        -640
+      ],
+      "id": "9e8175d8-4720-47f1-b2dc-037452e6dc38",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$input.first().json[\"input1.json->telegram_chat_id\"]}}",
+        "text": "=We cannot add event to calendar interval\nTitle:{{ $json.title }}\nStart Date:{{ $json.startdate }}\nEnd Date:{{ $json.enddate }}\nDue to time collision",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        -640
+      ],
+      "id": "8fc747a6-54df-4a4a-b750-7d7f189aae88",
+      "name": "Send a text message2",
+      "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.*,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -128,
+        -640
+      ],
+      "id": "1f0b371e-89c2-4834-b613-5c410254a294",
+      "name": "Merge6"
     }
   ],
   "connections": {
-    "Recipient Filter": {
+    "Email Calendar Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Date Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Date Data": {
+      "main": [
+        [
+          {
+            "node": "Date Filter",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adjust Date Data": {
       "main": [
         [
           {
@@ -292,39 +658,49 @@
             "index": 1
           }
         ],
-        []
-      ]
-    },
-    "HTTP Request": {
-      "main": [
         [
           {
-            "node": "Code in JavaScript",
+            "node": "Send a text message",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Code in JavaScript": {
+    "Date Filter": {
       "main": [
         [
           {
-            "node": "Merge1",
-            "type": "main",
-            "index": 1
-          }
-        ],
-        [
-          {
-            "node": "Error Message",
+            "node": "Adjust Date Data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Merge": {
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Email Calendar Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "ai_tool": [
+        [
+          {
+            "node": "Email Calendar Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
       "main": [
         [
           {
@@ -335,42 +711,34 @@
         ]
       ]
     },
-    "When Executed by Another Workflow": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Get Calendar Lists": {
       "main": [
         [
           {
-            "node": "HTTP Request1",
+            "node": "Code in JavaScript1",
             "type": "main",
             "index": 0
-          },
+          }
+        ],
+        [
           {
-            "node": "Merge2",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge1",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge",
+            "node": "Send a text message",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If": {
+    "Code in JavaScript1": {
       "main": [
         [
           {
-            "node": "Add Calendar Tag",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Mail-Calendar",
+            "node": "Merge1",
             "type": "main",
             "index": 0
           }
@@ -381,29 +749,7 @@
       "main": [
         [
           {
-            "node": "Recipient Filter",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Merge2": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request1": {
-      "main": [
-        [
-          {
-            "node": "Code in JavaScript2",
+            "node": "If1",
             "type": "main",
             "index": 0
           }
@@ -414,11 +760,99 @@
       "main": [
         [
           {
-            "node": "Merge2",
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Get Calendar Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Calendar Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar Event": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
             "type": "main",
             "index": 1
           }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
         ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Email Calendar Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
       ]
     },
     "When clicking ‘Execute workflow’": {
@@ -432,54 +866,391 @@
         ]
       ]
     },
-    "Edit Fields": {
+    "If1": {
       "main": [
+        [
+          {
+            "node": "Get Schedule",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 1
+          }
+        ],
         []
+      ]
+    },
+    "Merge5": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Schedule": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Calendar Event",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge6": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": {
-    "node:Schedule Trigger": {
-      "recurrenceRules": []
-    }
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
   },
-  "meta": null,
   "pinData": {
     "Edit Fields": [
       {
         "json": {
-          "id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
+          "telegram_chat_id": "-1003315838853",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
           "name": "Berkay",
           "last_name": "Güzel",
-          "email": "berkayguzel06@outlook.com",
-          "password_hash": "$2a$10$BeuHt4T6S5cEKqydoeZU7u8vsCZbvwtMtor.csLhDL9XunQrGSFwS",
-          "role": "user",
-          "api_key": null,
-          "last_login": "2025-12-02T05:55:26.800Z",
-          "created_at": "2025-12-01T11:35:53.535Z",
-          "updated_at": "2025-12-02T05:55:26.800Z",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5b\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yEAAAA=",
+          "categories": [
+            "Categorized",
+            "drive",
+            "todo"
+          ],
+          "receivedDateTime": "2025-12-01T14:13:06Z",
+          "hasAttachments": false,
+          "subject": "👀 HSBC calls out OpenAI",
+          "bodyPreview": "ALSO: How to create consultant-quality strategies  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
+          "from": {
+            "emailAddress": {
+              "name": "Superhuman – Zain Kahn",
+              "address": "superhuman@mail.joinsuperhuman.ai"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
+          "telegram_chat_id": "-1003315838853",
           "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "refresh_token": "M.C551_BL2.0.U.-CknJALezOHUkd6ARxAezS1UNYhMww6R8PCC1nhVRul8WuWs!8Iap!qHpNwvrv2d19MeuiSxwHmfKAgb9fjNtAL9b7V0syW6nyJzY44D0SF7kt6tpN5VlznI!WO472ZhgtzJ4YaMFpF*2Q27J6!QSt9Bl!AI80T2Tu14lHEY4pg1Yuq6Rw1uxUjG!jB!a5K12MADtGi3rZCT7nyr2yEFtM5h*ysHxutpbZAyFkenVdeiEK!BRZ*AGd1bvmFYXePRq3xvrVSmer73str5FpWaP!ywGt5I4rSKU!yqTk!I!c3S6v1*p8vQ3sOglNf0EL0qM210!l1LWW46In6LmsPBv6Pi1OqCUyHYYYiJYCuQ2Ou!cpcwDoS3llf23SZXmnppOBDDXGnIY9unU5xWZnSBhX*VkTveBbaHLXxpzHB2j9fge",
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeBPDw0DajT2yJT15lR8tmgIkwrasHIm/ZacXQt53ib10Hrj9KwaUjz7qLL1kYAx5rkSx32c8wQBxX0Nx9MM4J8vAfWyav7HteV8w34JC3RRDy9FlgqrtGOwRx4ZnAIDa+v/guZLcmdPWJQlxgWNSISpob9ii1m1vsa/6kBWl1l9oAR96T2xwikFHoYNzpGTI3IkVpmmTfC0zQeTrc0Fr2oIBzkAc9d9nnQKpsJZeqv40/FF33p7r7YvXDK7D/epdYIrWKYX8PbPzTj0jD/nGVkvo9V4K4g8jjGcoReNF66z7gUISvLYN+KeqOoasLxhRA8J0d4PGmmpCUmBN0gWITMQZgAAEE+8txuzD0/ekanHp3gsf95QAzJHn43Bj8aQmDejsuDu5f8ylsPRNNp5KHiinsXdXMze27Tfsmt9PKVQtbYoYMK+PUVWL6AENQRKo5FvATLGG41ihezBqLWp0e9BIWoDsUiUm/SIYiutBcVXbAkKboG6/qnDZV9kV39SAKP+BRhLW+vnJ8qL5dLPvd4gYH0Afotj8qowHOEXJEHTX7dYgl3CdRiHrih0/soJy4ZB23xu+Pu3WnSBk9oU95MMjjkw/fXDrE+oYe65iPBOHpIz7cS1PSwvm66DpZEl/dsd53qU5xorONFRvfmHefMUYjvSYI5NR8Xn4n/UyrO4XSbOMuIfs0gvkr4SEuhy+nxCXSJijiUkRzmLX78H7AcXhx6F9LgGSjAufuvy1pHIZWtvv98TrRd1FU5LPsKDoUrZYMsUpBSRSKyIr3hQlkZBaYXOByWFLVpp7QmyQ2CPE1m17p3Xc+X9kQta3lUUUeGJVaQ/wrIj0n0JrCK423x5N0/vA2t+qzrZp3+0gp76JZmdmnCPTM5IHUPHkmc/zE2iVdT8zzxeNxIImJZEhJEvmIjRQYZ50kVIsNZnrnsS5fEnQRBbGKWxbdvrkDicXVzW8u9y62+b6ECr+KJ752mV6+qeDq7L1H64e7I/kGB3Ge+4ZjwMfcs95AlPm8ztzvsOYdEiUSlGR8V4dxjkcy040rnJ0kYYoFzG/uo/NknJB67ner8EDWd9iRPR2g3+Kn+UlOo7ZIWILdzjWhtbV+SKPePDonmYO8F4dK/sqGELbSdjyxPNIJvMqb7fn3RQdL8NuLbzS0pLPt2hMSaxgR1J/wpuZi5EVhgrYfgemZK5N19BLzven//rqECJLReLH/ZPwH2E9JBX39W/dEfC4OFWUvLwpYaMeH/MDb+Y1+sNq7Wo7rhAbqFWjExJZQTKeO5UNbc2afrOvr5sExOTXiBjq/piuemkJGRezFj7IWiqQR5R3c4ciuntDNg9BQCcWnp9aU2kVejsurwv/bLURWvkVQREhR7p4VUwVc77ttw5CgeN+pt4CFrQOVJ5Viu5IoeetmR0HMxRX4sFHxps9eoC7hqG7ohP0Ehqs08W1YN9PDAb4UEpR1XUVAc3yVqWvRmBxqB+tgui3Xwbn+3GDG4DBfri3gD7jAM=",
-          "expires_at": "2025-12-02T07:30:32.518Z",
-          "ctelegram_chat_id": null,
-          "telegram_chat_id": "-1003315838853"
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5V\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yIAAAA=",
+          "categories": [
+            "Categorized",
+            "drive",
+            "todo"
+          ],
+          "receivedDateTime": "2025-12-01T15:27:54Z",
+          "hasAttachments": false,
+          "subject": "How do your stocks stack up?",
+          "bodyPreview": "Visualize performance, valuation, dividends, and more—all in one place.\r\n\r\n\r\nSee How Your Stocks Really Stack Up\r\n\r\nEvery investor wants to know: Is my stock truly the strongest\r\nchoice in its space?\r\n\r\n\r\n\r\nTo show you how it works, we've pulled Nvidia's ",
+          "from": {
+            "emailAddress": {
+              "name": "Seeking Alpha",
+              "address": "subscriptions@seekingalpha.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
+          "telegram_chat_id": "-1003315838853",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5F\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yMAAAA=",
+          "categories": [
+            "Categorized",
+            "drive"
+          ],
+          "receivedDateTime": "2025-12-01T15:28:03Z",
+          "hasAttachments": false,
+          "subject": "What can AI reveal about AMZN?",
+          "bodyPreview": "Run an instant Virtual Analyst report to guide your next move.\r\n\r\n\r\nGet AI Insights for Faster Decisions\r\n\r\n\r\n\r\nYou’re building your watchlist and exploring our tools—now see what happens when you add in the power of AI.\r\n\r\n\r\n\r\nOur Virtual Analyst Reports",
+          "from": {
+            "emailAddress": {
+              "name": "Seeking Alpha",
+              "address": "subscriptions@seekingalpha.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
+          "telegram_chat_id": "-1003315838853",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5Z\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yQAAAA=",
+          "categories": [
+            "Categorized",
+            "drive",
+            "todo"
+          ],
+          "receivedDateTime": "2025-12-01T15:51:44Z",
+          "hasAttachments": false,
+          "subject": "USA Rare Earth: The Small Cap Sitting At The Center Of America's Rare Earth Competition With China",
+          "bodyPreview": "Stock Ideas\r\nStock Ideas\r\n \r\n\r\nAnalysis Picked for You\r\n\r\n\r\n\r\nUSA Rare Earth: The Small Cap Sitting At The Center Of America's Rare Earth Competition With China\r\n\r\nEveryday Options • USAR\r\n\r\n\r\n\r\nAlbemarle: Ride The Lithium Surge\r\n\r\nStone Fox Capital • ALB",
+          "from": {
+            "emailAddress": {
+              "name": "Stock Ideas",
+              "address": "account@seekingalpha.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
+          "telegram_chat_id": "-1003315838853",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5X\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yUAAAA=",
+          "categories": [
+            "Categorized",
+            "drive",
+            "todo"
+          ],
+          "receivedDateTime": "2025-12-01T18:46:09Z",
+          "hasAttachments": false,
+          "subject": "Did Wall Street Accidentally Hide This Arbitrage Trade for NetApp (NTAP) Stock?",
+          "bodyPreview": "Today's insight on high volume options activity.\r\nDid Wall Street Accidentally Hide This Arbitrage Trade for NetApp (NTAP) Stock?\r\nUnusual Options Report for December 01, 2025\r\n\r\n\r\nI’m going to be upfront: I’m supposed to be specifically focusing on unusu",
+          "from": {
+            "emailAddress": {
+              "name": "Barchart",
+              "address": "newsletters@barchart.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
+          "telegram_chat_id": "-1003315838853",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5h\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yYAAAA=",
+          "categories": [
+            "Categorized",
+            "drive",
+            "todo"
+          ],
+          "receivedDateTime": "2025-12-01T19:38:37Z",
+          "hasAttachments": false,
+          "subject": "Nvidia's $2B stock buy",
+          "bodyPreview": "Return of the yen carry trade panic; plus, natural gas heats up.\r\n͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿",
+          "from": {
+            "emailAddress": {
+              "name": "Barchart Brief",
+              "address": "newsletters@brief.barchart.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
+          "telegram_chat_id": "-1003315838853",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5f\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815ycAAAA=",
+          "categories": [
+            "Categorized",
+            "drive",
+            "todo"
+          ],
+          "receivedDateTime": "2025-12-01T19:58:15Z",
+          "hasAttachments": false,
+          "subject": "The AI Boom Is Shifting — Don’t Be Late to This One",
+          "bodyPreview": "Early buyers are already positioning ahead of the next AI boom.\r\n                Unsubscribe\r\n \r\nBelow is a message from one of our sponsors\r\nThe Next AI Boom Won’t Be Chips. It’ll Be Software—And This Startup Is Leading It.\r\n\r\nThe AI 1.0 boom made chip c",
+          "from": {
+            "emailAddress": {
+              "name": "Barchart Partner",
+              "address": "bcmembers@partners.barchart.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
+          "telegram_chat_id": "-1003315838853",
+          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5d\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815ygAAAA=",
+          "categories": [
+            "Categorized",
+            "drive",
+            "todo"
+          ],
+          "receivedDateTime": "2025-12-01T21:18:23Z",
+          "hasAttachments": false,
+          "subject": "Rotations Continue To The Next Rally As Markets Anticipate The January Effect",
+          "bodyPreview": "Timing is crucial for investment success; static buy-and-hold strategies often underperform due to market cycles and pro\r\n\r\nMust Reads\r\n\r\n \r\n \r\n\r\nGet 20% off any Seeking Alpha plan during our Cyber Monday sale* Claim Offer »\r\n\r\n \r\n \r\n \r\n \r\n \r\n\r\nFREE TREND",
+          "from": {
+            "emailAddress": {
+              "name": "Must Reads",
+              "address": "account@seekingalpha.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
         }
       }
     ]
   },
-  "versionId": "b3bc7bd0-5253-4bb5-a899-26cc790b9ae3",
-  "versionCounter": 120,
-  "triggerCount": 1,
+  "versionId": "1d2e1f11-60b3-4f4d-83e8-7d1161faff96",
+  "versionCounter": 48,
+  "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-28T07:54:12.222Z",
-      "createdAt": "2025-11-28T07:54:12.222Z",
+      "updatedAt": "2025-11-25T07:28:14.719Z",
+      "createdAt": "2025-11-25T07:28:14.719Z",
       "role": "workflow:owner",
-      "workflowId": "foTJVf0W9BRJbt4D",
+      "workflowId": "NlDvdXwFHBjxGgTA",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -496,7 +1267,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-03T05:43:07.000Z",
+              "updatedAt": "2025-12-04T20:18:03.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -519,7 +1290,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-03",
+              "lastActiveAt": "2025-12-04",
               "isPending": false
             }
           }

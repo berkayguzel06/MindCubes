@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2025-12-02T06:56:15.000Z",
+  "updatedAt": "2025-12-04T20:18:54.000Z",
   "createdAt": "2025-12-01T08:02:13.560Z",
   "id": "yF5RpEu8IPfTJpWp",
-  "name": "Mail Drive",
+  "name": "Mail Drive Fetch",
   "description": null,
   "active": false,
   "isArchived": false,
@@ -411,8 +411,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "39c77877-58cb-48d8-b441-348da7463666",
-  "versionCounter": 124,
+  "versionId": "ad293195-5258-444e-b5a8-69404d7f2783",
+  "versionCounter": 125,
   "triggerCount": 1,
   "shared": [
     {
@@ -436,7 +436,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-03T05:43:07.000Z",
+              "updatedAt": "2025-12-04T20:18:03.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -459,7 +459,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-03",
+              "lastActiveAt": "2025-12-04",
               "isPending": false
             }
           }

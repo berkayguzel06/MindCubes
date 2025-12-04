@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2025-12-02T06:57:55.000Z",
+  "updatedAt": "2025-12-04T20:18:58.000Z",
   "createdAt": "2025-11-28T08:07:10.615Z",
   "id": "wmgfcWHCt08DQNK8",
-  "name": "Mail Categorization",
+  "name": "Mail Categorization Fetch",
   "description": null,
   "active": false,
   "isArchived": false,
@@ -15,7 +15,7 @@
       "typeVersion": 2,
       "position": [
         -2176,
-        104
+        112
       ],
       "id": "9eeceb50-5a1f-451a-994a-f11fed38f357",
       "name": "Recipient Filter",
@@ -39,7 +39,7 @@
       "typeVersion": 4.3,
       "position": [
         -2848,
-        248
+        256
       ],
       "id": "803df440-bae2-4407-8be0-183b9f8b0b54",
       "name": "HTTP Request"
@@ -52,7 +52,7 @@
       "typeVersion": 2,
       "position": [
         -2624,
-        248
+        256
       ],
       "id": "33976f95-4f6a-4636-a3e7-1d032f2a0bec",
       "name": "Code in JavaScript",
@@ -82,7 +82,7 @@
       "typeVersion": 1.1,
       "position": [
         -3072,
-        56
+        64
       ],
       "id": "6e6241a3-dc3a-4091-b7e6-f7faa24c360a",
       "name": "When Executed by Another Workflow"
@@ -131,7 +131,7 @@
       "typeVersion": 3.2,
       "position": [
         -2400,
-        104
+        112
       ],
       "id": "17bde116-a427-4842-a573-638bea87cd12",
       "name": "Merge1"
@@ -146,7 +146,7 @@
       "typeVersion": 1.2,
       "position": [
         -1952,
-        248
+        256
       ],
       "id": "b77dbb6a-24c4-4b97-bf47-d37e7e9f5937",
       "name": "Error Message",
@@ -325,8 +325,8 @@
   },
   "meta": null,
   "pinData": {},
-  "versionId": "d214c3c3-da58-4545-8782-17ad82b26d68",
-  "versionCounter": 109,
+  "versionId": "7b19647f-63a7-43f2-9bce-9e1376a9f8d8",
+  "versionCounter": 110,
   "triggerCount": 1,
   "shared": [
     {
@@ -350,7 +350,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-03T05:43:07.000Z",
+              "updatedAt": "2025-12-04T20:18:03.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -373,7 +373,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-03",
+              "lastActiveAt": "2025-12-04",
               "isPending": false
             }
           }

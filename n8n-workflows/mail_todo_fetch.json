@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2025-12-01T08:56:46.000Z",
-  "createdAt": "2025-11-20T07:07:35.004Z",
-  "id": "kNu54ENHUJqxAefV",
-  "name": "Mail Calendar Integration",
+  "updatedAt": "2025-12-04T20:18:49.000Z",
+  "createdAt": "2025-12-01T06:24:37.305Z",
+  "id": "Y7v3LnlpWqKjA3cD",
+  "name": "Mail ToDo Fetch",
   "description": null,
   "active": false,
-  "isArchived": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
@@ -14,100 +14,16 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2400,
-        752
+        -1920,
+        112
       ],
-      "id": "858d75e9-a87c-42cb-ba69-6780151d592c",
+      "id": "c0d63d02-9d64-4544-a94a-048262089caa",
       "name": "Recipient Filter",
       "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "cbK2DhaqpErX6deF",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/cbK2DhaqpErX6deF",
-          "cachedResultName": "Mail-ToDo"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        -1312,
-        512
-      ],
-      "id": "f6de5683-b04a-42c8-810a-e7d0036ab015",
-      "name": "Mail-ToDo"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "NlDvdXwFHBjxGgTA",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/NlDvdXwFHBjxGgTA",
-          "cachedResultName": "Mail-Calendar"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        -1312,
-        704
-      ],
-      "id": "11c3ff71-e430-4be8-beba-5dbff2e9b6df",
-      "name": "Mail-Calendar"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "wF9RJClNrNYAlCjT",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/wF9RJClNrNYAlCjT",
-          "cachedResultName": "Mail-Prioritizing"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        -1312,
-        320
-      ],
-      "id": "701f0737-2476-4823-a693-5d350e5619de",
-      "name": "Mail-Prioritizing"
-    },
-    {
-      "parameters": {
-        "url": "https://graph.microsoft.com/v1.0/me/messages?$top=20&$filter=isRead eq false and not(categories/any(a:a eq 'AI_processed')) and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview",
+        "url": "=https://graph.microsoft.com/v1.0/me/messages?$top=20&$filter=parentFolderId ne '{{ $json.json.id }}' and categories/any(a:a eq 'Categorized') and not(categories/any(a:a eq 'todo')) and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview,body\n",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -122,23 +38,23 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -2896,
-        848
+        -2592,
+        272
       ],
-      "id": "d1dcfd8c-5f7c-43ca-af09-28a72f2583bf",
+      "id": "ce42b845-809f-46dd-ac5f-476d21c06bf8",
       "name": "HTTP Request"
     },
     {
       "parameters": {
-        "jsCode": "// Gelen JSON verisini $input.json'dan alın.\nconst inputData = $input.first().json;\n\n// 'value' özelliğinin var olup olmadığını kontrol edin ve varsa bu diziyi döndürün.\nif (inputData && Array.isArray(inputData.value)) {\n    return inputData.value;\n}\n\n// 'value' alanı yoksa veya dizi değilse, boş bir dizi veya orijinal veriyi döndürmeyi seçebilirsiniz.\n// Bu örnekte, beklenen 'value' dizisi yoksa boş bir dizi döndürüyoruz.\nreturn [];"
+        "jsCode": "// Gelen JSON verisini $input.json'dan alın.\nconst inputData = $input.first().json;\n\n// HTML temizleme fonksiyonu\nfunction cleanHtmlContent(html) {\n    if (!html) return \"\";\n    \n    let text = html;\n    \n    // 1. Blok bitiş etiketlerini (p, div, br, li) yeni satıra çevir\n    text = text.replace(/<\\/p>|<\\/div>|<br>|<\\/br>|<\\/li>/gi, '\\n');\n\n    // 2. Geriye kalan tüm HTML etiketlerini sil\n    text = text.replace(/<[^>]+>/g, '');\n\n    // 3. HTML entity'lerini (örneğin &nbsp;) boşluk ile değiştir\n    text = text.replace(/&nbsp;/g, ' ');\n\n    // 4. Fazla boş satırları ve baştaki/sondaki boşlukları temizle\n    text = text.replace(/\\n\\s*\\n/g, '\\n').trim();\n\n    return text;\n}\n\n// 'value' özelliğinin var olup olmadığını kontrol edin\nif (inputData && Array.isArray(inputData.value)) {\n    // Dizideki her bir öğeyi dön\n    return inputData.value.map(item => {\n        if (item.body && item.body.content) {\n            // Önce HTML içeriği temizle\n            const cleanedText = cleanHtmlContent(item.body.content);\n\n            // Temizlenen metni 'bodyPreview' alanına ata\n            item.bodyPreview = cleanedText;\n\n            // (Opsiyonel) Body'nin kendisini de temizlenmiş haliyle güncellemek istersen:\n            item.body.content = cleanedText;\n            item.body.contentType = \"text\";\n        }\n        return item;\n    });\n}\n\n// Veri yoksa boş dizi döndür\nreturn [];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2752,
-        848
+        -2368,
+        272
       ],
-      "id": "17eeb2a5-7a9d-4d23-bf12-54c3aefa2b81",
+      "id": "0561d145-fac1-47ce-9cc0-56f0ab508e06",
       "name": "Code in JavaScript",
       "alwaysOutputData": false,
       "onError": "continueErrorOutput"
@@ -152,10 +68,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -2176,
-        608
+        -1696,
+        32
       ],
-      "id": "d09b96fb-e443-46dd-9709-7833182d56eb",
+      "id": "4d5278f9-f26d-40eb-8699-161c7bb55115",
       "name": "Merge"
     },
     {
@@ -165,59 +81,11 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -3072,
-        736
+        -3488,
+        112
       ],
-      "id": "933ae9f9-a26b-48ed-aa37-1b650069da8d",
+      "id": "ebcf94b2-0dd3-4e54-bcd2-ef945b51505d",
       "name": "When Executed by Another Workflow"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "Vxx0invazo8UfRuk",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/Vxx0invazo8UfRuk",
-          "cachedResultName": "Mail-OneDrive"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {}
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        -1312,
-        896
-      ],
-      "id": "595489c2-c5b4-42b0-befe-4aa9ef954185",
-      "name": "Mail-OneDrive"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "rpTj6NRiVVAvLDLt",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/rpTj6NRiVVAvLDLt",
-          "cachedResultName": "Mail-Labeler"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {}
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        -1328,
-        1104
-      ],
-      "id": "4eb24287-f8ad-44ac-adfe-ae8f66373163",
-      "name": "Mail-Labeler"
     },
     {
       "parameters": {
@@ -247,10 +115,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1984,
-        608
+        -1472,
+        32
       ],
-      "id": "e58fa5c2-7e1d-40b6-bad1-79ba0d2ebfe6",
+      "id": "1cdf5aa3-a11a-4f98-bccc-48874a891e7d",
       "name": "If"
     },
     {
@@ -262,10 +130,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -2576,
-        752
+        -2144,
+        112
       ],
-      "id": "180161e7-f3ed-42d8-824e-d3719f567527",
+      "id": "fbf09e15-b41b-44b6-8d94-e0d074818cdf",
       "name": "Merge1"
     },
     {
@@ -277,12 +145,12 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -2064,
-        944
+        -2144,
+        320
       ],
-      "id": "b096356c-c8af-4b8b-9cf3-3f951ed4e736",
+      "id": "98f8af84-4d06-43ee-a84d-67419c8a3b8f",
       "name": "Error Message",
-      "webhookId": "51982885-3445-4d7e-95e6-7441f71a21be",
+      "webhookId": "abc461bc-36ae-4e57-bdf5-dc5c397ed57f",
       "credentials": {
         "telegramApi": {
           "id": "JG4HCYCvUBrFrjrG",
@@ -292,12 +160,63 @@
     },
     {
       "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/me/mailFolders('deleteditems')?$select=id",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -3264,
+        352
+      ],
+      "id": "6a65f549-8686-4c74-9b01-473a94d48c3a",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT * FROM input1 LEFT JOIN input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2816,
+        272
+      ],
+      "id": "b173d6a2-3c21-4b7d-8360-a7705fd6b327",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3040,
+        352
+      ],
+      "id": "6a827aa9-0691-4186-926f-cbcf45199c29",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "23Eb5BG7UmbO8qn1",
+          "value": "Vnp5sdn1TximetGj",
           "mode": "list",
-          "cachedResultUrl": "/workflow/23Eb5BG7UmbO8qn1",
-          "cachedResultName": "Add AI Process Tag"
+          "cachedResultUrl": "/workflow/Vnp5sdn1TximetGj",
+          "cachedResultName": "Add ToDo Tag"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -308,11 +227,35 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -1312,
+        -1248,
+        -64
+      ],
+      "id": "ea605208-7edf-450e-8575-ba89a1e9004c",
+      "name": "Call 'Add ToDo Tag'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "cbK2DhaqpErX6deF",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/cbK2DhaqpErX6deF",
+          "cachedResultName": "Mail-ToDo"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1248,
         128
       ],
-      "id": "b1a3e4a5-eefc-4e70-987f-ae122fb52288",
-      "name": "Add AI Process Tag"
+      "id": "282b6217-647e-4a0d-a5c7-0057b4859650",
+      "name": "Call 'Mail-ToDo'"
     }
   ],
   "connections": {
@@ -377,12 +320,17 @@
             "index": 0
           },
           {
-            "node": "HTTP Request",
+            "node": "Merge1",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Merge1",
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge2",
             "type": "main",
             "index": 0
           }
@@ -393,32 +341,12 @@
       "main": [
         [
           {
-            "node": "Mail-Prioritizing",
+            "node": "Call 'Add ToDo Tag'",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Mail-ToDo",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Mail-Calendar",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Mail-OneDrive",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Mail-Labeler",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Add AI Process Tag",
+            "node": "Call 'Mail-ToDo'",
             "type": "main",
             "index": 0
           }
@@ -435,6 +363,39 @@
           }
         ]
       ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -447,15 +408,15 @@
   },
   "meta": null,
   "pinData": {},
-  "versionId": "5c53674e-6061-4603-b713-f0478cb596f4",
-  "versionCounter": 88,
+  "versionId": "00fb0e9b-8020-4c86-9966-d2ed50f64206",
+  "versionCounter": 122,
   "triggerCount": 1,
   "shared": [
     {
-      "updatedAt": "2025-11-25T07:28:14.720Z",
-      "createdAt": "2025-11-25T07:28:14.720Z",
+      "updatedAt": "2025-12-01T06:24:37.309Z",
+      "createdAt": "2025-12-01T06:24:37.309Z",
       "role": "workflow:owner",
-      "workflowId": "kNu54ENHUJqxAefV",
+      "workflowId": "Y7v3LnlpWqKjA3cD",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -504,6 +465,12 @@
     }
   ],
   "tags": [
+    {
+      "updatedAt": "2025-12-01T06:23:06.670Z",
+      "createdAt": "2025-12-01T06:23:06.670Z",
+      "id": "0cbLQ4Aipx5LSkSX",
+      "name": "todo"
+    },
     {
       "updatedAt": "2025-11-25T07:28:56.435Z",
       "createdAt": "2025-11-25T07:28:56.435Z",
