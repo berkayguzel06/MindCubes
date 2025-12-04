@@ -149,11 +149,13 @@ function rotateWorkflowBackups(baseName) {
 
 // @desc    Get all workflows from PostgreSQL (synced from n8n)
 // @route   GET /api/v1/n8n/workflows
-// @access  Public
+// @access  Private (uses authenticated user to enrich with user-specific settings)
 exports.getWorkflows = async (req, res, next) => {
   try {
-    const result = await query(
-      `
+    const userId = req.user && req.user.id ? req.user.id : null;
+
+    const params = [];
+    const sql = `
       SELECT 
         w.n8n_id AS id,
         w.name,
@@ -169,27 +171,40 @@ exports.getWorkflows = async (req, res, next) => {
             )
           ) FILTER (WHERE t.id IS NOT NULL),
           '[]'::JSON
-        ) AS tags
+        ) AS tags,
+        -- user-specific settings (nullable if no settings or no user)
+        CASE
+          WHEN $1::uuid IS NULL THEN NULL
+          ELSE COALESCE(wus.is_enabled, TRUE)
+        END AS is_enabled_for_user
       FROM workflows w
       LEFT JOIN workflow_tags wt ON wt.workflow_id = w.id
       LEFT JOIN tags t ON t.id = wt.tag_id
-      GROUP BY w.id
+      LEFT JOIN workflow_user_settings wus 
+        ON $1::uuid IS NOT NULL 
+       AND wus.workflow_id = w.id 
+       AND wus.user_id = $1::uuid
+      GROUP BY w.id, wus.is_enabled
       ORDER BY w.created_at DESC
-      `
-    );
+    `;
+
+    params.push(userId);
+
+    const result = await query(sql, params);
 
     const allWorkflows = result.rows || [];
 
-    // Filter workflows: only include those with 'executable' tag and exclude 'archive' tag
+    // Filter workflows: only include those with 'executable' / 'start' / 'editable' tags and exclude 'archive' tag
     const filteredWorkflows = allWorkflows.filter((workflow) => {
       const tags = workflow.tags || [];
       const tagNames = tags.map((tag) => (tag.name || '').toLowerCase());
 
-      const hasExecutable = tagNames.includes('executable');
+      const hasExecutable = tagNames.includes('executable') || tagNames.includes('start-executable');
+      const hasStart = tagNames.includes('start');
       const editable = tagNames.includes('editable');
       const hasArchive = tagNames.includes('archive');
 
-      return hasExecutable || editable && !hasArchive;
+      return (hasExecutable || hasStart || editable) && !hasArchive;
     });
 
     res.json({
@@ -442,12 +457,12 @@ exports.deactivateWorkflow = async (req, res, next) => {
 exports.getWorkflowPrompt = async (req, res, next) => {
   try {
     const { id } = req.params; // n8n workflow id
-    const { userId } = req.query;
+    const userId = req.user && req.user.id;
 
     if (!userId) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
-        message: 'userId is required'
+        message: 'Unauthorized'
       });
     }
 
@@ -505,12 +520,13 @@ exports.getWorkflowPrompt = async (req, res, next) => {
 exports.upsertWorkflowPrompt = async (req, res, next) => {
   try {
     const { id } = req.params; // n8n workflow id
-    const { userId, prompt } = req.body;
+    const userId = req.user && req.user.id;
+    const { prompt } = req.body;
 
     if (!userId || typeof prompt !== 'string') {
       return res.status(400).json({
         success: false,
-        message: 'userId and prompt are required'
+        message: 'prompt is required'
       });
     }
 
@@ -553,18 +569,140 @@ exports.upsertWorkflowPrompt = async (req, res, next) => {
   }
 };
 
+// @desc    Get user-specific workflow settings (enable/disable)
+// @route   GET /api/v1/n8n/workflows/:id/settings
+// @access  Private
+exports.getWorkflowUserSettings = async (req, res, next) => {
+  try {
+    const { id } = req.params; // n8n workflow id
+    const userId = req.user && req.user.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized'
+      });
+    }
+
+    const workflowResult = await query(
+      'SELECT id FROM workflows WHERE n8n_id = $1',
+      [id]
+    );
+
+    if (workflowResult.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Workflow not found in database'
+      });
+    }
+
+    const dbWorkflowId = workflowResult.rows[0].id;
+
+    const settingsResult = await query(
+      `
+      SELECT is_enabled
+      FROM workflow_user_settings
+      WHERE user_id = $1 AND workflow_id = $2
+      `,
+      [userId, dbWorkflowId]
+    );
+
+    const isEnabled = settingsResult.rowCount === 0
+      ? true // default: enabled
+      : !!settingsResult.rows[0].is_enabled;
+
+    res.json({
+      success: true,
+      data: {
+        isEnabled
+      }
+    });
+  } catch (error) {
+    logger.error(`Error fetching workflow user settings: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch workflow user settings'
+    });
+  }
+};
+
+// @desc    Update user-specific workflow settings (enable/disable)
+// @route   POST /api/v1/n8n/workflows/:id/settings
+// @access  Private
+exports.upsertWorkflowUserSettings = async (req, res, next) => {
+  try {
+    const { id } = req.params; // n8n workflow id
+    const userId = req.user && req.user.id;
+    const { isEnabled } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized'
+      });
+    }
+
+    if (typeof isEnabled !== 'boolean') {
+      return res.status(400).json({
+        success: false,
+        message: 'isEnabled (boolean) is required'
+      });
+    }
+
+    const workflowResult = await query(
+      'SELECT id FROM workflows WHERE n8n_id = $1',
+      [id]
+    );
+
+    if (workflowResult.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Workflow not found in database'
+      });
+    }
+
+    const dbWorkflowId = workflowResult.rows[0].id;
+
+    await query(
+      `
+      INSERT INTO workflow_user_settings (user_id, workflow_id, is_enabled)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (user_id, workflow_id)
+      DO UPDATE SET
+        is_enabled = EXCLUDED.is_enabled,
+        updated_at = NOW()
+      `,
+      [userId, dbWorkflowId, isEnabled]
+    );
+
+    res.json({
+      success: true,
+      message: 'Workflow user settings updated successfully'
+    });
+  } catch (error) {
+    logger.error(`Error updating workflow user settings: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update workflow user settings'
+    });
+  }
+};
+
 // @desc    Execute workflow manually with chat input, file, and user_id
 // @route   POST /api/v1/n8n/workflows/:id/execute
 // @access  Private
 exports.executeWorkflow = async (req, res, next) => {
   try {
-    const { chatInput, userId, webhookPath } = req.body;
+    const { chatInput, webhookPath } = req.body;
+    const authenticatedUserId = req.user && req.user.id;
+    const userId = authenticatedUserId || req.body.userId || 'anonymous';
+
     const file = req.file; // Multer will attach file here
     
     // Prepare data to send to n8n
     const executionData = {
       chatInput: chatInput || '',
-      userId: userId || 'anonymous',
+      userId,
       timestamp: new Date().toISOString()
     };
     

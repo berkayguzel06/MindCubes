@@ -15,6 +15,8 @@ const { protect, authorize, adminOnly } = require('../middleware/auth');
 const {
   getWorkflows,
   getWorkflow,
+  getWorkflowUserSettings,
+  upsertWorkflowUserSettings,
   backupWorkflows,
   importWorkflows,
   activateWorkflow,
@@ -29,6 +31,8 @@ const {
 // Workflow management routes - all require authentication
 router.get('/workflows', protect, getWorkflows);
 router.get('/workflows/:id', protect, getWorkflow);
+router.get('/workflows/:id/settings', protect, getWorkflowUserSettings);
+router.post('/workflows/:id/settings', protect, express.json(), upsertWorkflowUserSettings);
 
 // Admin-only workflow management
 router.post('/workflows/backup', protect, adminOnly, backupWorkflows);

@@ -166,6 +166,24 @@ const ensureTables = async (client) => {
     ON workflow_prompts (user_id, workflow_id)
   `);
 
+  // User-specific workflow settings (enable/disable per workflow)
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS workflow_user_settings (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      workflow_id UUID NOT NULL REFERENCES workflows(id) ON DELETE CASCADE,
+      is_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (user_id, workflow_id)
+    )
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_workflow_user_settings_user_workflow
+    ON workflow_user_settings (user_id, workflow_id)
+  `);
+
   // Backfill newly introduced / updated optional columns on already existing tables
   await client.query(`
     ALTER TABLE user_credentials

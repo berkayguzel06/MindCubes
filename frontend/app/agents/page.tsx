@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useStoredUser } from '@/hooks/useStoredUser';
 import { useRouter } from 'next/navigation';
-import Sidebar from '../components/Sidebar';
+import { useEffect, useState } from 'react';
 import NotificationPanel, { NotificationType } from '../components/NotificationPanel';
+import Sidebar from '../components/Sidebar';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:5000/api/v1';
 
@@ -14,6 +14,7 @@ interface N8nWorkflow {
   active: boolean;
   version_id?: string;
   tags?: Array<{ id: string; name: string; createdAt?: string; updatedAt?: string }>;
+  is_enabled_for_user?: boolean;
 }
 
 export default function Agents() {
@@ -47,6 +48,7 @@ export default function Agents() {
   const [promptText, setPromptText] = useState('');
   const [promptLoading, setPromptLoading] = useState(false);
   const [selectedTagFilter, setSelectedTagFilter] = useState<string>('all');
+  const [updatingSettings, setUpdatingSettings] = useState<string | null>(null);
 
   const showNotification = (message: string, type: NotificationType = 'info') => {
     setNotification({ message, type, isOpen: true });
@@ -191,7 +193,7 @@ export default function Agents() {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/n8n/workflows/${workflowId}/prompt?userId=${encodeURIComponent(userId)}`,
+        `${API_BASE_URL}/n8n/workflows/${workflowId}/prompt`,
         {
           headers: {
             'Authorization': `Bearer ${token}`
@@ -220,7 +222,7 @@ export default function Agents() {
   };
 
   const savePrompt = async () => {
-    if (!userId || !promptModal.workflowId || !token) return;
+    if (!promptModal.workflowId || !token) return;
 
     try {
       setPromptLoading(true);
@@ -231,7 +233,6 @@ export default function Agents() {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          userId,
           prompt: promptText
         })
       });
@@ -249,6 +250,48 @@ export default function Agents() {
       showNotification('An error occurred while saving the prompt.', 'error');
     } finally {
       setPromptLoading(false);
+    }
+  };
+
+  const toggleWorkflowForUser = async (workflowId: string, currentlyEnabled: boolean) => {
+    if (!token) return;
+
+    try {
+      setUpdatingSettings(workflowId);
+      const response = await fetch(`${API_BASE_URL}/n8n/workflows/${workflowId}/settings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          isEnabled: !currentlyEnabled
+        })
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        showNotification(data.message || 'Failed to update workflow settings for user.', 'error');
+        return;
+      }
+
+      // Optimistically update local state
+      setWorkflows((prev) =>
+        prev.map((wf) =>
+          wf.id === workflowId
+            ? {
+                ...wf,
+                is_enabled_for_user: !currentlyEnabled
+              }
+            : wf
+        )
+      );
+    } catch (err) {
+      console.error('Error updating workflow settings for user:', err);
+      showNotification('Failed to update workflow settings for user. Check console for details.', 'error');
+    } finally {
+      setUpdatingSettings(null);
     }
   };
 
@@ -486,7 +529,9 @@ export default function Agents() {
                 const tagNames = (workflow.tags || []).map((t) => t.name.toLowerCase());
                 const hasDataInput = tagNames.includes('data-input');
                 const hasEditable = tagNames.includes('editable');
+                const hasStart = tagNames.includes('start');
                 const isActive = workflow.active;
+                const isEnabledForUser = workflow.is_enabled_for_user !== false;
 
                 return (
                   <div
@@ -520,22 +565,35 @@ export default function Agents() {
                     </p>
                     
                     <div className="flex items-center justify-between pt-4 border-t border-white/5 gap-2">
-                    {/*
-                      <button
-                        onClick={() => toggleWorkflowActive(workflow.id, workflow.active)}
-                        className="text-xs text-white hover:underline px-2 py-1 rounded hover:bg-white/5 transition-colors"
-                      >
-                        {workflow.active ? 'Deactivate' : 'Activate'}
-                      </button>
-                    */}
-                      {hasEditable && (
-                        <button
-                          onClick={() => openPromptModal(workflow.id, workflow.name)}
-                          className="text-xs px-3 py-1 rounded-full border border-purple-500/40 bg-purple-500/10 text-purple-200 hover:bg-purple-500/20 transition-colors"
-                        >
-                          ✏️ Edit Prompt
-                        </button>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {hasStart && (
+                          <button
+                            onClick={() => toggleWorkflowForUser(workflow.id, isEnabledForUser)}
+                            disabled={updatingSettings === workflow.id}
+                            className={`text-xs px-3 py-1 rounded-full border transition-colors ${
+                              isEnabledForUser
+                                ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200 hover:bg-emerald-500/20'
+                                : 'border-gray-500/40 bg-gray-700/40 text-gray-300 hover:bg-gray-600/60'
+                            } disabled:opacity-50 disabled:cursor-not-allowed`}
+                          >
+                            {updatingSettings === workflow.id
+                              ? 'Updating...'
+                              : isEnabledForUser
+                                ? 'Disable for me'
+                                : 'Enable for me'}
+                          </button>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {hasEditable && (
+                          <button
+                            onClick={() => openPromptModal(workflow.id, workflow.name)}
+                            className="text-xs px-3 py-1 rounded-full border border-purple-500/40 bg-purple-500/10 text-purple-200 hover:bg-purple-500/20 transition-colors"
+                          >
+                            ✏️ Edit Prompt
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );
