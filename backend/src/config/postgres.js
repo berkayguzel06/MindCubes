@@ -228,6 +228,42 @@ const ensureTables = async (client) => {
     CREATE INDEX IF NOT EXISTS idx_error_logs_execution_id
     ON error_logs (execution_id)
   `);
+
+  // n8n agent traces - LLM call logs with CoT and token usage
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS agent_traces_n8n (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      source TEXT,
+      workflow_name TEXT,
+      workflow_id TEXT,
+      execution_id TEXT,
+      node_name TEXT,
+      model_name TEXT,
+      user_input TEXT,
+      context JSONB DEFAULT '{}',
+      thoughts TEXT,
+      output JSONB DEFAULT '{}',
+      input_tokens INTEGER,
+      output_tokens INTEGER,
+      total_tokens INTEGER,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_agent_traces_n8n_workflow_id
+    ON agent_traces_n8n (workflow_id)
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_agent_traces_n8n_execution_id
+    ON agent_traces_n8n (execution_id)
+  `);
+
+  await client.query(`
+    CREATE INDEX IF NOT EXISTS idx_agent_traces_n8n_created_at
+    ON agent_traces_n8n (created_at DESC)
+  `);
 };
 
 const initPostgres = async () => {
