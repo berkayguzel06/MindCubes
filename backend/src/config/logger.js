@@ -39,14 +39,6 @@ const logger = winston.createLogger({
   format: logFormat,
   defaultMeta: { service: 'mindcubes-backend' },
   transports: [
-    // Console loglama
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      )
-    }),
-
     // Günlük genel loglar (gün + boyut bazlı versiyonlama)
     new winston.transports.File({
       filename: path.join(LOG_DIR, `combined-${CURRENT_DATE}.log`),
@@ -64,15 +56,13 @@ const logger = winston.createLogger({
   ]
 });
 
-// Development ortamında ekstra sade console log
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    )
-  }));
-}
+// Tüm ortamlarda tek bir console transport (double-log önlemek için)
+logger.add(new winston.transports.Console({
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.simple()
+  )
+}));
 
 module.exports = logger;
 

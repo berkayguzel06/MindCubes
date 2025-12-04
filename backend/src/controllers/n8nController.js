@@ -773,11 +773,16 @@ exports.importWorkflows = async (req, res, next) => {
       }
     }
 
-    res.json({
-      success: true,
-      message: `Import completed. ${importedCount} workflows imported from backups.`,
+    const hasErrors = errors.length > 0;
+
+    res.status(hasErrors ? 207 : 200).json({
+      success: !hasErrors,
+      message: hasErrors
+        ? `Import completed with errors. ${importedCount} workflows imported, ${errors.length} failed.`
+        : `Import completed. ${importedCount} workflows imported from backups.`,
       importedCount,
       imported,
+      errorCount: errors.length,
       errors
     });
   } catch (error) {

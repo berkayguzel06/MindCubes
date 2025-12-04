@@ -121,7 +121,23 @@ export default function Agents() {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
+        // Hata detaylarını konsola da yaz
+        console.error('Workflow import errors:', data.errors);
+
+        const failedFilesPreview = data.errors
+          .slice(0, 5)
+          .map((e: any) => `${e.file}: ${e.message}`)
+          .join(' | ');
+
+        showNotification(
+          data.message ||
+            `Workflow import completed with errors. Imported: ${data.importedCount ?? 0}, Failed: ${
+              data.errorCount ?? data.errors.length
+            }. ${failedFilesPreview}`,
+          'error'
+        );
+      } else if (data.success) {
         showNotification(
           data.message || `Workflow import completed. Total ${data.importedCount ?? 0} workflows imported.`,
           'success'
