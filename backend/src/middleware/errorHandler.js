@@ -11,22 +11,38 @@ const errorHandler = (err, req, res, next) => {
   // Log to console for dev
   logger.error(err);
 
-  // Mongoose bad ObjectId
-  if (err.name === 'CastError') {
-    const message = 'Resource not found';
-    error = { message, statusCode: 404 };
-  }
-
-  // Mongoose duplicate key
-  if (err.code === 11000) {
+  // PostgreSQL unique constraint violation
+  if (err.code === '23505') {
     const message = 'Duplicate field value entered';
     error = { message, statusCode: 400 };
   }
 
-  // Mongoose validation error
-  if (err.name === 'ValidationError') {
-    const message = Object.values(err.errors).map(val => val.message);
+  // PostgreSQL foreign key violation
+  if (err.code === '23503') {
+    const message = 'Referenced resource not found';
     error = { message, statusCode: 400 };
+  }
+
+  // PostgreSQL invalid input syntax (e.g., invalid UUID)
+  if (err.code === '22P02') {
+    const message = 'Invalid input format';
+    error = { message, statusCode: 400 };
+  }
+
+  // JWT errors
+  if (err.name === 'JsonWebTokenError') {
+    const message = 'Invalid token';
+    error = { message, statusCode: 401 };
+  }
+
+  if (err.name === 'TokenExpiredError') {
+    const message = 'Token expired';
+    error = { message, statusCode: 401 };
+  }
+
+  // Custom error with statusCode
+  if (err.statusCode) {
+    error.statusCode = err.statusCode;
   }
 
   res.status(error.statusCode || 500).json({

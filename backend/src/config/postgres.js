@@ -15,6 +15,15 @@ const pool = new Pool({
 });
 
 const ensureTables = async (client) => {
+  // Create role enum type if not exists
+  await client.query(`
+    DO $$ BEGIN
+      CREATE TYPE user_role AS ENUM ('admin', 'customer', 'user');
+    EXCEPTION
+      WHEN duplicate_object THEN null;
+    END $$;
+  `);
+
   await client.query(`
     CREATE TABLE IF NOT EXISTS users (
       id UUID PRIMARY KEY,
@@ -22,12 +31,19 @@ const ensureTables = async (client) => {
       last_name VARCHAR(100) NOT NULL,
       email VARCHAR(255) UNIQUE NOT NULL,
       password_hash VARCHAR(255) NOT NULL,
-      role VARCHAR(20) NOT NULL DEFAULT 'user',
+      role VARCHAR(20) NOT NULL DEFAULT 'customer',
       api_key VARCHAR(255) UNIQUE,
       last_login TIMESTAMPTZ,
+      is_active BOOLEAN NOT NULL DEFAULT true,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
+  `);
+
+  // Add is_active column if not exists (for existing databases)
+  await client.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true
   `);
 
   await client.query(`

@@ -29,6 +29,14 @@ export default function SidebarUserCard({ user, onLogout }: SidebarUserCardProps
 
   const displayName = user ? `${user.name} ${user.lastName}` : 'Guest User';
   const email = user?.email ?? 'guest@example.com';
+  const role = user?.role ?? 'guest';
+  
+  const roleColors: Record<string, string> = {
+    admin: 'bg-red-500/20 text-red-400 border-red-500/30',
+    customer: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+    user: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    guest: 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+  };
 
   return (
     <div className="relative" ref={containerRef}>
@@ -39,7 +47,12 @@ export default function SidebarUserCard({ user, onLogout }: SidebarUserCardProps
       >
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-500" />
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-medium text-white truncate">{displayName}</div>
+          <div className="flex items-center gap-2">
+            <div className="text-sm font-medium text-white truncate">{displayName}</div>
+            <span className={`px-1.5 py-0.5 text-[10px] font-medium uppercase rounded border ${roleColors[role] || roleColors.guest}`}>
+              {role}
+            </span>
+          </div>
           <div className="text-xs text-gray-500 truncate">{email}</div>
         </div>
       </button>

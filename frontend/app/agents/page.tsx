@@ -18,7 +18,7 @@ interface N8nWorkflow {
 
 export default function Agents() {
   const router = useRouter();
-  const { user, saveUser, hydrated } = useStoredUser();
+  const { user, token, logout, hydrated } = useStoredUser();
   const [workflows, setWorkflows] = useState<N8nWorkflow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -77,10 +77,14 @@ export default function Agents() {
   ).sort((a, b) => a.localeCompare(b));
 
   const backupWorkflows = async () => {
+    if (!token) return;
     try {
       setBackingUp(true);
       const response = await fetch(`${API_BASE_URL}/n8n/workflows/backup`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       const data = await response.json();
@@ -105,10 +109,14 @@ export default function Agents() {
   };
 
   const importWorkflows = async () => {
+    if (!token) return;
     try {
       setImporting(true);
       const response = await fetch(`${API_BASE_URL}/n8n/workflows/import`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       const data = await response.json();
@@ -135,9 +143,14 @@ export default function Agents() {
   };
 
   const fetchWorkflows = async () => {
+    if (!token) return;
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/n8n/workflows`);
+      const response = await fetch(`${API_BASE_URL}/n8n/workflows`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       const data = await response.json();
       
       if (data.success) {
@@ -154,7 +167,7 @@ export default function Agents() {
   };
 
   const openPromptModal = async (workflowId: string, workflowName: string) => {
-    if (!userId) return;
+    if (!userId || !token) return;
 
     setPromptModal({ isOpen: true, workflowId, workflowName });
     setPromptText('');
@@ -162,7 +175,12 @@ export default function Agents() {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/n8n/workflows/${workflowId}/prompt?userId=${encodeURIComponent(userId)}`
+        `${API_BASE_URL}/n8n/workflows/${workflowId}/prompt?userId=${encodeURIComponent(userId)}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
       );
       const data = await response.json();
 
@@ -186,14 +204,15 @@ export default function Agents() {
   };
 
   const savePrompt = async () => {
-    if (!userId || !promptModal.workflowId) return;
+    if (!userId || !promptModal.workflowId || !token) return;
 
     try {
       setPromptLoading(true);
       const response = await fetch(`${API_BASE_URL}/n8n/workflows/${promptModal.workflowId}/prompt`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           userId,
@@ -232,7 +251,7 @@ export default function Agents() {
   };
 
   const executeWorkflow = async () => {
-    if (!chatInput.trim()) {
+    if (!chatInput.trim() || !token) {
       showNotification('Please enter a chat message.', 'error');
       return;
     }
@@ -254,6 +273,9 @@ export default function Agents() {
 
       const response = await fetch(`${API_BASE_URL}/n8n/workflows/${executeModal.workflowId}/execute`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
         body: formData // Don't set Content-Type, browser will set it with boundary
       });
       
@@ -282,6 +304,7 @@ export default function Agents() {
   // Execute workflow directly without opening the data input modal
   // Used for workflows that DON'T have the `data-input` tag
   const executeWorkflowDirect = async (workflowId: string) => {
+    if (!token) return;
     try {
       setExecuting(true);
 
@@ -290,6 +313,9 @@ export default function Agents() {
 
       const response = await fetch(`${API_BASE_URL}/n8n/workflows/${workflowId}/execute`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
         body: formData
       });
 
@@ -309,10 +335,14 @@ export default function Agents() {
   };
 
   const toggleWorkflowActive = async (workflowId: string, currentActive: boolean) => {
+    if (!token) return;
     try {
       const endpoint = currentActive ? 'deactivate' : 'activate';
       const response = await fetch(`${API_BASE_URL}/n8n/workflows/${workflowId}/${endpoint}`, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
       
       const data = await response.json();
@@ -330,7 +360,7 @@ export default function Agents() {
   };
 
   const handleLogout = () => {
-    saveUser(null);
+    logout();
     router.replace('/login');
   };
 

@@ -23,9 +23,6 @@ NODE_ENV=development
 PORT=5000
 API_VERSION=v1
 
-# Database
-MONGODB_URI=mongodb://localhost:27017/mindcubes
-
 # CORS
 CORS_ORIGIN=http://localhost:3000
 
@@ -37,6 +34,14 @@ JWT_EXPIRE=30d
 N8N_API_URL=http://localhost:5678/api/v1
 N8N_API_KEY=BURAYA_KOPYALADIĞIN_API_KEY_YAZI
 N8N_WEBHOOK_URL=http://localhost:5678
+
+# PostgreSQL
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=mindcubes
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=your-password-here
+POSTGRES_SSL=false
 ```
 
 BURAYA_KOPYALADIĞIN_API_KEY_YAZI yazan yere kopyaladığın API key'i yapıştır.

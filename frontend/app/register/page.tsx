@@ -6,11 +6,10 @@ import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useStoredUser } from '@/hooks/useStoredUser';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:5000/api/v1';
-const USER_PROFILE_KEY = 'mindcubes:userProfile';
 
 export default function Register() {
   const router = useRouter();
-  const { user, saveUser, hydrated } = useStoredUser();
+  const { user, saveToken, hydrated } = useStoredUser();
   const [form, setForm] = useState({ name: '', lastName: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -56,24 +55,8 @@ export default function Register() {
         return;
       }
 
-      const profile = {
-        name: result.data.name,
-        lastName: result.data.lastName,
-        email: result.data.email
-      };
-
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
-      }
-
-      saveUser({
-        id: result.data.id,
-        name: result.data.name,
-        lastName: result.data.lastName,
-        email: result.data.email,
-        token: result.token
-      });
-
+      // Only save the JWT token - user info is extracted from it
+      saveToken(result.token);
       router.push('/agents');
     } catch (registrationError) {
       console.error('Registration error', registrationError);

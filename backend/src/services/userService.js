@@ -14,7 +14,8 @@ const serializeUser = (row) => {
     name: row.name,
     lastName: row.last_name,
     email: row.email,
-    role: row.role,
+    role: row.role || 'customer',
+    isActive: row.is_active !== false,
     apiKey: row.api_key,
     lastLogin: row.last_login,
     createdAt: row.created_at,
@@ -48,7 +49,7 @@ const getUserByEmail = async (email) => {
 
 const getUserById = async (id) => {
   const result = await query(
-    `SELECT id, name, last_name, email, role, api_key, last_login, created_at, updated_at
+    `SELECT id, name, last_name, email, role, is_active, api_key, last_login, created_at, updated_at
      FROM users WHERE id = $1`,
     [id]
   );
@@ -58,7 +59,7 @@ const getUserById = async (id) => {
 
 const getUserByApiKey = async (apiKey) => {
   const result = await query(
-    `SELECT id, name, last_name, email, role, api_key, last_login, created_at, updated_at
+    `SELECT id, name, last_name, email, role, is_active, api_key, last_login, created_at, updated_at
      FROM users WHERE api_key = $1`,
     [apiKey]
   );
@@ -144,12 +145,112 @@ const deleteCredentialsByUserId = async (userId) => {
 
 const comparePassword = (candidate, hash) => bcrypt.compare(candidate, hash);
 
-const generateToken = (payload) =>
+/**
+ * Generate JWT token with full user payload
+ * Token contains all necessary user info to avoid localStorage storage
+ * @param {Object} user - User object with id, name, lastName, email, role
+ * @returns {string} JWT token
+ */
+const generateToken = (user) =>
   jwt.sign(
-    { id: payload.id, role: payload.role },
+    {
+      id: user.id,
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role || 'customer'
+    },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
+
+/**
+ * Decode and verify JWT token
+ * @param {string} token - JWT token
+ * @returns {Object|null} Decoded payload or null if invalid
+ */
+const verifyToken = (token) => {
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    return null;
+  }
+};
+
+/**
+ * Extract user info from JWT token without verification (for frontend)
+ * Note: This should only be used for display purposes, not for auth
+ * @param {string} token - JWT token
+ * @returns {Object|null} Decoded payload or null if invalid
+ */
+const decodeToken = (token) => {
+  try {
+    return jwt.decode(token);
+  } catch (error) {
+    return null;
+  }
+};
+
+/**
+ * Update user role
+ * @param {string} userId - User ID
+ * @param {string} role - New role ('admin', 'customer', 'user')
+ * @returns {Object} Updated user
+ */
+const updateUserRole = async (userId, role) => {
+  const validRoles = ['admin', 'customer', 'user'];
+  if (!validRoles.includes(role)) {
+    throw new Error(`Invalid role: ${role}. Must be one of: ${validRoles.join(', ')}`);
+  }
+
+  const result = await query(
+    `UPDATE users SET role = $1, updated_at = NOW() WHERE id = $2 RETURNING *`,
+    [role, userId]
+  );
+
+  return serializeUser(result.rows[0]);
+};
+
+/**
+ * Get all users (admin only)
+ * @returns {Array} List of users
+ */
+const getAllUsers = async () => {
+  const result = await query(
+    `SELECT id, name, last_name, email, role, is_active, last_login, created_at, updated_at
+     FROM users ORDER BY created_at DESC`
+  );
+
+  return result.rows.map(serializeUser);
+};
+
+/**
+ * Deactivate a user (admin only)
+ * @param {string} userId - User ID
+ * @returns {Object} Updated user
+ */
+const deactivateUser = async (userId) => {
+  const result = await query(
+    `UPDATE users SET is_active = false, updated_at = NOW() WHERE id = $1 RETURNING *`,
+    [userId]
+  );
+
+  return serializeUser(result.rows[0]);
+};
+
+/**
+ * Activate a user (admin only)
+ * @param {string} userId - User ID
+ * @returns {Object} Updated user
+ */
+const activateUser = async (userId) => {
+  const result = await query(
+    `UPDATE users SET is_active = true, updated_at = NOW() WHERE id = $1 RETURNING *`,
+    [userId]
+  );
+
+  return serializeUser(result.rows[0]);
+};
 
 module.exports = {
   createUser,
@@ -165,6 +266,12 @@ module.exports = {
   deleteCredentialsByUserId,
   comparePassword,
   generateToken,
+  verifyToken,
+  decodeToken,
+  updateUserRole,
+  getAllUsers,
+  deactivateUser,
+  activateUser,
   serializeUser
 };
 

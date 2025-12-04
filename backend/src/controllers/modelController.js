@@ -1,55 +1,34 @@
 /**
  * Model Controller
+ * 
+ * Note: Model registration via MongoDB is deprecated.
+ * This controller now focuses on Ollama model discovery.
  */
 
-const Model = require('../models/Model');
 const logger = require('../config/logger');
 const axios = require('axios');
 
-// @desc    Get all models
+// @desc    Get all models (deprecated - use getOllamaModels)
 // @route   GET /api/v1/models
-// @access  Public
+// @access  Private
 exports.getModels = async (req, res, next) => {
   try {
-    const { type, status } = req.query;
-    
-    const filter = {};
-    if (type) filter.type = type;
-    if (status) filter.status = status;
-    
-    const models = await Model.find(filter)
-      .populate('createdBy', 'username email')
-      .sort('-createdAt');
-    
-    res.json({
-      success: true,
-      count: models.length,
-      data: models
-    });
+    // Redirect to Ollama models
+    return exports.getOllamaModels(req, res, next);
   } catch (error) {
     logger.error(`Error fetching models: ${error.message}`);
     next(error);
   }
 };
 
-// @desc    Get single model
+// @desc    Get single model (deprecated)
 // @route   GET /api/v1/models/:id
-// @access  Public
+// @access  Private
 exports.getModel = async (req, res, next) => {
   try {
-    const model = await Model.findById(req.params.id)
-      .populate('createdBy', 'username email');
-    
-    if (!model) {
-      return res.status(404).json({
-        success: false,
-        message: 'Model not found'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: model
+    res.status(410).json({
+      success: false,
+      message: 'Individual model lookup is deprecated. Use /api/v1/models/ollama to list available models.'
     });
   } catch (error) {
     logger.error(`Error fetching model: ${error.message}`);
@@ -57,20 +36,14 @@ exports.getModel = async (req, res, next) => {
   }
 };
 
-// @desc    Register new model
+// @desc    Register new model (deprecated)
 // @route   POST /api/v1/models
 // @access  Private
 exports.registerModel = async (req, res, next) => {
   try {
-    req.body.createdBy = req.user?.id;
-    
-    const model = await Model.create(req.body);
-    
-    logger.info(`Model registered: ${model.modelId} by user ${req.user?.id}`);
-    
-    res.status(201).json({
-      success: true,
-      data: model
+    res.status(410).json({
+      success: false,
+      message: 'Model registration is deprecated. Use "ollama pull <model>" to install models.'
     });
   } catch (error) {
     logger.error(`Error registering model: ${error.message}`);
@@ -78,31 +51,14 @@ exports.registerModel = async (req, res, next) => {
   }
 };
 
-// @desc    Update model
+// @desc    Update model (deprecated)
 // @route   PUT /api/v1/models/:id
 // @access  Private
 exports.updateModel = async (req, res, next) => {
   try {
-    let model = await Model.findById(req.params.id);
-    
-    if (!model) {
-      return res.status(404).json({
-        success: false,
-        message: 'Model not found'
-      });
-    }
-    
-    model = await Model.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    
-    logger.info(`Model updated: ${model.modelId}`);
-    
-    res.json({
-      success: true,
-      data: model
+    res.status(410).json({
+      success: false,
+      message: 'Model updates are deprecated. Manage models through Ollama CLI.'
     });
   } catch (error) {
     logger.error(`Error updating model: ${error.message}`);
@@ -110,27 +66,14 @@ exports.updateModel = async (req, res, next) => {
   }
 };
 
-// @desc    Delete model
+// @desc    Delete model (deprecated)
 // @route   DELETE /api/v1/models/:id
-// @access  Private
+// @access  Private/Admin
 exports.deleteModel = async (req, res, next) => {
   try {
-    const model = await Model.findById(req.params.id);
-    
-    if (!model) {
-      return res.status(404).json({
-        success: false,
-        message: 'Model not found'
-      });
-    }
-    
-    await model.deleteOne();
-    
-    logger.info(`Model deleted: ${model.modelId}`);
-    
-    res.json({
-      success: true,
-      message: 'Model deleted successfully'
+    res.status(410).json({
+      success: false,
+      message: 'Model deletion is deprecated. Use "ollama rm <model>" to remove models.'
     });
   } catch (error) {
     logger.error(`Error deleting model: ${error.message}`);
@@ -138,28 +81,14 @@ exports.deleteModel = async (req, res, next) => {
   }
 };
 
-// @desc    Get model usage statistics
+// @desc    Get model usage statistics (deprecated)
 // @route   GET /api/v1/models/:id/stats
-// @access  Public
+// @access  Private
 exports.getModelStats = async (req, res, next) => {
   try {
-    const model = await Model.findById(req.params.id);
-    
-    if (!model) {
-      return res.status(404).json({
-        success: false,
-        message: 'Model not found'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: {
-        modelId: model.modelId,
-        name: model.name,
-        type: model.type,
-        usage: model.usage
-      }
+    res.status(410).json({
+      success: false,
+      message: 'Model stats are deprecated.'
     });
   } catch (error) {
     logger.error(`Error fetching model stats: ${error.message}`);
@@ -169,7 +98,7 @@ exports.getModelStats = async (req, res, next) => {
 
 // @desc    Get Ollama models
 // @route   GET /api/v1/models/ollama
-// @access  Public
+// @access  Private
 exports.getOllamaModels = async (req, res, next) => {
   try {
     const ollamaBaseUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
@@ -214,4 +143,3 @@ exports.getOllamaModels = async (req, res, next) => {
     });
   }
 };
-

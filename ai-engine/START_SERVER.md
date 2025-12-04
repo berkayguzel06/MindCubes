@@ -1,7 +1,11 @@
 # AI Engine Nasıl Başlatılır? 🚀
 
 ## Hızlı Başlangıç
+```bash
+python -m venv venv
 
+pip install -r requirements.txt
+```
 ### Yöntem 1: run.py ile (Önerilen)
 ```bash
 # Terminal'de ai-engine klasörüne gidin

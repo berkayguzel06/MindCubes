@@ -1,29 +1,23 @@
 /**
  * Agent Controller
+ * 
+ * Note: This controller is deprecated. Agent functionality has been moved to n8n workflows.
+ * These endpoints return stub responses for backwards compatibility.
  */
 
-const Agent = require('../models/Agent');
 const logger = require('../config/logger');
 
 // @desc    Get all agents
 // @route   GET /api/v1/agents
-// @access  Public
+// @access  Private
 exports.getAgents = async (req, res, next) => {
   try {
-    const { status, type } = req.query;
-    
-    const filter = {};
-    if (status) filter.status = status;
-    if (type) filter.type = type;
-    
-    const agents = await Agent.find(filter)
-      .populate('createdBy', 'username email')
-      .sort('-createdAt');
-    
+    // Agent functionality moved to n8n workflows
     res.json({
       success: true,
-      count: agents.length,
-      data: agents
+      count: 0,
+      data: [],
+      message: 'Agent management has been moved to n8n workflows. Use /api/v1/n8n/workflows instead.'
     });
   } catch (error) {
     logger.error(`Error fetching agents: ${error.message}`);
@@ -33,22 +27,12 @@ exports.getAgents = async (req, res, next) => {
 
 // @desc    Get single agent
 // @route   GET /api/v1/agents/:id
-// @access  Public
+// @access  Private
 exports.getAgent = async (req, res, next) => {
   try {
-    const agent = await Agent.findById(req.params.id)
-      .populate('createdBy', 'username email');
-    
-    if (!agent) {
-      return res.status(404).json({
-        success: false,
-        message: 'Agent not found'
-      });
-    }
-    
-    res.json({
-      success: true,
-      data: agent
+    res.status(404).json({
+      success: false,
+      message: 'Agent management has been moved to n8n workflows. Use /api/v1/n8n/workflows/:id instead.'
     });
   } catch (error) {
     logger.error(`Error fetching agent: ${error.message}`);
@@ -61,16 +45,9 @@ exports.getAgent = async (req, res, next) => {
 // @access  Private
 exports.createAgent = async (req, res, next) => {
   try {
-    // Add user to req.body
-    req.body.createdBy = req.user?.id;
-    
-    const agent = await Agent.create(req.body);
-    
-    logger.info(`Agent created: ${agent.name} by user ${req.user?.id}`);
-    
-    res.status(201).json({
-      success: true,
-      data: agent
+    res.status(410).json({
+      success: false,
+      message: 'Agent creation has been moved to n8n. Create workflows in n8n instead.'
     });
   } catch (error) {
     logger.error(`Error creating agent: ${error.message}`);
@@ -83,26 +60,9 @@ exports.createAgent = async (req, res, next) => {
 // @access  Private
 exports.updateAgent = async (req, res, next) => {
   try {
-    let agent = await Agent.findById(req.params.id);
-    
-    if (!agent) {
-      return res.status(404).json({
-        success: false,
-        message: 'Agent not found'
-      });
-    }
-    
-    agent = await Agent.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    
-    logger.info(`Agent updated: ${agent.name}`);
-    
-    res.json({
-      success: true,
-      data: agent
+    res.status(410).json({
+      success: false,
+      message: 'Agent updates have been moved to n8n. Update workflows in n8n instead.'
     });
   } catch (error) {
     logger.error(`Error updating agent: ${error.message}`);
@@ -112,25 +72,12 @@ exports.updateAgent = async (req, res, next) => {
 
 // @desc    Delete agent
 // @route   DELETE /api/v1/agents/:id
-// @access  Private
+// @access  Private/Admin
 exports.deleteAgent = async (req, res, next) => {
   try {
-    const agent = await Agent.findById(req.params.id);
-    
-    if (!agent) {
-      return res.status(404).json({
-        success: false,
-        message: 'Agent not found'
-      });
-    }
-    
-    await agent.deleteOne();
-    
-    logger.info(`Agent deleted: ${agent.name}`);
-    
-    res.json({
-      success: true,
-      message: 'Agent deleted successfully'
+    res.status(410).json({
+      success: false,
+      message: 'Agent deletion has been moved to n8n. Delete workflows in n8n instead.'
     });
   } catch (error) {
     logger.error(`Error deleting agent: ${error.message}`);
@@ -140,36 +87,15 @@ exports.deleteAgent = async (req, res, next) => {
 
 // @desc    Get agent statistics
 // @route   GET /api/v1/agents/:id/stats
-// @access  Public
+// @access  Private
 exports.getAgentStats = async (req, res, next) => {
   try {
-    const agent = await Agent.findById(req.params.id);
-    
-    if (!agent) {
-      return res.status(404).json({
-        success: false,
-        message: 'Agent not found'
-      });
-    }
-    
-    const stats = {
-      name: agent.name,
-      type: agent.type,
-      status: agent.status,
-      totalTasks: agent.stats.totalTasks,
-      completedTasks: agent.stats.completedTasks,
-      failedTasks: agent.stats.failedTasks,
-      successRate: agent.successRate,
-      averageResponseTime: agent.stats.averageResponseTime
-    };
-    
-    res.json({
-      success: true,
-      data: stats
+    res.status(410).json({
+      success: false,
+      message: 'Agent stats have been moved to n8n. Check workflow executions in n8n instead.'
     });
   } catch (error) {
     logger.error(`Error fetching agent stats: ${error.message}`);
     next(error);
   }
 };
-

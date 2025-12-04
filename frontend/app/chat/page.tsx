@@ -146,7 +146,7 @@ const parseMarkdown = (text: string): React.ReactNode[] => {
 
 export default function Chat() {
   const router = useRouter();
-  const { user, saveUser, hydrated } = useStoredUser();
+  const { user, token, logout, hydrated } = useStoredUser();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -180,9 +180,14 @@ export default function Chat() {
 
   // Load available Ollama models
   const loadOllamaModels = useCallback(async () => {
+    if (!token) return;
     setIsLoadingModels(true);
     try {
-      const response = await fetch(`${BACKEND_URL}/api/v1/models/ollama`);
+      const response = await fetch(`${BACKEND_URL}/api/v1/models/ollama`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       const data = await response.json();
       
       if (data.success && data.data) {
@@ -199,15 +204,19 @@ export default function Chat() {
     } finally {
       setIsLoadingModels(false);
     }
-  }, [selectedModel]);
+  }, [selectedModel, token]);
 
   // Load chat sessions from database
   const loadChatSessions = useCallback(async () => {
-    if (!user?.id) return;
+    if (!user?.id || !token) return;
     
     setIsLoadingSessions(true);
     try {
-      const response = await fetch(`${BACKEND_URL}/api/v1/chat/sessions?userId=${user.id}`);
+      const response = await fetch(`${BACKEND_URL}/api/v1/chat/sessions?userId=${user.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       const data = await response.json();
       
       if (data.success && data.data) {
@@ -223,14 +232,18 @@ export default function Chat() {
     } finally {
       setIsLoadingSessions(false);
     }
-  }, [user?.id]);
+  }, [user?.id, token]);
 
   // Load session messages from database
   const loadSessionMessages = useCallback(async (sid: string) => {
-    if (!user?.id) return [];
+    if (!user?.id || !token) return [];
     
     try {
-      const response = await fetch(`${BACKEND_URL}/api/v1/chat/history?userId=${user.id}&sessionId=${sid}`);
+      const response = await fetch(`${BACKEND_URL}/api/v1/chat/history?userId=${user.id}&sessionId=${sid}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       const data = await response.json();
       
       if (data.success && data.data) {
@@ -246,7 +259,7 @@ export default function Chat() {
       console.error('Failed to load session messages:', error);
     }
     return [];
-  }, [user?.id]);
+  }, [user?.id, token]);
 
   // Load models on mount
   useEffect(() => {
@@ -322,12 +335,15 @@ export default function Chat() {
   const handleDeleteSession = async (sid: string, e: React.MouseEvent) => {
     e.stopPropagation();
     
-    if (!user?.id) return;
+    if (!user?.id || !token) return;
     
     try {
       await fetch(`${BACKEND_URL}/api/v1/chat/history`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ userId: user.id, sessionId: sid })
       });
       
@@ -404,7 +420,10 @@ export default function Chat() {
         
         const response = await fetch(`${BACKEND_URL}/api/v1/chat`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify({
             message: userMsg.content,
             userId: user?.id ?? 'anonymous',
@@ -467,7 +486,7 @@ export default function Chat() {
   }, [hydrated, user, router]);
 
   const handleLogout = () => {
-    saveUser(null);
+    logout();
     router.replace('/login');
   };
 

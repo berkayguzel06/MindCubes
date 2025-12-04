@@ -23,7 +23,7 @@ interface OllamaModel {
 
 export default function Models() {
   const router = useRouter();
-  const { user, saveUser, hydrated } = useStoredUser();
+  const { user, token, logout, hydrated } = useStoredUser();
   const [models, setModels] = useState<OllamaModel[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,9 +37,14 @@ export default function Models() {
 
   useEffect(() => {
     const fetchModels = async () => {
+      if (!token) return;
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/models/ollama`);
+        const response = await fetch(`${API_BASE_URL}/models/ollama`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         const data = await response.json();
         
         if (data.success) {
@@ -57,13 +62,13 @@ export default function Models() {
       }
     };
 
-    if (hydrated && user) {
+    if (hydrated && user && token) {
       fetchModels();
     }
-  }, [hydrated, user]);
+  }, [hydrated, user, token]);
 
   const handleLogout = () => {
-    saveUser(null);
+    logout();
     router.replace('/login');
   };
 

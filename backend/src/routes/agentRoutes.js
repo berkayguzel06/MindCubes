@@ -1,5 +1,9 @@
 /**
  * Agent Routes
+ * 
+ * Security:
+ * - All routes require authentication
+ * - Delete agent requires admin role
  */
 
 const express = require('express');
@@ -13,19 +17,20 @@ const {
   getAgentStats
 } = require('../controllers/agentController');
 
-const { protect, authorize } = require('../middleware/auth');
+const { protect, adminOnly } = require('../middleware/auth');
 
+// All agent routes require authentication
 router.route('/')
-  .get(getAgents)
+  .get(protect, getAgents)
   .post(protect, createAgent);
 
 router.route('/:id')
-  .get(getAgent)
+  .get(protect, getAgent)
   .put(protect, updateAgent)
-  .delete(protect, authorize('admin'), deleteAgent);
+  .delete(protect, adminOnly, deleteAgent);
 
 router.route('/:id/stats')
-  .get(getAgentStats);
+  .get(protect, getAgentStats);
 
 module.exports = router;
 

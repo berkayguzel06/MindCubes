@@ -5,18 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useStoredUser } from '@/hooks/useStoredUser';
 
-const USER_PROFILE_KEY = 'mindcubes:userProfile';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:5000/api/v1';
-
-type ProfilePayload = {
-  name: string;
-  lastName: string;
-  email: string;
-};
 
 export default function Login() {
   const router = useRouter();
-  const { user, saveUser, hydrated } = useStoredUser();
+  const { user, saveToken, hydrated } = useStoredUser();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -27,22 +20,15 @@ export default function Login() {
       setForm((prev) => ({ ...prev, [field]: event.target.value }));
     };
 
+  // Pre-fill email if user info exists in current session
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const storedProfile = window.localStorage.getItem(USER_PROFILE_KEY);
-    if (storedProfile) {
-      try {
-        const parsed = JSON.parse(storedProfile) as ProfilePayload;
-        setForm((prev) => ({
-          ...prev,
-          email: parsed.email
-        }));
-      } catch (parseError) {
-        console.warn('Failed to parse stored profile', parseError);
-        window.localStorage.removeItem(USER_PROFILE_KEY);
-      }
+    if (user?.email) {
+      setForm((prev) => ({
+        ...prev,
+        email: user.email
+      }));
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -50,12 +36,6 @@ export default function Login() {
       router.replace('/agents');
     }
   }, [hydrated, user, router]);
-
-  const persistProfile = (profile: ProfilePayload) => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
-    }
-  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -78,23 +58,17 @@ export default function Login() {
 
       const result = await response.json();
       if (!response.ok || !result.success) {
-        setError(result.message || 'Giriş başarısız. Bilgilerinizi kontrol edin.');
+        // Handle specific error codes
+        if (result.code === 'ACCOUNT_DEACTIVATED') {
+          setError('Hesabınız devre dışı bırakılmış. Yönetici ile iletişime geçin.');
+        } else {
+          setError(result.message || 'Giriş başarısız. Bilgilerinizi kontrol edin.');
+        }
         return;
       }
 
-      const profileFromServer: ProfilePayload = {
-        name: result.data.name,
-        lastName: result.data.lastName,
-        email: result.data.email
-      };
-      persistProfile(profileFromServer);
-      saveUser({
-        id: result.data.id,
-        name: result.data.name,
-        lastName: result.data.lastName,
-        email: result.data.email,
-        token: result.token
-      });
+      // Only save the JWT token - user info is extracted from it
+      saveToken(result.token);
       router.push('/agents');
     } catch (loginError) {
       console.error('Login error', loginError);

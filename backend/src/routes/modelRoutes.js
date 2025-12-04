@@ -1,5 +1,9 @@
 /**
  * Model Routes
+ * 
+ * Security:
+ * - All routes require authentication
+ * - Delete model requires admin role
  */
 
 const express = require('express');
@@ -14,22 +18,23 @@ const {
   getOllamaModels
 } = require('../controllers/modelController');
 
-const { protect, authorize } = require('../middleware/auth');
+const { protect, adminOnly } = require('../middleware/auth');
 
+// All model routes require authentication
 router.route('/')
-  .get(getModels)
+  .get(protect, getModels)
   .post(protect, registerModel);
 
 router.route('/ollama')
-  .get(getOllamaModels);
+  .get(protect, getOllamaModels);
 
 router.route('/:id')
-  .get(getModel)
+  .get(protect, getModel)
   .put(protect, updateModel)
-  .delete(protect, authorize('admin'), deleteModel);
+  .delete(protect, adminOnly, deleteModel);
 
 router.route('/:id/stats')
-  .get(getModelStats);
+  .get(protect, getModelStats);
 
 module.exports = router;
 

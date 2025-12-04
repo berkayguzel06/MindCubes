@@ -1,5 +1,7 @@
 /**
  * Main server file for MindCubes Backend
+ * 
+ * Database: PostgreSQL only (MongoDB removed)
  */
 
 // Load environment variables FIRST (before any other imports)
@@ -10,7 +12,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
-const connectDB = require('./config/database');
 const { initPostgres } = require('./config/postgres');
 const logger = require('./config/logger');
 const errorHandler = require('./middleware/errorHandler');
@@ -26,18 +27,13 @@ const n8nRoutes = require('./routes/n8nRoutes');
 // Initialize Express app
 const app = express();
 
-const startDatabases = async () => {
+const startDatabase = async () => {
   try {
     await initPostgres();
+    logger.info('PostgreSQL database initialized successfully');
   } catch (error) {
     logger.error(`Failed to initialize PostgreSQL: ${error.message}`);
     process.exit(1);
-  }
-
-  try {
-    await connectDB();
-  } catch (error) {
-    logger.warn(`Starting server without MongoDB connection: ${error.message}`);
   }
 };
 
@@ -94,7 +90,7 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 5000;
 let server;
 
-startDatabases().then(() => {
+startDatabase().then(() => {
   server = app.listen(PORT, () => {
     logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
   });
