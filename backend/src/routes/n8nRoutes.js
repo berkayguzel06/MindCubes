@@ -11,7 +11,7 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../middleware/upload');
-const { protect, authorize, adminOnly } = require('../middleware/auth');
+const { protect, authorize, adminOnly, n8nServiceAuth } = require('../middleware/auth');
 const {
   getWorkflows,
   getWorkflow,
@@ -25,7 +25,8 @@ const {
   triggerWebhook,
   getWorkflowExecutions,
   getWorkflowPrompt,
-  upsertWorkflowPrompt
+  upsertWorkflowPrompt,
+  getWorkflowUsersForN8n
 } = require('../controllers/n8nController');
 
 // Workflow management routes - all require authentication
@@ -47,6 +48,9 @@ router.get('/workflows/:id/executions', protect, getWorkflowExecutions);
 // Workflow prompt routes (user specific prompts stored in PostgreSQL)
 router.get('/workflows/:id/prompt', protect, getWorkflowPrompt);
 router.post('/workflows/:id/prompt', protect, express.json(), upsertWorkflowPrompt);
+
+// Internal n8n service route - n8n calls this with X-N8N-SERVICE-KEY
+router.post('/workflows/:id/users', n8nServiceAuth, express.json(), getWorkflowUsersForN8n);
 
 // Webhook trigger route - public but secured via path-based tokens
 // Webhooks use unique paths as tokens for security

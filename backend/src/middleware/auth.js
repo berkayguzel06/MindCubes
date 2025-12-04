@@ -330,3 +330,30 @@ exports.ownerOrAdmin = (ownerIdField = 'userId') => {
   };
 };
 
+/**
+ * n8n service authentication (server-to-server)
+ * Uses a static API key sent in X-N8N-SERVICE-KEY header.
+ * This is intended for n8n workflows to call internal backend endpoints
+ * without needing a user context.
+ */
+exports.n8nServiceAuth = (req, res, next) => {
+  const configuredKey = process.env.N8N_SERVICE_API_KEY;
+  const providedKey = req.headers['x-n8n-service-key'];
+
+  if (!configuredKey) {
+    return res.status(500).json({
+      success: false,
+      message: 'N8N_SERVICE_API_KEY is not configured on backend'
+    });
+  }
+
+  if (!providedKey || providedKey !== configuredKey) {
+    return res.status(401).json({
+      success: false,
+      message: 'Not authorized to access n8n service endpoint'
+    });
+  }
+
+  next();
+};
+

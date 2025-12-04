@@ -933,3 +933,133 @@ exports.importWorkflows = async (req, res, next) => {
   }
 };
 
+/**
+ * Internal endpoint for n8n workflows to fetch user + credential + workflow context
+ * via HTTP instead of querying the database directly.
+ *
+ * This is designed to be stable and modular so workflows don't need frequent updates.
+ *
+ * @route POST /api/v1/n8n/workflows/:id/users
+ * @access n8nServiceAuth (server-to-server, X-N8N-SERVICE-KEY)
+ */
+exports.getWorkflowUsersForN8n = async (req, res, next) => {
+  try {
+    const n8nWorkflowId = req.params.id;
+    const { onlyEnabled = true } = req.body || {};
+
+    if (!n8nWorkflowId) {
+      return res.status(400).json({
+        success: false,
+        message: 'workflow id (n8n id) is required'
+      });
+    }
+
+    // Fetch workflow, its tags and eligible users in a single query
+    const result = await query(
+      `
+      WITH target_workflow AS (
+        SELECT w.id, w.n8n_id, w.name
+        FROM workflows w
+        WHERE w.n8n_id = $1
+        LIMIT 1
+      ),
+      workflow_tags_agg AS (
+        SELECT
+          tw.id AS workflow_id,
+          COALESCE(
+            JSON_AGG(
+              JSON_BUILD_OBJECT(
+                'id', t.id,
+                'name', t.name
+              )
+            ) FILTER (WHERE t.id IS NOT NULL),
+            '[]'::JSON
+          ) AS tags
+        FROM target_workflow tw
+        LEFT JOIN workflow_tags wt ON wt.workflow_id = tw.id
+        LEFT JOIN tags t ON t.id = wt.tag_id
+        GROUP BY tw.id
+      )
+      SELECT 
+        u.id AS user_id,
+        u.name,
+        u.last_name,
+        u.email,
+        u.role,
+        u.is_active,
+        uc.telegram_chat_id,
+        uc.ctelegram_chat_id,
+        uc.expires_at,
+        uc.access_token,
+        uc.refresh_token,
+        COALESCE(wus.is_enabled, TRUE) AS is_enabled_for_workflow,
+        tw.id AS workflow_db_id,
+        tw.n8n_id,
+        tw.name AS workflow_name,
+        wta.tags AS workflow_tags
+      FROM target_workflow tw
+      JOIN users u ON u.is_active = TRUE
+      LEFT JOIN LATERAL (
+        SELECT telegram_chat_id, ctelegram_chat_id, expires_at, access_token, refresh_token
+        FROM user_credentials uc
+        WHERE uc.user_id = u.id
+        ORDER BY created_at DESC
+        LIMIT 1
+      ) uc ON TRUE
+      LEFT JOIN workflow_user_settings wus 
+        ON wus.workflow_id = tw.id
+       AND wus.user_id = u.id
+      LEFT JOIN workflow_tags_agg wta ON wta.workflow_id = tw.id
+      WHERE ($2::boolean = FALSE OR COALESCE(wus.is_enabled, TRUE) = TRUE)
+      ORDER BY u.created_at DESC
+      `,
+      [n8nWorkflowId, Boolean(onlyEnabled)]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Workflow not found or no eligible users'
+      });
+    }
+
+    const rows = result.rows;
+
+    const workflowMeta = {
+      id: rows[0].workflow_db_id,
+      n8nId: rows[0].n8n_id,
+      name: rows[0].workflow_name,
+      tags: rows[0].workflow_tags || []
+    };
+
+    const users = rows.map((row) => ({
+      id: row.user_id,
+      name: row.name,
+      lastName: row.last_name,
+      email: row.email,
+      role: row.role,
+      isActive: row.is_active !== false,
+      isEnabledForWorkflow: row.is_enabled_for_workflow,
+      credentials: {
+        telegramChatId: row.telegram_chat_id ? String(row.telegram_chat_id) : null,
+        ctelegramChatId: row.ctelegram_chat_id ? String(row.ctelegram_chat_id) : null,
+        expiresAt: row.expires_at,
+        accessToken: row.access_token || null,
+        refreshToken: row.refresh_token || null
+      }
+    }));
+
+    res.json({
+      success: true,
+      workflow: workflowMeta,
+      users
+    });
+  } catch (error) {
+    logger.error(`Error fetching workflow users for n8n: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch workflow users for n8n'
+    });
+  }
+};
+
