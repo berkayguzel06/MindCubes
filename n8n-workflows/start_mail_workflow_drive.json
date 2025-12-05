@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2025-12-05T08:58:57.000Z",
-  "createdAt": "2025-12-05T06:45:33.921Z",
-  "id": "HEWrMSCD4Rk2ALe3",
+  "updatedAt": "2025-12-05T16:31:59.000Z",
+  "createdAt": "2025-12-05T16:20:07.417Z",
+  "id": "IDIIHQni6aIVRK0V",
   "name": "Start-Mail-Workflow Drive",
+  "description": null,
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -21,7 +22,7 @@
       "typeVersion": 1.2,
       "position": [
         -608,
-        -24
+        -120
       ],
       "id": "6f2a604b-c588-4a40-a91c-60b45f6b57e1",
       "name": "Schedule Trigger"
@@ -36,42 +37,18 @@
       "typeVersion": 1.2,
       "position": [
         64,
-        72
+        -24
       ],
       "id": "308d987b-935b-430a-83c7-389a27e7dd6c",
       "name": "Error Message",
       "webhookId": "1ab4e373-8295-4d52-9b0b-16c06355aee7",
       "credentials": {
         "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
+          "id": "JG4HCYCvUBrFrjrG",
           "name": "Telegram account"
         }
       },
       "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "SpCzlQeTfwR7OrPa",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/SpCzlQeTfwR7OrPa",
-          "cachedResultName": "Mail Drive Fetch"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {}
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        288,
-        -144
-      ],
-      "id": "b1487ee1-7e57-4486-89d9-fae49366f163",
-      "name": "Call 'Mail Drive Fetch'"
     },
     {
       "parameters": {
@@ -102,7 +79,7 @@
       "typeVersion": 2.2,
       "position": [
         64,
-        -144
+        -240
       ],
       "id": "c5a402ff-a857-4f8c-b48c-c6ac1fe386b8",
       "name": "If"
@@ -130,7 +107,7 @@
       "typeVersion": 4.3,
       "position": [
         -384,
-        -24
+        -120
       ],
       "id": "e8eb4f57-32c9-43e8-aee4-da1925d714da",
       "name": "HTTP Request",
@@ -144,11 +121,36 @@
       "typeVersion": 2,
       "position": [
         -160,
-        -96
+        -192
       ],
       "id": "42832002-305a-4ff3-a358-e4409050ae87",
       "name": "Code in JavaScript",
       "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zI1lfifpZTkZai1k",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zI1lfifpZTkZai1k",
+          "cachedResultName": "Mail Drive Fetch"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        -240
+      ],
+      "id": "04d6ffaa-f74b-4201-b820-15962ab205bd",
+      "name": "Call 'Mail Drive Fetch'"
     }
   ],
   "connections": {
@@ -212,7 +214,9 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": {
     "node:Schedule Trigger": {
@@ -221,59 +225,50 @@
   },
   "meta": null,
   "pinData": {},
-  "versionId": "087586c6-fc8e-4dad-adff-88f0fd7b9900",
-  "versionCounter": 9,
+  "versionId": "54485d5e-02e0-4314-aed8-d29cc095ac0e",
+  "versionCounter": 7,
   "triggerCount": 1,
   "shared": [
     {
-      "updatedAt": "2025-12-05T06:45:33.927Z",
-      "createdAt": "2025-12-05T06:45:33.927Z",
+      "updatedAt": "2025-12-05T16:20:07.419Z",
+      "createdAt": "2025-12-05T16:20:07.419Z",
       "role": "workflow:owner",
-      "workflowId": "HEWrMSCD4Rk2ALe3",
-      "projectId": "Qz4EZoRaJoP60D6r",
+      "workflowId": "IDIIHQni6aIVRK0V",
+      "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
-        "updatedAt": "2025-03-05T09:02:20.383Z",
-        "createdAt": "2025-03-05T08:58:50.174Z",
-        "id": "Qz4EZoRaJoP60D6r",
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-03-05T08:58:50.174Z",
-            "createdAt": "2025-03-05T08:58:50.174Z",
-            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
-            "projectId": "Qz4EZoRaJoP60D6r",
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-05T06:44:21.000Z",
-              "createdAt": "2025-03-05T08:58:49.757Z",
-              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
-                "personalization_survey_n8n_version": "1.81.4",
-                "automationGoalDevops": [
-                  "other",
-                  "monitoring-alerting",
-                  "reporting"
-                ],
-                "companySize": "personalUser",
-                "companyType": "systems-integrator",
-                "role": "engineering",
-                "reportedSource": "linkedin"
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
-                "userActivatedAt": 1761210491841,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763717488235
+                  "lastShownAt": 1763316240404
                 }
               },
               "disabled": false,
@@ -288,10 +283,22 @@
   ],
   "tags": [
     {
-      "updatedAt": "2025-12-04T12:59:34.169Z",
-      "createdAt": "2025-12-04T12:59:34.169Z",
-      "id": "cwpgHJH3sGrarRBq",
+      "updatedAt": "2025-12-05T16:23:23.113Z",
+      "createdAt": "2025-12-05T16:23:23.113Z",
+      "id": "chdfMY23MzD2QqyT",
       "name": "start"
+    },
+    {
+      "updatedAt": "2025-12-01T08:00:58.410Z",
+      "createdAt": "2025-12-01T08:00:58.410Z",
+      "id": "fTIAo3WUvkbJgslo",
+      "name": "drive"
+    },
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
     }
   ]
 }

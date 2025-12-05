@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2025-12-05T12:57:02.000Z",
-  "createdAt": "2025-12-05T06:45:32.782Z",
-  "id": "H67AazHPjBucJNYF",
+  "updatedAt": "2025-12-05T16:41:20.000Z",
+  "createdAt": "2025-12-05T16:20:06.960Z",
+  "id": "8vuzfZJKl4TEOIF8",
   "name": "Mail-Labeler",
+  "description": null,
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -14,8 +15,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        -3312,
-        1104
+        -4800,
+        1372
       ],
       "id": "5594e54a-c1b1-4764-9ad2-0a0ede5239eb",
       "name": "Structured Output Parser2",
@@ -33,8 +34,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -3408,
-        880
+        -3440,
+        820
       ],
       "id": "49e3ae0a-30fb-44fd-8dc5-a3e2e74b00a7",
       "name": "Email Labeler Agent",
@@ -61,14 +62,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -3440,
-        1104
+        -5008,
+        1580
       ],
       "id": "f04433c5-b0e4-417b-9adc-e227037c7af4",
       "name": "Google Gemini Chat Model2",
       "credentials": {
         "googlePalmApi": {
-          "id": "fxWHzuDbpxOZTwOR",
+          "id": "yohuzcpOTpBCKcFi",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -115,7 +116,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -2496,
+        -2640,
         -72
       ],
       "id": "aee74b81-c994-4402-9d70-eafacb5ea47b",
@@ -128,7 +129,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2272,
+        -2416,
         -72
       ],
       "id": "a0697fc5-f0a0-4b8a-a6bc-be4b872c5223",
@@ -167,7 +168,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -2048,
+        -2192,
         -144
       ],
       "id": "18ab58df-f43b-408f-9596-563e0636502d",
@@ -219,7 +220,7 @@
       "typeVersion": 1,
       "position": [
         -5008,
-        1744
+        1788
       ],
       "id": "24d5c48e-4768-4106-8e33-b560b9438c03",
       "name": "Ollama Chat Model",
@@ -240,8 +241,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
       "position": [
-        -3232,
-        1312
+        -5008,
+        1372
       ],
       "id": "9f0360fb-6d36-4740-b1ca-fd62e75ac66c",
       "name": "Ollama Model",
@@ -262,8 +263,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -5008,
-        1536
+        -3368,
+        1044
       ],
       "id": "9c5cac9a-8d33-46b8-b0b2-7d66668a5b63",
       "name": "Ollama Chat Model1",
@@ -282,7 +283,7 @@
       "typeVersion": 3.4,
       "position": [
         -4784,
-        1312
+        1148
       ],
       "id": "a2db4fd4-c2a8-4ebc-9e83-b7db866f6259",
       "name": "Edit Fields"
@@ -293,7 +294,7 @@
       "typeVersion": 1,
       "position": [
         -5008,
-        1312
+        1148
       ],
       "id": "04681a9f-8289-43a0-9203-35a19c23e152",
       "name": "When clicking ‘Execute workflow’"
@@ -305,8 +306,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2944,
-        952
+        -3088,
+        892
       ],
       "id": "c9558593-f6ed-468d-96a5-49df6435e46b",
       "name": "Parse Date Data",
@@ -321,7 +322,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -1824,
+        -1968,
         288
       ],
       "id": "0d95e995-ed75-443d-9d16-596b2ce7a242",
@@ -329,7 +330,7 @@
       "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
       "credentials": {
         "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
+          "id": "JG4HCYCvUBrFrjrG",
           "name": "Telegram account"
         }
       },
@@ -369,7 +370,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -3304,
+        -3376,
         144
       ],
       "id": "6f6e4bba-b945-4321-9287-0646c3175ad9",
@@ -455,7 +456,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -2720,
+        -2864,
         -240
       ],
       "id": "a73e6e87-ab1e-435d-813f-fdc1f2ce3d72",
@@ -469,7 +470,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -2944,
+        -3088,
         -240
       ],
       "id": "d2f86ed1-306c-446a-bb11-6533c345ce49",
@@ -496,7 +497,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2944,
+        -3088,
         528
       ],
       "id": "d1dfd585-bdd7-49dc-8a16-9f4e5bfc3a92",
@@ -511,7 +512,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -2720,
+        -2864,
         528
       ],
       "id": "aa18af97-eb34-4286-81be-06deca339dee",
@@ -521,13 +522,7 @@
   "connections": {
     "Structured Output Parser2": {
       "ai_outputParser": [
-        [
-          {
-            "node": "Email Labeler Agent",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Email Labeler Agent": {
@@ -561,13 +556,7 @@
     },
     "Google Gemini Chat Model2": {
       "ai_languageModel": [
-        [
-          {
-            "node": "Email Labeler Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Code in JavaScript4": {
@@ -694,7 +683,13 @@
     },
     "Ollama Chat Model1": {
       "ai_languageModel": [
-        []
+        [
+          {
+            "node": "Email Labeler Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
       ]
     },
     "When clicking ‘Execute workflow’": {
@@ -844,106 +839,57 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
   "meta": null,
-  "pinData": {
-    "Edit Fields": [
-      {
-        "json": {
-          "access_token": "EwBoBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAWizhPHp0EWih5luoZaV7QmX4Xvf7CPPnfP2ishEI8AF/K3ggi9xI+CwQ9HjOlHkc4GetrxJHlCAL7/Lq80BcmCkk3p+wybVhuGnm8fDroUfRGUmhiEKAIosjHwKFS/JTmDpRJoT7zK6EPCaKSqn4ZXZ4YIH+09UYPEOCGXFE3xlCQk24lsvck63Frl519fm5DYMeMhyl+f/08ZQlSNuT+vJKMqVO7ai+PcrvKjYsr/5nMhj/1rPsVlYEsb1pTDiXHrNResZ7A0FdSZ2YAPrq2C+kWOjFDhyhoBDWhSxEGjS8cQzzvvkc3dtmOCtcz5gVhI5y9rgfMrY6M9cfCjksgAQZgAAEI0kzpwni17aUT6fMrSl1E8wA66Lqi2BVOn07NEAQAXIeitBg/pZf/Fo7PRsOsour2V4g6Ad5p9ytD1i/tVZjfCHQXnwTYVijAw8HnFSNSY71O3gduq0GjnYLqmQXqF8h40pXgv9VzxKRfhgDS1RO5Cv7DeMGKy9sRNRCzakfbVgS8/0+kJxfqe4yVteFdhld/RaorWZNazwhGb8SF/oRys6bjxKp26jcQEnrJX7uD/0i6WNTZr8/0F33DLkPOowfBNs6ILsVfs2IRMYFrxz900uLwJkrCIvZ3aPTDZquWUUZA2DiX2AODJdysIQ/o3XSSczILKUgDMWs4sxtuTkD9pNy4UTcC+fLdBHqwjbTYpPLwFugud0aCv8Jp/U6o7ybqDTtywVAFN6RIxs6aUf6sniSaxy8lKVZoLa3RDok3JaaN09B9tNq+wb6btsmbXl1PjYtXTtJ6J4XlYY10lgdRJyZqUZBzCbkK2GNk56XYk1uOQoejNt9OkY1gfFSPHe2jjTXWOahSIT9Zmj3i+RFqQ34FeOarcCB2R7kcFq0vYSQcR4eE+eg6wN+yfhwtYI3GlWg1I+re+1ePDacDL++3fPxMmI0fTwR3n+jm5mjrbPRMc+2QW0vXxZOPFj0NtmQhZMQ3S5X2w6hfce/YdgsLbXyCMVCdpUxVSvdXaJtrCNgYbNvJWcQbiBa4glZ090t8j/4ewpA5efffVz8DRGc5UUVpBCwbgiM9GVcOWuiU0Rwgrq45H/dfRGWAd2dtFj/LEoJOYKvWA6DxLCz+sJUnrOxtM2toNJUmEIr8frmpMOF9S6kymqd1p3cO+tsAmxmDoW6fFq2vJPahFAwjpmcKSx3VlZ4HVrZ4wxnv/NghMSooIdpSBrZz7LbcHiI7RkQAhZb596eERyvlDMKsr0fNhn5DTBS91Na26tJr0CJNjv9Y/Gzw5taf9ZvmzAZDOjP4VE4lFmSuOWinasUmGeY3GQQ7lyRzzOieAWc1WBsYxrVz07IFXn9raBNssoWPT348hoTqG7D7seARhu8z+OyQUXf1AZpLtLAyBndGY9VTH0/X52CJw+sFZnf7G2aExy1f8PCo7hQO/BHP0FV9+hFpyk9ngD",
-          "telegram_chat_id": "-1003315838853",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAExj/gz\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAATGbqTEAAAA=",
-          "categories": [
-            "Categorized",
-            "Calendar",
-            "Prioritized",
-            "todo"
-          ],
-          "receivedDateTime": "2025-12-03T08:42:08Z",
-          "hasAttachments": false,
-          "subject": "Makale",
-          "bodyPreview": "Yarına kadar ai agent makalesi okuyup notlar çıkarman lazım",
-          "body": {
-            "contentType": "text",
-            "content": "Yarına kadar ai agent makalesi okuyup notlar çıkarman lazım"
-          },
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  },
-  "versionId": "760b8b9a-73db-42e8-bd59-2530fe1aac01",
-  "versionCounter": 25,
+  "pinData": {},
+  "versionId": "6f1801ec-9242-49a3-a8ce-10913e69a94d",
+  "versionCounter": 5,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-05T06:45:32.789Z",
-      "createdAt": "2025-12-05T06:45:32.789Z",
+      "updatedAt": "2025-12-05T16:20:06.964Z",
+      "createdAt": "2025-12-05T16:20:06.964Z",
       "role": "workflow:owner",
-      "workflowId": "H67AazHPjBucJNYF",
-      "projectId": "Qz4EZoRaJoP60D6r",
+      "workflowId": "8vuzfZJKl4TEOIF8",
+      "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
-        "updatedAt": "2025-03-05T09:02:20.383Z",
-        "createdAt": "2025-03-05T08:58:50.174Z",
-        "id": "Qz4EZoRaJoP60D6r",
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-03-05T08:58:50.174Z",
-            "createdAt": "2025-03-05T08:58:50.174Z",
-            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
-            "projectId": "Qz4EZoRaJoP60D6r",
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-05T06:44:21.000Z",
-              "createdAt": "2025-03-05T08:58:49.757Z",
-              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
-                "personalization_survey_n8n_version": "1.81.4",
-                "automationGoalDevops": [
-                  "other",
-                  "monitoring-alerting",
-                  "reporting"
-                ],
-                "companySize": "personalUser",
-                "companyType": "systems-integrator",
-                "role": "engineering",
-                "reportedSource": "linkedin"
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
-                "userActivatedAt": 1761210491841,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763717488235
+                  "lastShownAt": 1763316240404
                 }
               },
               "disabled": false,
@@ -956,5 +902,18 @@
       }
     }
   ],
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2025-11-28T07:47:36.846Z",
+      "createdAt": "2025-11-28T07:47:36.846Z",
+      "id": "rFb0OIp7gOe3RUr9",
+      "name": "categorized"
+    },
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
+    }
+  ]
 }

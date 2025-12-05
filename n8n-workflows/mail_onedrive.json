@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2025-12-05T06:45:33.242Z",
-  "createdAt": "2025-12-05T06:45:33.242Z",
-  "id": "nb0o8802pFHxVGCk",
+  "updatedAt": "2025-12-05T16:31:18.000Z",
+  "createdAt": "2025-12-05T16:20:06.995Z",
+  "id": "4PWZPYzSfK22Puj7",
   "name": "Mail-OneDrive",
+  "description": null,
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -319,7 +320,7 @@
       "webhookId": "51982885-3445-4d7e-95e6-7441f71a21be",
       "credentials": {
         "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
+          "id": "JG4HCYCvUBrFrjrG",
           "name": "Telegram account"
         }
       },
@@ -542,64 +543,57 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
   "meta": null,
-  "pinData": null,
-  "versionId": "3bf28609-0591-43f2-a40b-795c309be135",
-  "versionCounter": 1,
+  "pinData": {},
+  "versionId": "f6b6feff-0eb8-469f-a2c1-76da7f5b9110",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-05T06:45:33.248Z",
-      "createdAt": "2025-12-05T06:45:33.248Z",
+      "updatedAt": "2025-12-05T16:20:07.004Z",
+      "createdAt": "2025-12-05T16:20:07.004Z",
       "role": "workflow:owner",
-      "workflowId": "nb0o8802pFHxVGCk",
-      "projectId": "Qz4EZoRaJoP60D6r",
+      "workflowId": "4PWZPYzSfK22Puj7",
+      "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
-        "updatedAt": "2025-03-05T09:02:20.383Z",
-        "createdAt": "2025-03-05T08:58:50.174Z",
-        "id": "Qz4EZoRaJoP60D6r",
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-03-05T08:58:50.174Z",
-            "createdAt": "2025-03-05T08:58:50.174Z",
-            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
-            "projectId": "Qz4EZoRaJoP60D6r",
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-05T06:44:21.000Z",
-              "createdAt": "2025-03-05T08:58:49.757Z",
-              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
-                "personalization_survey_n8n_version": "1.81.4",
-                "automationGoalDevops": [
-                  "other",
-                  "monitoring-alerting",
-                  "reporting"
-                ],
-                "companySize": "personalUser",
-                "companyType": "systems-integrator",
-                "role": "engineering",
-                "reportedSource": "linkedin"
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
-                "userActivatedAt": 1761210491841,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763717488235
+                  "lastShownAt": 1763316240404
                 }
               },
               "disabled": false,
@@ -612,5 +606,18 @@
       }
     }
   ],
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2025-12-01T08:00:58.410Z",
+      "createdAt": "2025-12-01T08:00:58.410Z",
+      "id": "fTIAo3WUvkbJgslo",
+      "name": "drive"
+    },
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
+    }
+  ]
 }

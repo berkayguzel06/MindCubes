@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2025-12-05T07:30:09.000Z",
-  "createdAt": "2025-12-05T06:45:32.233Z",
-  "id": "REhgGnpoG871gjIR",
+  "updatedAt": "2025-12-05T16:35:41.000Z",
+  "createdAt": "2025-12-05T16:20:06.717Z",
+  "id": "ZCQFXRgs7pTO3AV5",
   "name": "Mail Calendar Fetch",
+  "description": null,
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -14,7 +15,7 @@
       "typeVersion": 2,
       "position": [
         -3232,
-        128
+        120
       ],
       "id": "0571c834-dbde-45e7-9df6-edce0946a9b3",
       "name": "Recipient Filter",
@@ -81,7 +82,7 @@
       "typeVersion": 1.1,
       "position": [
         -4800,
-        128
+        120
       ],
       "id": "45cc8447-625c-4773-bdef-c56d0fa2c201",
       "name": "When Executed by Another Workflow"
@@ -130,7 +131,7 @@
       "typeVersion": 3.2,
       "position": [
         -3456,
-        128
+        120
       ],
       "id": "92e27429-3bc7-4bf1-b685-a7e6c4b13894",
       "name": "Merge1"
@@ -152,7 +153,7 @@
       "webhookId": "6d3dda81-081c-43e9-811a-9867f8dea51a",
       "credentials": {
         "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
+          "id": "JG4HCYCvUBrFrjrG",
           "name": "Telegram account"
         }
       }
@@ -175,7 +176,7 @@
       "typeVersion": 4.3,
       "position": [
         -4576,
-        368
+        360
       ],
       "id": "ec0b17ac-0816-4c35-b80c-739a57df6cb3",
       "name": "HTTP Request1"
@@ -203,7 +204,7 @@
       "typeVersion": 2,
       "position": [
         -4352,
-        368
+        360
       ],
       "id": "c4a2030d-f056-44aa-8605-0f7c73560b03",
       "name": "Code in JavaScript2"
@@ -214,7 +215,7 @@
       "typeVersion": 1,
       "position": [
         -4800,
-        592
+        584
       ],
       "id": "3a9f0710-42f1-485b-9774-b64d877d8443",
       "name": "When clicking ‘Execute workflow’"
@@ -227,7 +228,7 @@
       "typeVersion": 3.4,
       "position": [
         -4576,
-        592
+        584
       ],
       "id": "7c916818-5373-4fae-9b20-8a28e9000d48",
       "name": "Edit Fields"
@@ -236,9 +237,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "MuoR9CND8AzkWXQJ",
+          "value": "nuYzlzJjI97LmTtr",
           "mode": "list",
-          "cachedResultUrl": "/workflow/MuoR9CND8AzkWXQJ",
+          "cachedResultUrl": "/workflow/nuYzlzJjI97LmTtr",
           "cachedResultName": "Add Calendar Tag"
         },
         "workflowInputs": {
@@ -250,19 +251,19 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -2256,
-        -144
+        -2560,
+        -48
       ],
-      "id": "dc6b8c0e-3f41-4634-a191-2c1163c813fc",
+      "id": "6a48e520-d0cc-42f7-9a35-0c217f7570ee",
       "name": "Call 'Add Calendar Tag'"
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "SrOr4ivr8iaQTPxM",
+          "value": "0U7iChW0qv21cCCE",
           "mode": "list",
-          "cachedResultUrl": "/workflow/SrOr4ivr8iaQTPxM",
+          "cachedResultUrl": "/workflow/0U7iChW0qv21cCCE",
           "cachedResultName": "Mail-Calendar"
         },
         "workflowInputs": {
@@ -274,10 +275,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -2176,
-        352
+        -2560,
+        144
       ],
-      "id": "1bbbe001-b6b1-42c3-b384-a4e1317e6a84",
+      "id": "b31ad1b8-bd67-49de-97a2-e3afa860bf60",
       "name": "Call 'Mail-Calendar'"
     }
   ],
@@ -438,64 +439,57 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "10f35fd6-3fac-4862-ba03-6e2220e730ab",
-  "versionCounter": 2,
+  "versionId": "398daa70-b1ec-4d86-b497-185afe964561",
+  "versionCounter": 3,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-05T06:45:32.237Z",
-      "createdAt": "2025-12-05T06:45:32.237Z",
+      "updatedAt": "2025-12-05T16:20:06.721Z",
+      "createdAt": "2025-12-05T16:20:06.721Z",
       "role": "workflow:owner",
-      "workflowId": "REhgGnpoG871gjIR",
-      "projectId": "Qz4EZoRaJoP60D6r",
+      "workflowId": "ZCQFXRgs7pTO3AV5",
+      "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
-        "updatedAt": "2025-03-05T09:02:20.383Z",
-        "createdAt": "2025-03-05T08:58:50.174Z",
-        "id": "Qz4EZoRaJoP60D6r",
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-03-05T08:58:50.174Z",
-            "createdAt": "2025-03-05T08:58:50.174Z",
-            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
-            "projectId": "Qz4EZoRaJoP60D6r",
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-05T06:44:21.000Z",
-              "createdAt": "2025-03-05T08:58:49.757Z",
-              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
-                "personalization_survey_n8n_version": "1.81.4",
-                "automationGoalDevops": [
-                  "other",
-                  "monitoring-alerting",
-                  "reporting"
-                ],
-                "companySize": "personalUser",
-                "companyType": "systems-integrator",
-                "role": "engineering",
-                "reportedSource": "linkedin"
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
-                "userActivatedAt": 1761210491841,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763717488235
+                  "lastShownAt": 1763316240404
                 }
               },
               "disabled": false,
@@ -508,5 +502,18 @@
       }
     }
   ],
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2025-11-28T07:54:31.025Z",
+      "createdAt": "2025-11-28T07:54:31.025Z",
+      "id": "PdONDcNhiGyYrDss",
+      "name": "calendar"
+    },
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
+    }
+  ]
 }

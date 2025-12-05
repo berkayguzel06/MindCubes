@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2025-12-05T06:49:17.000Z",
-  "createdAt": "2025-12-05T06:44:58.331Z",
-  "id": "2vUKvq72nB35eOCN",
+  "updatedAt": "2025-12-05T16:46:34.000Z",
+  "createdAt": "2025-12-05T16:20:06.591Z",
+  "id": "mvT4c7bsEYpM1Rez",
   "name": "Calendar Single Executable",
+  "description": null,
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -50,13 +51,13 @@
       "typeVersion": 2.6,
       "position": [
         -2960,
-        -976
+        -968
       ],
       "id": "fffd4913-3e57-4f28-99ca-5be9613e34a6",
       "name": "Select rows from a table",
       "credentials": {
         "postgres": {
-          "id": "lSf8LsoQGg0drmfO",
+          "id": "eeGTexNNm3ZWrmrC",
           "name": "Postgres account"
         }
       }
@@ -71,7 +72,7 @@
       "typeVersion": 3.2,
       "position": [
         -2736,
-        -976
+        -968
       ],
       "id": "bd73d7f2-1e7b-4228-9f7d-e75c6440b411",
       "name": "Merge4"
@@ -105,13 +106,13 @@
       "typeVersion": 2.6,
       "position": [
         -2960,
-        -688
+        -680
       ],
       "id": "6af705d1-d031-460a-82a7-5a4a36afb6e8",
       "name": "Select rows from a table1",
       "credentials": {
         "postgres": {
-          "id": "lSf8LsoQGg0drmfO",
+          "id": "eeGTexNNm3ZWrmrC",
           "name": "Postgres account"
         }
       }
@@ -126,7 +127,7 @@
       "typeVersion": 2.1,
       "position": [
         -3184,
-        -832
+        -824
       ],
       "id": "3256413c-7edc-40d5-bd85-4d0f01ca2082",
       "name": "Webhook1",
@@ -145,7 +146,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -1344,
+        -1392,
         -752
       ],
       "id": "73e794b8-cc8a-43ac-8473-e5888db4cab6",
@@ -159,7 +160,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -768,
+        -1040,
         -656
       ],
       "id": "4cfab766-0553-4f03-85f8-a5fe4cf5d1af",
@@ -174,8 +175,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -320,
-        -544
+        -592,
+        -536
       ],
       "id": "2f5da3fe-5102-4600-ac02-a7690a9526c0",
       "name": "Adjust Date Data",
@@ -219,8 +220,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -544,
-        -544
+        -816,
+        -536
       ],
       "id": "9f85d5ca-de59-45fe-8a87-2e6456a9f304",
       "name": "Date Filter"
@@ -233,8 +234,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        -1136,
-        -528
+        -2976,
+        -312
       ],
       "id": "ef10e457-4014-4282-b00c-2f5c48bf8043",
       "name": "Structured Output Parser1",
@@ -249,7 +250,7 @@
       "type": "n8n-nodes-base.dateTimeTool",
       "typeVersion": 2,
       "position": [
-        -1264,
+        -1256,
         -528
       ],
       "id": "de32a022-5b32-4525-9843-630e152acf85",
@@ -264,7 +265,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2368,
+        2096,
         -896
       ],
       "id": "975ba2eb-f078-4c85-90e1-c070b9535668",
@@ -272,7 +273,7 @@
       "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
       "credentials": {
         "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
+          "id": "JG4HCYCvUBrFrjrG",
           "name": "Telegram account"
         }
       },
@@ -287,8 +288,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        800,
-        -1312
+        528,
+        -1304
       ],
       "id": "101c579f-14c3-465d-b8e8-e0d876e934c3",
       "name": "Merge1"
@@ -310,7 +311,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        352,
+        80,
         -1040
       ],
       "id": "d7b673ea-ee67-4adc-bd2e-65e1638462f6",
@@ -324,8 +325,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        576,
-        -1168
+        304,
+        -1160
       ],
       "id": "30a16dbf-516a-4e14-add6-ee3a73a1d029",
       "name": "Code in JavaScript1"
@@ -355,8 +356,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        2144,
-        -1120
+        1872,
+        -1112
       ],
       "id": "dc463c0f-7bcb-4ce4-ad46-c16eeb0d9983",
       "name": "Calendar Event",
@@ -371,7 +372,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -96,
+        -368,
         -1184
       ],
       "id": "dc2d2da5-eb48-42a8-9f84-d03a9f23cf0a",
@@ -384,7 +385,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -320,
+        -592,
         -1184
       ],
       "id": "c25b37ba-312f-4451-8c38-528a5541b090",
@@ -397,7 +398,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        128,
+        -144,
         -1040
       ],
       "id": "b9fc5257-901b-4f97-8f74-a4361c304f90",
@@ -413,7 +414,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -1392,
+        -1384,
         -528
       ],
       "id": "6e7ee4f0-ee9d-4378-8a57-e2c47d8d57a2",
@@ -435,8 +436,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
       "position": [
-        -1056,
-        -320
+        -3184,
+        -312
       ],
       "id": "65f65376-7075-4409-ae17-440b861fc0e3",
       "name": "Ollama Model",
@@ -485,8 +486,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1024,
-        -1312
+        752,
+        -1304
       ],
       "id": "bc0274f8-4da9-4664-9776-3f0915609dc9",
       "name": "If1"
@@ -499,7 +500,7 @@
       "typeVersion": 3.4,
       "position": [
         -2960,
-        -320
+        -104
       ],
       "id": "7f2e6ce1-e681-47a0-b741-c631872017cb",
       "name": "Edit Fields"
@@ -510,7 +511,7 @@
       "typeVersion": 1,
       "position": [
         -3184,
-        -320
+        -104
       ],
       "id": "8c0b9b70-23d6-41fc-b5ea-a6209c39236e",
       "name": "When clicking ‘Execute workflow’"
@@ -523,7 +524,7 @@
       "typeVersion": 2,
       "position": [
         -2288,
-        -688
+        -680
       ],
       "id": "da4fee63-5684-470c-aa03-40c760c80bc0",
       "name": "Code in JavaScript4"
@@ -603,7 +604,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2592,
+        2320,
         -1232
       ],
       "id": "ab511fed-4b98-4fa0-927f-246af3ec3226",
@@ -611,7 +612,7 @@
       "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
       "credentials": {
         "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
+          "id": "JG4HCYCvUBrFrjrG",
           "name": "Telegram account"
         }
       },
@@ -626,7 +627,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        2368,
+        2096,
         -1232
       ],
       "id": "fed93806-35d6-4a5c-9a2b-c8e0647060ba",
@@ -657,8 +658,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1248,
-        -1408
+        976,
+        -1400
       ],
       "id": "5005dea4-1b73-4afb-9156-5646697c703e",
       "name": "Get Schedule",
@@ -671,8 +672,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1472,
-        -1408
+        1200,
+        -1400
       ],
       "id": "858d0c7c-7b46-4296-b733-428e43cda5bd",
       "name": "Code in JavaScript"
@@ -705,8 +706,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1920,
-        -1312
+        1648,
+        -1304
       ],
       "id": "dac8c4a1-5b09-4f43-9097-c34976cfb6bc",
       "name": "If2"
@@ -722,7 +723,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2144,
+        1872,
         -1424
       ],
       "id": "357e7e03-0c8d-4929-8a8a-a43980fc3535",
@@ -730,7 +731,7 @@
       "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
       "credentials": {
         "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
+          "id": "JG4HCYCvUBrFrjrG",
           "name": "Telegram account"
         }
       },
@@ -745,8 +746,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        1696,
-        -1312
+        1424,
+        -1304
       ],
       "id": "054debf2-9038-4fe5-8cf9-c7cea9bd037d",
       "name": "Merge6"
@@ -758,14 +759,14 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -1376,
-        -112
+        -3184,
+        120
       ],
       "id": "771273e4-e44a-4bce-b1cf-4c63f8aeca48",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "fxWHzuDbpxOZTwOR",
+          "id": "yohuzcpOTpBCKcFi",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -909,13 +910,7 @@
     },
     "Structured Output Parser1": {
       "ai_outputParser": [
-        [
-          {
-            "node": "Email Calendar Agent",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Date & Time": {
@@ -1027,7 +1022,13 @@
     },
     "Ollama Chat Model": {
       "ai_languageModel": [
-        []
+        [
+          {
+            "node": "Email Calendar Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
       ]
     },
     "Ollama Model": {
@@ -1198,77 +1199,62 @@
     },
     "Google Gemini Chat Model": {
       "ai_languageModel": [
-        [
-          {
-            "node": "Email Calendar Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
+        []
       ]
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "9a0351ea-8d3d-4871-b692-ef7b04be9551",
+  "versionId": "eb18a4eb-cd70-4c4d-bacb-73112ebf868f",
   "versionCounter": 5,
   "triggerCount": 1,
   "shared": [
     {
-      "updatedAt": "2025-12-05T06:44:58.360Z",
-      "createdAt": "2025-12-05T06:44:58.360Z",
+      "updatedAt": "2025-12-05T16:20:06.594Z",
+      "createdAt": "2025-12-05T16:20:06.594Z",
       "role": "workflow:owner",
-      "workflowId": "2vUKvq72nB35eOCN",
-      "projectId": "Qz4EZoRaJoP60D6r",
+      "workflowId": "mvT4c7bsEYpM1Rez",
+      "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
-        "updatedAt": "2025-03-05T09:02:20.383Z",
-        "createdAt": "2025-03-05T08:58:50.174Z",
-        "id": "Qz4EZoRaJoP60D6r",
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-03-05T08:58:50.174Z",
-            "createdAt": "2025-03-05T08:58:50.174Z",
-            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
-            "projectId": "Qz4EZoRaJoP60D6r",
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-05T06:44:21.000Z",
-              "createdAt": "2025-03-05T08:58:49.757Z",
-              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
-                "personalization_survey_n8n_version": "1.81.4",
-                "automationGoalDevops": [
-                  "other",
-                  "monitoring-alerting",
-                  "reporting"
-                ],
-                "companySize": "personalUser",
-                "companyType": "systems-integrator",
-                "role": "engineering",
-                "reportedSource": "linkedin"
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
-                "userActivatedAt": 1761210491841,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763717488235
+                  "lastShownAt": 1763316240404
                 }
               },
               "disabled": false,
@@ -1281,5 +1267,12 @@
       }
     }
   ],
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2025-11-24T12:37:07.615Z",
+      "createdAt": "2025-11-24T12:37:07.615Z",
+      "id": "JltU9W7VB1ZMp5s7",
+      "name": "executable"
+    }
+  ]
 }

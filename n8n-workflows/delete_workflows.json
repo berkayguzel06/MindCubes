@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2025-12-04T06:57:10.000Z",
-  "createdAt": "2025-12-04T06:52:28.080Z",
-  "id": "plV1jqF3D6dAgr6p",
+  "updatedAt": "2025-12-05T16:46:13.000Z",
+  "createdAt": "2025-12-05T16:20:06.634Z",
+  "id": "0ANDsO63DO1oE0jn",
   "name": "Delete Workflows",
+  "description": null,
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -77,7 +78,7 @@
       ],
       "credentials": {
         "n8nApi": {
-          "id": "GDG9SijOxfBHqnVI",
+          "id": "GqyMbBKQ5oN9Jd2o",
           "name": "n8n account"
         }
       }
@@ -97,7 +98,7 @@
       ],
       "credentials": {
         "n8nApi": {
-          "id": "GDG9SijOxfBHqnVI",
+          "id": "GqyMbBKQ5oN9Jd2o",
           "name": "n8n account"
         }
       }
@@ -146,66 +147,57 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "c0e2b756-8c1a-4b1c-ab75-16dbd4abbbba",
-  "versionCounter": 5,
+  "versionId": "4cb9e153-90f9-45e5-adb8-323aa7b69016",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-04T06:52:28.086Z",
-      "createdAt": "2025-12-04T06:52:28.086Z",
+      "updatedAt": "2025-12-05T16:20:06.639Z",
+      "createdAt": "2025-12-05T16:20:06.639Z",
       "role": "workflow:owner",
-      "workflowId": "plV1jqF3D6dAgr6p",
-      "projectId": "Qz4EZoRaJoP60D6r",
+      "workflowId": "0ANDsO63DO1oE0jn",
+      "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
-        "updatedAt": "2025-03-05T09:02:20.383Z",
-        "createdAt": "2025-03-05T08:58:50.174Z",
-        "id": "Qz4EZoRaJoP60D6r",
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-03-05T08:58:50.174Z",
-            "createdAt": "2025-03-05T08:58:50.174Z",
-            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
-            "projectId": "Qz4EZoRaJoP60D6r",
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-05T06:44:21.000Z",
-              "createdAt": "2025-03-05T08:58:49.757Z",
-              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
-                "personalization_survey_n8n_version": "1.81.4",
-                "automationGoalDevops": [
-                  "other",
-                  "monitoring-alerting",
-                  "reporting"
-                ],
-                "companySize": "personalUser",
-                "companyType": "systems-integrator",
-                "role": "engineering",
-                "reportedSource": "linkedin"
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
-                "userActivatedAt": 1761210491841,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763717488235
+                  "lastShownAt": 1763316240404
                 }
               },
               "disabled": false,
@@ -218,5 +210,12 @@
       }
     }
   ],
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2025-12-05T16:44:31.509Z",
+      "createdAt": "2025-12-05T16:44:31.509Z",
+      "id": "wgMjaO52Q3OltjFG",
+      "name": "database"
+    }
+  ]
 }

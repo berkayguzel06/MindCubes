@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2025-12-05T09:02:39.000Z",
-  "createdAt": "2025-12-05T06:45:34.100Z",
-  "id": "tcd6HHl7FJRW8Fm7",
+  "updatedAt": "2025-12-05T16:32:01.000Z",
+  "createdAt": "2025-12-05T16:20:07.486Z",
+  "id": "kgpb3gPGTDAR9oB3",
   "name": "Start-Mail-Workflow ToDo",
+  "description": null,
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -21,7 +22,7 @@
       "typeVersion": 1.2,
       "position": [
         -608,
-        -24
+        -120
       ],
       "id": "337b1215-9aa8-4342-b5c3-4564daa9f843",
       "name": "Schedule Trigger"
@@ -36,43 +37,18 @@
       "typeVersion": 1.2,
       "position": [
         64,
-        72
+        -24
       ],
       "id": "845774ac-b250-4e45-ab41-0349b1fe9d2e",
       "name": "Error Message",
       "webhookId": "e79f74b9-6b6e-4082-a7d4-b7f707c9c17b",
       "credentials": {
         "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
+          "id": "JG4HCYCvUBrFrjrG",
           "name": "Telegram account"
         }
       },
       "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "g3ENZlFrZDL5qn9v",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/g3ENZlFrZDL5qn9v",
-          "cachedResultName": "Mail ToDo Fetch"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {}
-        },
-        "mode": "each",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
-      "position": [
-        288,
-        -144
-      ],
-      "id": "bb553a4e-50c5-4d67-b413-a89ef3239e9a",
-      "name": "Call 'Mail ToDo Fetch'"
     },
     {
       "parameters": {
@@ -97,7 +73,7 @@
       "typeVersion": 4.3,
       "position": [
         -384,
-        -24
+        -120
       ],
       "id": "45bcba56-0496-4a6e-a72a-776385542b79",
       "name": "HTTP Request",
@@ -111,7 +87,7 @@
       "typeVersion": 2,
       "position": [
         -160,
-        -96
+        -192
       ],
       "id": "56a40afa-1249-4af5-92df-d4b96dd1865a",
       "name": "Code in JavaScript",
@@ -146,10 +122,35 @@
       "typeVersion": 2.2,
       "position": [
         64,
-        -144
+        -240
       ],
       "id": "d96c1cc6-5459-4591-9d9b-7b5632399911",
       "name": "If1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "uwFBg2fpc8eIiYLu",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/uwFBg2fpc8eIiYLu",
+          "cachedResultName": "Mail ToDo Fetch"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "mode": "each",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        -240
+      ],
+      "id": "63ecda15-6aa3-44ec-9e3c-8a5d19f2d6e3",
+      "name": "Call 'Mail ToDo Fetch'"
     }
   ],
   "connections": {
@@ -213,7 +214,9 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": {
     "node:Schedule Trigger": {
@@ -222,59 +225,50 @@
   },
   "meta": null,
   "pinData": {},
-  "versionId": "cc232345-61c0-4684-be72-3ef7f4922d16",
-  "versionCounter": 9,
+  "versionId": "200d89bd-b5c9-438f-832a-c062c05b093d",
+  "versionCounter": 11,
   "triggerCount": 1,
   "shared": [
     {
-      "updatedAt": "2025-12-05T06:45:34.105Z",
-      "createdAt": "2025-12-05T06:45:34.105Z",
+      "updatedAt": "2025-12-05T16:20:07.489Z",
+      "createdAt": "2025-12-05T16:20:07.489Z",
       "role": "workflow:owner",
-      "workflowId": "tcd6HHl7FJRW8Fm7",
-      "projectId": "Qz4EZoRaJoP60D6r",
+      "workflowId": "kgpb3gPGTDAR9oB3",
+      "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
-        "updatedAt": "2025-03-05T09:02:20.383Z",
-        "createdAt": "2025-03-05T08:58:50.174Z",
-        "id": "Qz4EZoRaJoP60D6r",
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-03-05T08:58:50.174Z",
-            "createdAt": "2025-03-05T08:58:50.174Z",
-            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
-            "projectId": "Qz4EZoRaJoP60D6r",
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-05T06:44:21.000Z",
-              "createdAt": "2025-03-05T08:58:49.757Z",
-              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
-                "personalization_survey_n8n_version": "1.81.4",
-                "automationGoalDevops": [
-                  "other",
-                  "monitoring-alerting",
-                  "reporting"
-                ],
-                "companySize": "personalUser",
-                "companyType": "systems-integrator",
-                "role": "engineering",
-                "reportedSource": "linkedin"
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
-                "userActivatedAt": 1761210491841,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763717488235
+                  "lastShownAt": 1763316240404
                 }
               },
               "disabled": false,
@@ -289,10 +283,22 @@
   ],
   "tags": [
     {
-      "updatedAt": "2025-12-04T12:59:34.169Z",
-      "createdAt": "2025-12-04T12:59:34.169Z",
-      "id": "cwpgHJH3sGrarRBq",
+      "updatedAt": "2025-12-01T06:23:06.670Z",
+      "createdAt": "2025-12-01T06:23:06.670Z",
+      "id": "0cbLQ4Aipx5LSkSX",
+      "name": "todo"
+    },
+    {
+      "updatedAt": "2025-12-05T16:23:23.113Z",
+      "createdAt": "2025-12-05T16:23:23.113Z",
+      "id": "chdfMY23MzD2QqyT",
       "name": "start"
+    },
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
     }
   ]
 }

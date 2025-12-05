@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2025-12-05T06:44:58.030Z",
-  "createdAt": "2025-12-05T06:44:58.030Z",
-  "id": "1I6fApboY7fsM5tb",
+  "updatedAt": "2025-12-05T16:39:01.000Z",
+  "createdAt": "2025-12-05T16:20:06.433Z",
+  "id": "AyKctiTX0fxh44Kj",
   "name": "Add Categorized Tag",
+  "description": null,
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -13,8 +14,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -1360,
-        480
+        -1504,
+        528
       ],
       "id": "77951041-613a-4075-a1db-32dae388826b",
       "name": "Get many messages"
@@ -51,8 +52,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -720,
-        464
+        -832,
+        528
       ],
       "id": "448c9501-b8be-4417-92db-d81f6d576cea",
       "name": "AI Category",
@@ -86,8 +87,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1136,
-        480
+        -1280,
+        528
       ],
       "id": "3404bc4f-0664-4ae4-848c-88dc68323268",
       "name": "If"
@@ -101,15 +102,15 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -496,
-        464
+        -608,
+        528
       ],
       "id": "74c609c8-abad-4ac3-b259-56def1c751b8",
       "name": "Error Message",
       "webhookId": "f47eba34-f626-4cc1-bf72-ebf3fbba3706",
       "credentials": {
         "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
+          "id": "JG4HCYCvUBrFrjrG",
           "name": "Telegram account"
         }
       },
@@ -122,8 +123,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -896,
-        448
+        -1056,
+        528
       ],
       "id": "63e3e496-781f-4052-bfce-647b595bec14",
       "name": "Code in JavaScript"
@@ -135,7 +136,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1296,
+        -1280,
         304
       ],
       "id": "0fed6612-21ee-4ae9-9743-842eff0e3919",
@@ -147,7 +148,7 @@
       "typeVersion": 1,
       "position": [
         -1504,
-        320
+        304
       ],
       "id": "67c2f5c7-1239-4a1b-bdf0-e95f80b6d22e",
       "name": "When clicking ‘Execute workflow’"
@@ -217,64 +218,57 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
   "meta": null,
-  "pinData": null,
-  "versionId": "292d7e89-3170-467d-bf1b-23227f626f41",
-  "versionCounter": 1,
+  "pinData": {},
+  "versionId": "b8e2fbf0-cff9-4046-8e23-a2ec6c6dbc2c",
+  "versionCounter": 3,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-05T06:44:58.042Z",
-      "createdAt": "2025-12-05T06:44:58.042Z",
+      "updatedAt": "2025-12-05T16:20:06.435Z",
+      "createdAt": "2025-12-05T16:20:06.435Z",
       "role": "workflow:owner",
-      "workflowId": "1I6fApboY7fsM5tb",
-      "projectId": "Qz4EZoRaJoP60D6r",
+      "workflowId": "AyKctiTX0fxh44Kj",
+      "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
-        "updatedAt": "2025-03-05T09:02:20.383Z",
-        "createdAt": "2025-03-05T08:58:50.174Z",
-        "id": "Qz4EZoRaJoP60D6r",
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-03-05T08:58:50.174Z",
-            "createdAt": "2025-03-05T08:58:50.174Z",
-            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
-            "projectId": "Qz4EZoRaJoP60D6r",
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-05T06:44:21.000Z",
-              "createdAt": "2025-03-05T08:58:49.757Z",
-              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
-                "personalization_survey_n8n_version": "1.81.4",
-                "automationGoalDevops": [
-                  "other",
-                  "monitoring-alerting",
-                  "reporting"
-                ],
-                "companySize": "personalUser",
-                "companyType": "systems-integrator",
-                "role": "engineering",
-                "reportedSource": "linkedin"
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
-                "userActivatedAt": 1761210491841,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763717488235
+                  "lastShownAt": 1763316240404
                 }
               },
               "disabled": false,
@@ -287,5 +281,18 @@
       }
     }
   ],
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2025-11-28T07:47:36.846Z",
+      "createdAt": "2025-11-28T07:47:36.846Z",
+      "id": "rFb0OIp7gOe3RUr9",
+      "name": "categorized"
+    },
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
+    }
+  ]
 }

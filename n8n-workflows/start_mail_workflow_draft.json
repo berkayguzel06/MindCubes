@@ -1,8 +1,9 @@
 {
-  "updatedAt": "2025-12-05T12:29:25.000Z",
-  "createdAt": "2025-12-05T12:26:59.795Z",
-  "id": "1WY3SXh4IXhgwI8p",
+  "updatedAt": "2025-12-05T16:34:30.000Z",
+  "createdAt": "2025-12-05T16:20:07.388Z",
+  "id": "uk9ZNXmmd7epNwtb",
   "name": "Start-Mail-Workflow Draft",
+  "description": null,
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -21,7 +22,7 @@
       "typeVersion": 1.2,
       "position": [
         -608,
-        -72
+        -168
       ],
       "id": "d996261b-4a21-4a3f-8f96-e8745b727719",
       "name": "Schedule Trigger"
@@ -36,14 +37,14 @@
       "typeVersion": 1.2,
       "position": [
         64,
-        24
+        -72
       ],
       "id": "221faf00-d693-49f4-a1c0-17e74fb4b762",
       "name": "Error Message",
       "webhookId": "55a57c3a-bc27-481c-829a-fac6edccc74b",
       "credentials": {
         "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
+          "id": "JG4HCYCvUBrFrjrG",
           "name": "Telegram account"
         }
       },
@@ -72,7 +73,7 @@
       "typeVersion": 4.3,
       "position": [
         -384,
-        -72
+        -168
       ],
       "id": "9dc65f95-8a30-4fd8-a981-9f9952e0c4af",
       "name": "HTTP Request",
@@ -86,7 +87,7 @@
       "typeVersion": 2,
       "position": [
         -160,
-        -144
+        -240
       ],
       "id": "26eb9a4a-2047-40a0-ad14-eaa91746f9d7",
       "name": "Code in JavaScript",
@@ -121,7 +122,7 @@
       "typeVersion": 2.2,
       "position": [
         64,
-        -192
+        -288
       ],
       "id": "384d1878-74f5-4e0e-8d16-a6ad7a469ccb",
       "name": "If1"
@@ -130,24 +131,25 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "fIb8BKRNac792wnA",
+          "value": "6ZNBgRIUh3ACnMTc",
           "mode": "list",
-          "cachedResultUrl": "/workflow/fIb8BKRNac792wnA",
+          "cachedResultUrl": "/workflow/6ZNBgRIUh3ACnMTc",
           "cachedResultName": "Mail Draft Fetch"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {}
         },
+        "mode": "each",
         "options": {}
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
         288,
-        -192
+        -288
       ],
-      "id": "f8156dca-e159-4346-a55b-81173901823d",
+      "id": "cc6f833b-f02b-44aa-bcf3-b1eca16d6742",
       "name": "Call 'Mail Draft Fetch'"
     }
   ],
@@ -212,70 +214,61 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": {
     "node:Schedule Trigger": {
       "recurrenceRules": []
     }
   },
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "f222bc4a-88db-4069-8f7f-6b9bf3b7c050",
-  "versionCounter": 16,
+  "versionId": "7c5784e7-0d5d-4b80-a00f-b12880082ce5",
+  "versionCounter": 6,
   "triggerCount": 1,
   "shared": [
     {
-      "updatedAt": "2025-12-05T12:26:59.800Z",
-      "createdAt": "2025-12-05T12:26:59.800Z",
+      "updatedAt": "2025-12-05T16:20:07.393Z",
+      "createdAt": "2025-12-05T16:20:07.393Z",
       "role": "workflow:owner",
-      "workflowId": "1WY3SXh4IXhgwI8p",
-      "projectId": "Qz4EZoRaJoP60D6r",
+      "workflowId": "uk9ZNXmmd7epNwtb",
+      "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
-        "updatedAt": "2025-03-05T09:02:20.383Z",
-        "createdAt": "2025-03-05T08:58:50.174Z",
-        "id": "Qz4EZoRaJoP60D6r",
+        "updatedAt": "2025-10-20T20:29:51.468Z",
+        "createdAt": "2025-10-20T20:29:10.045Z",
+        "id": "Ti3JL05CSVUvJj6A",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-03-05T08:58:50.174Z",
-            "createdAt": "2025-03-05T08:58:50.174Z",
-            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
-            "projectId": "Qz4EZoRaJoP60D6r",
+            "updatedAt": "2025-10-20T20:29:10.046Z",
+            "createdAt": "2025-10-20T20:29:10.046Z",
+            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+            "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-05T06:44:21.000Z",
-              "createdAt": "2025-03-05T08:58:49.757Z",
-              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
+              "createdAt": "2025-10-20T20:29:09.823Z",
+              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
-                "personalization_survey_n8n_version": "1.81.4",
-                "automationGoalDevops": [
-                  "other",
-                  "monitoring-alerting",
-                  "reporting"
-                ],
-                "companySize": "personalUser",
-                "companyType": "systems-integrator",
-                "role": "engineering",
-                "reportedSource": "linkedin"
+                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
+                "personalization_survey_n8n_version": "1.115.3"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
-                "userActivatedAt": 1761210491841,
+                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
+                "userActivatedAt": 1761636420034,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763717488235
+                  "lastShownAt": 1763316240404
                 }
               },
               "disabled": false,
@@ -290,10 +283,22 @@
   ],
   "tags": [
     {
-      "updatedAt": "2025-12-04T12:59:34.169Z",
-      "createdAt": "2025-12-04T12:59:34.169Z",
-      "id": "cwpgHJH3sGrarRBq",
+      "updatedAt": "2025-12-05T16:23:23.113Z",
+      "createdAt": "2025-12-05T16:23:23.113Z",
+      "id": "chdfMY23MzD2QqyT",
       "name": "start"
+    },
+    {
+      "updatedAt": "2025-12-05T16:32:21.179Z",
+      "createdAt": "2025-12-05T16:32:21.179Z",
+      "id": "oaHPeL6BLsQowLef",
+      "name": "draft"
+    },
+    {
+      "updatedAt": "2025-11-25T07:28:56.435Z",
+      "createdAt": "2025-11-25T07:28:56.435Z",
+      "id": "uEPVpiLWGIcHIKbE",
+      "name": "non-exectuable"
     }
   ]
 }
