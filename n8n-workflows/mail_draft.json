@@ -1,0 +1,545 @@
+{
+  "updatedAt": "2025-12-05T12:58:30.000Z",
+  "createdAt": "2025-12-05T12:36:01.985Z",
+  "id": "qcnTNff2HhOfWLKL",
+  "name": "Mail-Draft",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -3664,
+        -148
+      ],
+      "id": "c4f7a687-855f-4fef-a47f-a5764b24b4f5",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "05a8fb07-b925-4c0c-a8af-21e1f8b26491",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3440,
+        -148
+      ],
+      "id": "a1295693-6554-4aa0-b1db-30f9c5ad5351",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Body:{{ $json.bodyPreview }}\nSubject:{{ $json.subject }}\nSender:{{ $json.from.emailAddress.address }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are a highly professional email response assistant.\nYour single responsibility is to write a clear, concise, and formally structured reply to the email you receive.\n\nYour writing style must always follow these principles:\n\nUse a polished, business-grade tone suitable for corporate communication.\n\nEnsure the response is respectful, solution-oriented, and grammatically flawless.\n\nReflect understanding of the sender’s message and address all actionable points.\n\nProvide clarification, confirmation, or next steps when appropriate.\n\nAvoid emotional language, unnecessary details, or informal expressions.\n\nDo NOT include any analysis about the email — only produce the final reply message.\n\nKeep the output strictly as the email reply text, without additional formatting, JSON, or commentary.\n\nDo NOT include disclaimers, self-references, or explanations about how you generated the message.\n\nYour output should be a complete, ready-to-send professional email reply.\n\nYour output language should be the language of the received mail.\n\nOutput Format:\n{\n\t\"message\":\"<generated_respone>\",\n     \"subject\":\"<generated_subject>\",\n     \"to\":\"<who-to-send-mail-address>\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -3216,
+        -400
+      ],
+      "id": "0722a8f1-0313-4e01-a50e-2c570b5bb5fa",
+      "name": "Mail Draft",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -3144,
+        -176
+      ],
+      "id": "4918379d-9f26-4d5e-9e39-a7757f8fc5d4",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "fxWHzuDbpxOZTwOR",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.microsoft.com/v1.0/me/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $json.accessToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"subject\": \"{{$json.subject}}\",\n  \"body\": {\n    \"contentType\": \"HTML\",\n    \"content\": \"{{$json.message.replace(/\\n/g, \"<br>\")}}\"\n  },\n  \"toRecipients\": [\n    {\n      \"emailAddress\": {\n        \"address\": \"{{$json.to}}\"\n      }\n    }\n  ],\n  \"isDraft\": true\n}\n",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 5
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -2416,
+        -4
+      ],
+      "id": "15a236e2-c5ba-4e52-860c-8422603b3197",
+      "name": "Create Draft",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.json.access_token,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2864,
+        -76
+      ],
+      "id": "915ef4a8-73dd-4225-95ea-3d7f7647c149",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3152,
+        0
+      ],
+      "id": "01cadc96-b484-4153-8917-1c84c562463e",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3664,
+        224
+      ],
+      "id": "4ce0401c-6120-4766-91ce-943c7b008af8",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3440,
+        224
+      ],
+      "id": "1c3debf8-6813-41e8-bbf9-f7554dd8a6cd",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen tüm verileri al\nconst items = $input.all();\n\nreturn items.map(item => {\n    // 1. Orijinal verideki Access Token'ı al\n    // Not: Veri yapınızda key ismi \"input1.json->access_token\" olarak görünüyor.\n    const accessToken = item.json[\"input1.json->access_token\"];\n\n    // 2. 'output' alanındaki string veriyi al\n    const rawOutput = item.json.output;\n    \n    let parsedData = {};\n\n    if (rawOutput && typeof rawOutput === 'string') {\n        // Markdown kod bloğu işaretlerini temizle\n        const cleanString = rawOutput.replace(/```json|```/g, '').trim();\n\n        try {\n            // String'i JSON objesine çevir\n            parsedData = JSON.parse(cleanString);\n        } catch (error) {\n            parsedData = { error: \"JSON Parse Hatası\" };\n        }\n    }\n\n    // 3. Ayrıştırılmış veriyi ve Access Token'ı birleştirerek döndür\n    return {\n        json: {\n            // Parsed edilen verileri yay (message, subject, to)\n            ...parsedData,\n            \n            // Access token'ı temiz bir isimle ekle\n            accessToken: accessToken\n        }\n    };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2640,
+        -76
+      ],
+      "id": "e5ca2f2f-9ef4-4553-82d4-a7edd0ffd986",
+      "name": "Code in JavaScript1",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "-3257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -2192,
+        -224
+      ],
+      "id": "0be3bf75-05bd-4fa5-9c46-b3a3c47b9bd4",
+      "name": "Error Message",
+      "webhookId": "d0122a52-c00b-4e15-ab3e-5f14c712b6af",
+      "credentials": {
+        "telegramApi": {
+          "id": "xTSQ9buOorLMIRKW",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Mail Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mail Draft": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Mail Draft",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Create Draft",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Draft": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Edit Fields": [
+      {
+        "json": {
+          "access_token": "EwBoBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAW//NgT9L/+xVmKQI2KQpLWE/XmKd02IhelD3BJ9VCN7Ar3f2s4l2lIwGi6nFXnLGzQpvI1xNp+RDSrSId2ZTzcTr8e3UUYO9jIUQtmUJuw5pXOar3AnZxfKQbKCKfEzfPNgakuSyqE8HiHbbxCJ6ZQ447XhfyfFTRuGhOqM28zRPAJ1vRAY1jmzD1rXHNFEedWDV5yeLD0eeWSQ8VsiL90pyZDSiW7qJpgfcXFDAAfrZ/XzK7XEcUa66wgyWnokZx6AE9vKjDH5BajRdxPEn/2o6s4p2E4jGcO8QGlqwcwniV4bhs0+eypJsch/rwizLnRz2ZXTwbPXTudvSF3oMZ8QZgAAEJ+zs5nUguvfauuMngHJqScwA2NuGGefge1FKqft4+3FW/afpv4/gH9+Awc/fcwFgGsoOmHXjEv1DZP4CqkKxj7cAWeSSU5XmNHzrXvaeI/SN3kRiFwBwdxolK39JRaFSGncEqAyg6RQ7TIAy/Mbcs7lzJ6VA9ODgEz7t8xu2jNYQVFo+/1asSMahASXOeokvz6PeH/tvZ8EmcJt1dCTD9GJnG02MU5Y2i+AEx2YCpxRF1uF/FvPuJmW0TfdAeaMUhBFTN2wLtXKQUOPrrSqdQXFKb2/GcbkLibnylDCHjNcqmUDHzF7/iQCU3xCBuZIz2Ioa+GtXdPwlJeSDYDC/UY952ZE5ePRLMjmdlCi+FpVN3WVshZV0ZgCIoFHGCb6yjbmeVql4eVV1crzU9kDNmYzTrf+TIBuozvkK6QjYlbJCUVzMfxAXdWscT23JJ0/qnGvYrVtfXAvvKrs1FHubMD5WhvtyO3ADkhBXnPQRaXl0EsVNy/VUv3yaDxTYZKmX6DvwzS6aN6bzvsclnpookfFR2FSoUnOl6U03FfAlcO/SumhIt5EHL5H/IGo59kxw6ZATi2/wZ2vikE+OfIh5kgW7Nx12bk9KRYO+Moi1SjhBcFfXd4BHvTJlKPVrinGMaFapWZE2pfuvtkzMjGXEKF9N83AtBLFt6sxYbs2FLgDtAg6lkqctoH17Ed3B9ZvP/tZpNpTrIveU7jem9PQYMpzsEM5FLUhrtTkqjLZved8H/ApiKt3t90L/LLeHpDNTotJckgULUq8Go4i5HkB44qvm0dW5Mgj7s9hIMpD6P3vYIDDirBBVzCY4UkrVbYZbYDKJ1TJnlwBHyRhewnjjeyWfTUm3NCRrjX6DaHH3ACKX0+5IYCuQ92ExOsOnTIDU6zUupfwk5m6E6s+7gL4/T6u46cXkkmskPTR80c6cbaRIX8p1E1GpDXngBJpeQb0mmLRZwQbw+dmxewqLzVPocvM/irwfjFxya+E+m9mE/6WexW1FxHXpFXx1I8m9ek6lVulRxTFKyfKBhXStskH6ioEXdBDWORxLm4BpPfZZhfCgm7tUvdVpAE+KwmukfpL087+Fdco8kQ4f3eYsr8S6NJAKXgD",
+          "telegram_chat_id": "-1003315838853",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAExj/iC\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAR0ji-IAAACmbAuzjNRkRJHPPR9ftVhgAAExm7quAAAA",
+          "categories": [
+            "Categorized",
+            "Calendar",
+            "drive",
+            "Prioritized",
+            "todo"
+          ],
+          "receivedDateTime": "2025-11-25T17:15:32Z",
+          "hasAttachments": false,
+          "subject": "Entegrasyon Sürecine İlişkin Onay Talebi",
+          "bodyPreview": "Selam,\nAkinon tarafındaki entegrasyon için hazırlanan yeni yapılandırma dosyalarını test ortamına aktarmadan önce onayını talep ediyorum.\nKontrol etmeni istediğim noktalar:\nEndpoint doğruluk testi\nTimeout &amp; retry politikaları\nHata loglama formatı\nOnay verdikten sonra deploy sürecine başlayacağım.\nTeşekkürler.",
+          "body": {
+            "contentType": "text",
+            "content": "Selam,\nAkinon tarafındaki entegrasyon için hazırlanan yeni yapılandırma dosyalarını test ortamına aktarmadan önce onayını talep ediyorum.\nKontrol etmeni istediğim noktalar:\nEndpoint doğruluk testi\nTimeout &amp; retry politikaları\nHata loglama formatı\nOnay verdikten sonra deploy sürecine başlayacağım.\nTeşekkürler."
+          },
+          "from": {
+            "emailAddress": {
+              "name": "Berkay Güzel",
+              "address": "berkayguzel43@gmail.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwBoBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAW//NgT9L/+xVmKQI2KQpLWE/XmKd02IhelD3BJ9VCN7Ar3f2s4l2lIwGi6nFXnLGzQpvI1xNp+RDSrSId2ZTzcTr8e3UUYO9jIUQtmUJuw5pXOar3AnZxfKQbKCKfEzfPNgakuSyqE8HiHbbxCJ6ZQ447XhfyfFTRuGhOqM28zRPAJ1vRAY1jmzD1rXHNFEedWDV5yeLD0eeWSQ8VsiL90pyZDSiW7qJpgfcXFDAAfrZ/XzK7XEcUa66wgyWnokZx6AE9vKjDH5BajRdxPEn/2o6s4p2E4jGcO8QGlqwcwniV4bhs0+eypJsch/rwizLnRz2ZXTwbPXTudvSF3oMZ8QZgAAEJ+zs5nUguvfauuMngHJqScwA2NuGGefge1FKqft4+3FW/afpv4/gH9+Awc/fcwFgGsoOmHXjEv1DZP4CqkKxj7cAWeSSU5XmNHzrXvaeI/SN3kRiFwBwdxolK39JRaFSGncEqAyg6RQ7TIAy/Mbcs7lzJ6VA9ODgEz7t8xu2jNYQVFo+/1asSMahASXOeokvz6PeH/tvZ8EmcJt1dCTD9GJnG02MU5Y2i+AEx2YCpxRF1uF/FvPuJmW0TfdAeaMUhBFTN2wLtXKQUOPrrSqdQXFKb2/GcbkLibnylDCHjNcqmUDHzF7/iQCU3xCBuZIz2Ioa+GtXdPwlJeSDYDC/UY952ZE5ePRLMjmdlCi+FpVN3WVshZV0ZgCIoFHGCb6yjbmeVql4eVV1crzU9kDNmYzTrf+TIBuozvkK6QjYlbJCUVzMfxAXdWscT23JJ0/qnGvYrVtfXAvvKrs1FHubMD5WhvtyO3ADkhBXnPQRaXl0EsVNy/VUv3yaDxTYZKmX6DvwzS6aN6bzvsclnpookfFR2FSoUnOl6U03FfAlcO/SumhIt5EHL5H/IGo59kxw6ZATi2/wZ2vikE+OfIh5kgW7Nx12bk9KRYO+Moi1SjhBcFfXd4BHvTJlKPVrinGMaFapWZE2pfuvtkzMjGXEKF9N83AtBLFt6sxYbs2FLgDtAg6lkqctoH17Ed3B9ZvP/tZpNpTrIveU7jem9PQYMpzsEM5FLUhrtTkqjLZved8H/ApiKt3t90L/LLeHpDNTotJckgULUq8Go4i5HkB44qvm0dW5Mgj7s9hIMpD6P3vYIDDirBBVzCY4UkrVbYZbYDKJ1TJnlwBHyRhewnjjeyWfTUm3NCRrjX6DaHH3ACKX0+5IYCuQ92ExOsOnTIDU6zUupfwk5m6E6s+7gL4/T6u46cXkkmskPTR80c6cbaRIX8p1E1GpDXngBJpeQb0mmLRZwQbw+dmxewqLzVPocvM/irwfjFxya+E+m9mE/6WexW1FxHXpFXx1I8m9ek6lVulRxTFKyfKBhXStskH6ioEXdBDWORxLm4BpPfZZhfCgm7tUvdVpAE+KwmukfpL087+Fdco8kQ4f3eYsr8S6NJAKXgD",
+          "telegram_chat_id": "-1003315838853",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAExj/iM\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAR0ji-AAAACmbAuzjNRkRJHPPR9ftVhgAAExm7TNAAAA",
+          "categories": [
+            "Categorized",
+            "Prioritized",
+            "todo",
+            "Calendar",
+            "drive"
+          ],
+          "receivedDateTime": "2025-12-03T07:21:15Z",
+          "hasAttachments": false,
+          "subject": "Acil Toplantı",
+          "bodyPreview": "Acil şekilde bugün saat 12.00 daki  toplantıya katılmanız gerekmektedir.",
+          "body": {
+            "contentType": "text",
+            "content": "Acil şekilde bugün saat 12.00 daki  toplantıya katılmanız gerekmektedir."
+          },
+          "from": {
+            "emailAddress": {
+              "name": "Berkay Güzel",
+              "address": "berkayguzel43@gmail.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "json": {
+          "access_token": "EwBoBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAW//NgT9L/+xVmKQI2KQpLWE/XmKd02IhelD3BJ9VCN7Ar3f2s4l2lIwGi6nFXnLGzQpvI1xNp+RDSrSId2ZTzcTr8e3UUYO9jIUQtmUJuw5pXOar3AnZxfKQbKCKfEzfPNgakuSyqE8HiHbbxCJ6ZQ447XhfyfFTRuGhOqM28zRPAJ1vRAY1jmzD1rXHNFEedWDV5yeLD0eeWSQ8VsiL90pyZDSiW7qJpgfcXFDAAfrZ/XzK7XEcUa66wgyWnokZx6AE9vKjDH5BajRdxPEn/2o6s4p2E4jGcO8QGlqwcwniV4bhs0+eypJsch/rwizLnRz2ZXTwbPXTudvSF3oMZ8QZgAAEJ+zs5nUguvfauuMngHJqScwA2NuGGefge1FKqft4+3FW/afpv4/gH9+Awc/fcwFgGsoOmHXjEv1DZP4CqkKxj7cAWeSSU5XmNHzrXvaeI/SN3kRiFwBwdxolK39JRaFSGncEqAyg6RQ7TIAy/Mbcs7lzJ6VA9ODgEz7t8xu2jNYQVFo+/1asSMahASXOeokvz6PeH/tvZ8EmcJt1dCTD9GJnG02MU5Y2i+AEx2YCpxRF1uF/FvPuJmW0TfdAeaMUhBFTN2wLtXKQUOPrrSqdQXFKb2/GcbkLibnylDCHjNcqmUDHzF7/iQCU3xCBuZIz2Ioa+GtXdPwlJeSDYDC/UY952ZE5ePRLMjmdlCi+FpVN3WVshZV0ZgCIoFHGCb6yjbmeVql4eVV1crzU9kDNmYzTrf+TIBuozvkK6QjYlbJCUVzMfxAXdWscT23JJ0/qnGvYrVtfXAvvKrs1FHubMD5WhvtyO3ADkhBXnPQRaXl0EsVNy/VUv3yaDxTYZKmX6DvwzS6aN6bzvsclnpookfFR2FSoUnOl6U03FfAlcO/SumhIt5EHL5H/IGo59kxw6ZATi2/wZ2vikE+OfIh5kgW7Nx12bk9KRYO+Moi1SjhBcFfXd4BHvTJlKPVrinGMaFapWZE2pfuvtkzMjGXEKF9N83AtBLFt6sxYbs2FLgDtAg6lkqctoH17Ed3B9ZvP/tZpNpTrIveU7jem9PQYMpzsEM5FLUhrtTkqjLZved8H/ApiKt3t90L/LLeHpDNTotJckgULUq8Go4i5HkB44qvm0dW5Mgj7s9hIMpD6P3vYIDDirBBVzCY4UkrVbYZbYDKJ1TJnlwBHyRhewnjjeyWfTUm3NCRrjX6DaHH3ACKX0+5IYCuQ92ExOsOnTIDU6zUupfwk5m6E6s+7gL4/T6u46cXkkmskPTR80c6cbaRIX8p1E1GpDXngBJpeQb0mmLRZwQbw+dmxewqLzVPocvM/irwfjFxya+E+m9mE/6WexW1FxHXpFXx1I8m9ek6lVulRxTFKyfKBhXStskH6ioEXdBDWORxLm4BpPfZZhfCgm7tUvdVpAE+KwmukfpL087+Fdco8kQ4f3eYsr8S6NJAKXgD",
+          "telegram_chat_id": "-1003315838853",
+          "email": "berkayguzel06@outlook.com",
+          "name": "Berkay",
+          "last_name": "Güzel",
+          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAExj/h8\"",
+          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAR0ji-IAAACmbAuzjNRkRJHPPR9ftVhgAAExm7qvAAAA",
+          "categories": [
+            "Categorized",
+            "Calendar",
+            "Prioritized",
+            "todo",
+            "drive"
+          ],
+          "receivedDateTime": "2025-12-03T08:42:08Z",
+          "hasAttachments": false,
+          "subject": "Makale",
+          "bodyPreview": "Yarına kadar ai agent makalesi okuyup notlar çıkarman lazım",
+          "body": {
+            "contentType": "text",
+            "content": "Yarına kadar ai agent makalesi okuyup notlar çıkarman lazım"
+          },
+          "from": {
+            "emailAddress": {
+              "name": "Berkay Güzel",
+              "address": "berkayguzel43@gmail.com"
+            }
+          },
+          "toRecipients": [
+            {
+              "emailAddress": {
+                "name": "berkayguzel06@outlook.com",
+                "address": "berkayguzel06@outlook.com"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "versionId": "4372167d-2722-484e-8339-8776f1b00145",
+  "versionCounter": 13,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-12-05T12:36:01.988Z",
+      "createdAt": "2025-12-05T12:36:01.988Z",
+      "role": "workflow:owner",
+      "workflowId": "qcnTNff2HhOfWLKL",
+      "projectId": "Qz4EZoRaJoP60D6r",
+      "project": {
+        "updatedAt": "2025-03-05T09:02:20.383Z",
+        "createdAt": "2025-03-05T08:58:50.174Z",
+        "id": "Qz4EZoRaJoP60D6r",
+        "name": "Berkay Güzel <berkayguzel43@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-03-05T08:58:50.174Z",
+            "createdAt": "2025-03-05T08:58:50.174Z",
+            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+            "projectId": "Qz4EZoRaJoP60D6r",
+            "user": {
+              "updatedAt": "2025-12-05T06:44:21.000Z",
+              "createdAt": "2025-03-05T08:58:49.757Z",
+              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+              "email": "berkayguzel43@gmail.com",
+              "firstName": "Berkay",
+              "lastName": "Güzel",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
+                "personalization_survey_n8n_version": "1.81.4",
+                "automationGoalDevops": [
+                  "other",
+                  "monitoring-alerting",
+                  "reporting"
+                ],
+                "companySize": "personalUser",
+                "companyType": "systems-integrator",
+                "role": "engineering",
+                "reportedSource": "linkedin"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
+                "userActivatedAt": 1761210491841,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1763717488235
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-12-05",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

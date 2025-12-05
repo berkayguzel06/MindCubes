@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2025-12-05T06:52:34.000Z",
-  "createdAt": "2025-12-05T06:45:33.484Z",
-  "id": "g3ENZlFrZDL5qn9v",
-  "name": "Mail ToDo Fetch",
+  "updatedAt": "2025-12-05T12:58:21.000Z",
+  "createdAt": "2025-12-05T12:27:34.629Z",
+  "id": "fIb8BKRNac792wnA",
+  "name": "Mail Draft Fetch",
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -13,16 +13,16 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1920,
-        112
+        -1856,
+        -88
       ],
-      "id": "c0d63d02-9d64-4544-a94a-048262089caa",
+      "id": "33898545-9c0b-431a-b55d-f7060c2e5865",
       "name": "Recipient Filter",
       "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "url": "=https://graph.microsoft.com/v1.0/me/messages?$top=20&$filter=parentFolderId ne '{{ $json.json.id }}' and categories/any(a:a eq 'Categorized') and not(categories/any(a:a eq 'todo')) and receivedDateTime ge 2025-11-12T00:00:00Z&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview,body\n",
+        "url": "=https://graph.microsoft.com/v1.0/me/messages?$top=20\n&$filter=\n(\n parentFolderId eq '{{ $json.folderIds.Urgent_Important }}'\n or\n parentFolderId eq '{{ $json.folderIds.Urgent_NotImportant }}'\n)\nand categories/any(a:a eq 'Categorized')\nand not(categories/any(a:a eq 'draft'))\nand receivedDateTime ge 2025-11-12T00:00:00Z\n&$select=id,subject,from,receivedDateTime,categories,hasAttachments,toRecipients,bodyPreview,body",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -37,10 +37,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -2592,
-        272
+        -2528,
+        32
       ],
-      "id": "ce42b845-809f-46dd-ac5f-476d21c06bf8",
+      "id": "025ec447-07bb-4e7a-aa7f-625b47939a0f",
       "name": "HTTP Request"
     },
     {
@@ -50,10 +50,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2368,
-        272
+        -2304,
+        32
       ],
-      "id": "0561d145-fac1-47ce-9cc0-56f0ab508e06",
+      "id": "6af9fb60-a7f6-4a26-a9a8-b5b217349eac",
       "name": "Code in JavaScript",
       "alwaysOutputData": false,
       "onError": "continueErrorOutput"
@@ -67,10 +67,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -1696,
-        32
+        -1632,
+        -160
       ],
-      "id": "4d5278f9-f26d-40eb-8699-161c7bb55115",
+      "id": "e1a0686d-216a-4e06-9579-8bb8a2ae0ebc",
       "name": "Merge"
     },
     {
@@ -80,10 +80,10 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -3488,
-        112
+        -4096,
+        -88
       ],
-      "id": "ebcf94b2-0dd3-4e54-bcd2-ef945b51505d",
+      "id": "baf24394-f1b6-48c0-8a77-03c269bd5743",
       "name": "When Executed by Another Workflow"
     },
     {
@@ -114,10 +114,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1472,
-        32
+        -1408,
+        -160
       ],
-      "id": "1cdf5aa3-a11a-4f98-bccc-48874a891e7d",
+      "id": "df0e7092-1c14-45f7-859e-bb60b877a9ec",
       "name": "If"
     },
     {
@@ -129,10 +129,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -2144,
-        112
+        -2080,
+        -88
       ],
-      "id": "fbf09e15-b41b-44b6-8d94-e0d074818cdf",
+      "id": "ae57fc60-c751-4316-8464-5ce2b7eccef1",
       "name": "Merge1"
     },
     {
@@ -144,12 +144,12 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -2144,
-        320
+        -2080,
+        152
       ],
-      "id": "98f8af84-4d06-43ee-a84d-67419c8a3b8f",
+      "id": "39aba09f-c9ec-477f-89bf-2db9474a929b",
       "name": "Error Message",
-      "webhookId": "abc461bc-36ae-4e57-bdf5-dc5c397ed57f",
+      "webhookId": "d0122a52-c00b-4e15-ab3e-5f14c712b6af",
       "credentials": {
         "telegramApi": {
           "id": "xTSQ9buOorLMIRKW",
@@ -174,10 +174,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -3264,
-        352
+        -3872,
+        248
       ],
-      "id": "6a65f549-8686-4c74-9b01-473a94d48c3a",
+      "id": "496360bd-b64c-493f-8d8a-e3e863265f1a",
       "name": "HTTP Request1"
     },
     {
@@ -189,10 +189,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -2816,
-        272
+        -3424,
+        176
       ],
-      "id": "b173d6a2-3c21-4b7d-8360-a7705fd6b327",
+      "id": "da3f096c-670a-4bf7-9371-dbfed9d58a2b",
       "name": "Merge2"
     },
     {
@@ -202,44 +202,72 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3040,
-        352
+        -3648,
+        248
       ],
-      "id": "6a827aa9-0691-4186-926f-cbcf45199c29",
+      "id": "0ff6486b-1218-4243-840e-cc5eeef05006",
       "name": "Code in JavaScript2"
     },
     {
       "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "jXapQvB8FZs0nXbV",
-          "mode": "list",
-          "cachedResultUrl": "/workflow/jXapQvB8FZs0nXbV",
-          "cachedResultName": "Add ToDo Tag"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {}
+        "url": "https://graph.microsoft.com/v1.0/me/mailFolders?$top=999",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$input.first().json[\"access_token\"]}}"
+            }
+          ]
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.3,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
       "position": [
-        -1216,
-        -224
+        -3200,
+        272
       ],
-      "id": "dc99e532-71ce-4fff-86eb-8586c874648b",
-      "name": "Call 'Add ToDo Tag'"
+      "id": "647b758e-f89f-4cd7-98ae-f8bb74b63302",
+      "name": "Get Mail Folders",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT * FROM input1 LEFT JOIN input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2752,
+        32
+      ],
+      "id": "2904ff7e-cfa5-4723-9168-b5d7c5add129",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const folders = $input.first().json.value || [];\n\nconst targetFolders = [\n  \"Urgent_Important\",\n  \"Urgent_NotImportant\"\n];\n\nconst out = {};\n\nfor (const f of folders) {\n  if (targetFolders.includes(f.displayName)) {\n    out[f.displayName] = f.id;\n  }\n}\n\nreturn [{\n  json: {\n    folderIds: out\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2976,
+        344
+      ],
+      "id": "c6d1d3c6-e249-4e17-a45b-aa62e374262d",
+      "name": "Code in JavaScript1"
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "YzljVGkC5GTkE6lz",
+          "value": "qcnTNff2HhOfWLKL",
           "mode": "list",
-          "cachedResultUrl": "/workflow/YzljVGkC5GTkE6lz",
-          "cachedResultName": "Mail-ToDo"
+          "cachedResultUrl": "/workflow/qcnTNff2HhOfWLKL",
+          "cachedResultName": "Mail-Draft"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -250,11 +278,35 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -1120,
-        304
+        -1184,
+        -64
       ],
-      "id": "32072dd8-f8ef-4070-a69e-49c078cf6828",
-      "name": "Call 'Mail-ToDo'"
+      "id": "4fe0d54e-1401-482a-b4f6-83a6f5f5e6bf",
+      "name": "Call 'Mail-Draft'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "mIqZLZEI5r2Xjt9r",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/mIqZLZEI5r2Xjt9r",
+          "cachedResultName": "Add Draft Tag"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -1184,
+        -256
+      ],
+      "id": "3663d6de-80c7-4d23-b0a2-2de6f261c862",
+      "name": "Call 'Add Draft Tag'"
     }
   ],
   "connections": {
@@ -340,12 +392,12 @@
       "main": [
         [
           {
-            "node": "Call 'Add ToDo Tag'",
+            "node": "Call 'Mail-Draft'",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Call 'Mail-ToDo'",
+            "node": "Call 'Add Draft Tag'",
             "type": "main",
             "index": 0
           }
@@ -367,7 +419,12 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Get Mail Folders",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge3",
             "type": "main",
             "index": 0
           }
@@ -395,23 +452,65 @@
           }
         ]
       ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Mail Folders": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "68efb3a2-1e01-4f46-95f3-51945a1c5f3a",
-  "versionCounter": 2,
+  "versionId": "f22bc304-d4a6-48d2-92b5-adb424ac0abf",
+  "versionCounter": 11,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-05T06:45:33.490Z",
-      "createdAt": "2025-12-05T06:45:33.490Z",
+      "updatedAt": "2025-12-05T12:27:34.631Z",
+      "createdAt": "2025-12-05T12:27:34.631Z",
       "role": "workflow:owner",
-      "workflowId": "g3ENZlFrZDL5qn9v",
+      "workflowId": "fIb8BKRNac792wnA",
       "projectId": "Qz4EZoRaJoP60D6r",
       "project": {
         "updatedAt": "2025-03-05T09:02:20.383Z",

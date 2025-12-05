@@ -1,9 +1,8 @@
 {
-  "updatedAt": "2025-12-03T08:36:17.000Z",
-  "createdAt": "2025-11-24T12:33:39.686Z",
-  "id": "svveFOQKZRrz6g1q",
+  "updatedAt": "2025-12-05T06:47:07.000Z",
+  "createdAt": "2025-12-05T06:45:34.187Z",
+  "id": "OU0FEk3szstDIobz",
   "name": "ToDo Single Executable",
-  "description": null,
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -15,7 +14,7 @@
       "typeVersion": 2,
       "position": [
         -4000,
-        248
+        256
       ],
       "id": "180ffff9-d414-44d9-bc98-cd4391a32856",
       "name": "Parse ToDo Data",
@@ -82,7 +81,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -4568,
+        -4576,
         176
       ],
       "id": "6b36d136-74b8-41fc-9c06-ce0566a18e88",
@@ -106,7 +105,7 @@
       "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
       "credentials": {
         "telegramApi": {
-          "id": "JG4HCYCvUBrFrjrG",
+          "id": "xTSQ9buOorLMIRKW",
           "name": "Telegram account"
         }
       }
@@ -125,7 +124,7 @@
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "yohuzcpOTpBCKcFi",
+          "id": "fxWHzuDbpxOZTwOR",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -144,7 +143,7 @@
       "name": "Google Gemini Chat Model1",
       "credentials": {
         "googlePalmApi": {
-          "id": "yohuzcpOTpBCKcFi",
+          "id": "fxWHzuDbpxOZTwOR",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -276,7 +275,7 @@
       "typeVersion": 3.2,
       "position": [
         -2880,
-        -456
+        -464
       ],
       "id": "7d93da03-2f74-4596-befc-a37d7ac5c8cf",
       "name": "Merge1"
@@ -289,7 +288,7 @@
       "typeVersion": 2,
       "position": [
         -3104,
-        -232
+        -240
       ],
       "id": "49e1c829-b105-4e5e-9094-bc6dcca65a11",
       "name": "Code in JavaScript"
@@ -328,7 +327,7 @@
       "typeVersion": 2,
       "position": [
         -2656,
-        -456
+        -464
       ],
       "id": "c7632053-c815-4653-9fc7-e04861d5ab9e",
       "name": "Code in JavaScript1"
@@ -400,7 +399,7 @@
       "typeVersion": 3.2,
       "position": [
         -5744,
-        -136
+        -144
       ],
       "id": "7589bbb4-d397-4449-a0da-663c0d9c32ba",
       "name": "Merge2"
@@ -427,7 +426,7 @@
       "typeVersion": 1,
       "position": [
         -5072,
-        -40
+        -48
       ],
       "id": "d71aa927-7355-4b55-9520-02ea3c4c82d1",
       "name": "Extract from File1"
@@ -495,7 +494,7 @@
       "name": "Select rows from a table",
       "credentials": {
         "postgres": {
-          "id": "eeGTexNNm3ZWrmrC",
+          "id": "lSf8LsoQGg0drmfO",
           "name": "Postgres account"
         }
       }
@@ -550,7 +549,7 @@
       "name": "Select rows from a table1",
       "credentials": {
         "postgres": {
-          "id": "eeGTexNNm3ZWrmrC",
+          "id": "lSf8LsoQGg0drmfO",
           "name": "Postgres account"
         }
       }
@@ -652,7 +651,7 @@
       "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
       "credentials": {
         "telegramApi": {
-          "id": "JG4HCYCvUBrFrjrG",
+          "id": "xTSQ9buOorLMIRKW",
           "name": "Telegram account"
         }
       },
@@ -741,14 +740,14 @@
       "typeVersion": 2.6,
       "position": [
         -6640,
-        -280
+        -288
       ],
       "id": "1f9da4fe-1160-4de0-9ada-7ae71fd2b441",
       "name": "Select rows from a table2",
       "alwaysOutputData": true,
       "credentials": {
         "postgres": {
-          "id": "eeGTexNNm3ZWrmrC",
+          "id": "lSf8LsoQGg0drmfO",
           "name": "Postgres account"
         }
       }
@@ -789,7 +788,7 @@
       "alwaysOutputData": true,
       "credentials": {
         "postgres": {
-          "id": "eeGTexNNm3ZWrmrC",
+          "id": "lSf8LsoQGg0drmfO",
           "name": "Postgres account"
         }
       }
@@ -804,7 +803,7 @@
       "typeVersion": 3.2,
       "position": [
         -6192,
-        -280
+        -288
       ],
       "id": "efe6a19c-001e-4dae-8953-fb7a19fee918",
       "name": "Merge8"
@@ -825,7 +824,7 @@
       "name": "Execute a SQL query",
       "credentials": {
         "postgres": {
-          "id": "eeGTexNNm3ZWrmrC",
+          "id": "lSf8LsoQGg0drmfO",
           "name": "Postgres account"
         }
       }
@@ -899,7 +898,13 @@
     },
     "Google Gemini Chat Model": {
       "ai_languageModel": [
-        []
+        [
+          {
+            "node": "Mail Task App",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
       ]
     },
     "Google Gemini Chat Model1": {
@@ -1190,13 +1195,7 @@
     },
     "Ollama Chat Model": {
       "ai_languageModel": [
-        [
-          {
-            "node": "Mail Task App",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Ollama Chat Model1": {
@@ -1326,83 +1325,66 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
-  "pinData": {
-    "Edit Fields": [
-      {
-        "json": {
-          "headers": {
-            "host": "localhost:5678",
-            "content-type": "application/json",
-            "accept": "*/*",
-            "accept-encoding": "gzip, deflate",
-            "user-agent": "Python/3.13 aiohttp/3.13.2",
-            "content-length": "245"
-          },
-          "params": {},
-          "query": {},
-          "body": {
-            "chatInput": "yarın saat 18:00 a kadar https://genesis.energy.gov/ sitesine bakıp not almam lazım bunu görev olarak ekler misin\n",
-            "userId": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-            "timestamp": "2025-12-01T14:42:30.094331"
-          },
-          "webhookUrl": "http://localhost:5678/webhook/453c17e9-4868-4e9b-a5c4-ac847b3039ef",
-          "executionMode": "production"
-        }
-      }
-    ]
-  },
-  "versionId": "beeb2f8b-5df2-4426-b26c-e090dbfab6ed",
-  "versionCounter": 138,
+  "meta": null,
+  "pinData": {},
+  "versionId": "f36d900d-d2eb-4551-8c4e-0e462a8f33c9",
+  "versionCounter": 5,
   "triggerCount": 1,
   "shared": [
     {
-      "updatedAt": "2025-11-25T07:28:14.737Z",
-      "createdAt": "2025-11-25T07:28:14.737Z",
+      "updatedAt": "2025-12-05T06:45:34.192Z",
+      "createdAt": "2025-12-05T06:45:34.192Z",
       "role": "workflow:owner",
-      "workflowId": "svveFOQKZRrz6g1q",
-      "projectId": "Ti3JL05CSVUvJj6A",
+      "workflowId": "OU0FEk3szstDIobz",
+      "projectId": "Qz4EZoRaJoP60D6r",
       "project": {
-        "updatedAt": "2025-10-20T20:29:51.468Z",
-        "createdAt": "2025-10-20T20:29:10.045Z",
-        "id": "Ti3JL05CSVUvJj6A",
+        "updatedAt": "2025-03-05T09:02:20.383Z",
+        "createdAt": "2025-03-05T08:58:50.174Z",
+        "id": "Qz4EZoRaJoP60D6r",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-10-20T20:29:10.046Z",
-            "createdAt": "2025-10-20T20:29:10.046Z",
-            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
-            "projectId": "Ti3JL05CSVUvJj6A",
+            "updatedAt": "2025-03-05T08:58:50.174Z",
+            "createdAt": "2025-03-05T08:58:50.174Z",
+            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+            "projectId": "Qz4EZoRaJoP60D6r",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
-              "createdAt": "2025-10-20T20:29:09.823Z",
-              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "updatedAt": "2025-12-05T06:44:21.000Z",
+              "createdAt": "2025-03-05T08:58:49.757Z",
+              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
-                "personalization_survey_n8n_version": "1.115.3"
+                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
+                "personalization_survey_n8n_version": "1.81.4",
+                "automationGoalDevops": [
+                  "other",
+                  "monitoring-alerting",
+                  "reporting"
+                ],
+                "companySize": "personalUser",
+                "companyType": "systems-integrator",
+                "role": "engineering",
+                "reportedSource": "linkedin"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
-                "userActivatedAt": 1761636420034,
+                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
+                "userActivatedAt": 1761210491841,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763316240404
+                  "lastShownAt": 1763717488235
                 }
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }
@@ -1410,24 +1392,5 @@
       }
     }
   ],
-  "tags": [
-    {
-      "updatedAt": "2025-11-24T12:37:07.615Z",
-      "createdAt": "2025-11-24T12:37:07.615Z",
-      "id": "JltU9W7VB1ZMp5s7",
-      "name": "executable"
-    },
-    {
-      "updatedAt": "2025-12-02T08:40:18.627Z",
-      "createdAt": "2025-12-02T08:40:18.627Z",
-      "id": "NCCf83voH9D7wxJ0",
-      "name": "editable"
-    },
-    {
-      "updatedAt": "2025-11-26T15:49:38.868Z",
-      "createdAt": "2025-11-26T15:49:38.868Z",
-      "id": "QncEhlKLYZxVpjw0",
-      "name": "data-input"
-    }
-  ]
+  "tags": []
 }

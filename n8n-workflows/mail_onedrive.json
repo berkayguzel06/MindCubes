@@ -1,9 +1,8 @@
 {
-  "updatedAt": "2025-12-01T08:57:48.000Z",
-  "createdAt": "2025-11-21T12:35:25.086Z",
-  "id": "Vxx0invazo8UfRuk",
+  "updatedAt": "2025-12-05T06:45:33.242Z",
+  "createdAt": "2025-12-05T06:45:33.242Z",
+  "id": "nb0o8802pFHxVGCk",
   "name": "Mail-OneDrive",
-  "description": null,
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -320,7 +319,7 @@
       "webhookId": "51982885-3445-4d7e-95e6-7441f71a21be",
       "credentials": {
         "telegramApi": {
-          "id": "JG4HCYCvUBrFrjrG",
+          "id": "xTSQ9buOorLMIRKW",
           "name": "Telegram account"
         }
       },
@@ -547,111 +546,65 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": {
-    "Edit Fields": [
-      {
-        "json": {
-          "access_token": "EwBoBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAdFdkDcbJynxbmNbgAqohyf50LbeLSA3MhvvaJyIugKcZobrehAgNAZPelCr/YM2Y8/BivElbSCr7DsG8yQ4ZLy3EVXZJ0bKG/uyPuF7NSAwpkpfyYOzUOzzBEYVDvSSjOrEQJW4VxYpfOovzCJgr2lLefhSDuM+kCn6t3AxHlCF9za/ht8TvtJ+UoB+YxO5Bs1PxEQPBXdoDTsd5unjWRPI4pCqIiHem1+BJvqVd7D6BVxUMpMYM6bPVdjJGy0WZa6edcycGSqK1e48d2yM38E/QEyQFOQCBDHjupqG6QF39yvbNoX0OJONDzzjUFhHC5ATapj1cAedVyMEpM6JgT0QZgAAEFoAk0vWtTyxug7EJnmig8UwA5wFS2XTSVUBp5RlKLHJ+ngld5VxA7VoZnuUbTqLqkNgUccwKYGvh/w/lMCNfEThJ0IvxuMBeqPKL7FIH0b6Fev5ZMr4kfbo5gQO9DDtTkYHTyOHAvpDekyNOkP7pK+5bBraHL+UFUr7bzofM5A36n9atDE3iSuZFwgEEBn8HqeF+r77F8tuNQC8PsqZU3NGpyHNzzDJA8TtLMCocGiDhlrze0yHbdwoiURo0F57qlxyWIiqiSeqsBQaGtukf6cwT+lSJcwfDTwQpsvwAZyZlB+z53hlgvwbcCaBM2mpQYCVd9wHCts81qfTHji6aOs2Go7M62hsB6Gmvo/3mU+/jlCYWfs6HJmqCsSMpGUIZjJcpfxri8cwrZaLT1yy1+q5UalLMqSN6bavKBkxhFik0rlAM+dnfroXZT6fyFG0iX9LvKTg7Qs8VNjPdEKCct3ipYptbc+G1ApwkvLCFORUVs9ek8du39zRp3vRaJjFTZ1Z9IuY2qSHlwlFLopACF5r46qVKrwpY5hNHxRSQl0YL03NP85xeoiBF5sJUfxdJRIRQSc0U4EHhdLSZk02DQ8t8N4mjcWQrvCwFiw1AlZ9/KHjLngQefZm3sSMdNnHjzw/jEk0EAyVVf+6orj1pZcriG5pJ2qNYoU0KovF9hbh05vlaXPo2/s3g+xGTNSx3SqWaHst4UOK69g7KTJFoeraW7EcLMv8vx9uXoqvQGJINRHwfcpzen+ig0Z2nnqYv00zXqJs0LoI1uV0RC0imzm2Zu+kTe8hxkpMW05um4XVvYzBMbGbnfMFFwyTPwDLFzF4UGkEUAsFIgdTJmOCNUAl0VezVFsrPGDxsqb9QEy2e0t1AalkD/T/6Z1o6VQnAcD/MQeYFeiniJ7D5R69RXVrlcdKsJ53nS54RyFr4jgFL8FoxFGkY512HAELf/c7gipr2pPIXrQ1VGB8U6zGN8HhGr8Ff3uhMESMmYJTtGyGI3CmpHvznFUEAb7gW5Th0Z2ArO1+hZUQxRH+/VOaOCTMZ177jUySi2nuJrU3dqSxatTbHU6tFMWIY6ERn3Yyl/4d3YxcizIPExw9JPMXvT/DQHgD",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAErsVlZ\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAASu7AjAAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-13T13:20:28Z",
-          "hasAttachments": true,
-          "subject": "Evren Hayat Hediye 07.11.2025-13.11.2025 Tarihli Muhasebe Raporu hk",
-          "bodyPreview": "Merhaba, Evren Hayat Hediye'ye ait 07.11.2025 - 13.11.2025 tarihli siparişlerin dökümü ekte bilgilerinize sunulmuştur. Hayat Hediye",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwBoBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAUQAUyMyBNbW/JTmxtLg5RQ4hLYVAyVxQrW9Bgn5LvwjqUR7wjRjYvvA1d2rXwBH0bfJL7fsxxg2ZsbBXVMqNZwH8wHLU5LltmLpja+9iFn+LTjlykkzns49bn0IjlRTFNJg5xy15Z39871+a7JdBiY7o6rDRadKRlxhXySjq3zmSwZChhRKqcMG8KfrGcSsMp7bb5OFqnexpnCirFXkdiySPNHnoCZ85qcXEAwKqecQAhk0l4t4jI7hbj1eMYGJt3dmZW4aH2dQ2ota/HnGqCs8lcqjGEDipDGhlELbjI1p+7u8hQcL1EOGbL5AKtx5kGH6y9ywmXsi3TlsAFLjkCcQZgAAECEQmTeh5UCDiypnfjn5JfUwAwnmuDCIZzvY4EmlxZzq8qfNYyXJgDAs7ayXYE1n2MFN8tXXQNVjX1C1HAkF4rSuDyc7aORHYWUaa8Y38foEX7wmWn4wNtzAP7bHhEns/0p5vd9el6jhjUYiynCxUv3FT7ejB5CaXLmBPVsR5Ye+sLN3U2YDudp0z3JD88tIOXze+MTwwqSDbDbr785W+N4KvbNeC8dis8TkFlbVs+0fEHOKQbY+cZ17FbqCMUO0/dkvF7UIxSCNXvBiIYx0JZLB1NCdd/qD574CZwuGyYYIr0MBkvc0QWe+15cIucQv1DjabQXG9xb2klKNtwudLeUclro9a7i8gtF0RjrmSnOmfBIGM9d9nxva7u3902gJkVPth0BtGsBsAl14rNNjj/F1KU9h15rqiGkby+2l7dDWYpe7kg9q9DqGIuG+kaQY8yVHzkQ1nk78HBLyCCZgA6b9p4SBJpqNcXLhrPT1T3yECwefNoNGL/YQxNTFoTSvNGPp04eKlOjx/ifCG1ndFC9UcPCPfMJny6qBwqD76it2fbFJDcqNZDtz+J8VnOkDs8p8J052+ZjT2yJNCQ8sF+zeLe+jXAbsDK6rgQe4fS3smm0d/3mRngo8WR1/Ugwo87GqdSBlKXHnv4zqE9oA1YMvlp73zf7i+jhCPkDxHTdzvTVGt6DlFwB3wJDGgBh1bbkTE5dWP9oHEb0XddQhfZbzfkp5BjSmNMwSmxtCeCjhoryrNnWuuhZ3m4vZ5oyZK2PVAoXfnHZHNjr2COyYWotBE1x4vZqUel08VTJipQV0i57zWp33STOW65y/LZcz+EouBCPoSerI7v9FHTmZT/HZDv/0r+ZpIZIWsygtNEC2vGs/7vL6b197MdRIUOzLQQy3gxmhlqfsX1LJRJU6gr1bM1bKBnH2KFpYmOkoYzM1CkflJvIhVY3sFbWHrGmNeukjJmsL3OhJ+ypsd/mKrw6K1eKVfbCrZH3g0TlxcJuwiOV06huG0BoNqEGoNj3cYgDvgtFRv6ySYs7fSF2HtPzAja3ajfL/1rv250F4QmOJ03Y9Cumpevf59Xc2eV/4u2i8q7EZqNYr8IC24CnDeDbll3gD",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAErsVlZ\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAASu7AjAAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-13T13:20:28Z",
-          "hasAttachments": true,
-          "subject": "Evren Hayat Hediye 07.11.2025-13.11.2025 Tarihli Muhasebe Raporu hk",
-          "bodyPreview": "Merhaba, Evren Hayat Hediye'ye ait 07.11.2025 - 13.11.2025 tarihli siparişlerin dökümü ekte bilgilerinize sunulmuştur. Hayat Hediye",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  },
-  "versionId": "d05f3391-fef4-4cd7-97f0-9315aca35f72",
-  "versionCounter": 40,
+  "pinData": null,
+  "versionId": "3bf28609-0591-43f2-a40b-795c309be135",
+  "versionCounter": 1,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-25T07:28:14.728Z",
-      "createdAt": "2025-11-25T07:28:14.728Z",
+      "updatedAt": "2025-12-05T06:45:33.248Z",
+      "createdAt": "2025-12-05T06:45:33.248Z",
       "role": "workflow:owner",
-      "workflowId": "Vxx0invazo8UfRuk",
-      "projectId": "Ti3JL05CSVUvJj6A",
+      "workflowId": "nb0o8802pFHxVGCk",
+      "projectId": "Qz4EZoRaJoP60D6r",
       "project": {
-        "updatedAt": "2025-10-20T20:29:51.468Z",
-        "createdAt": "2025-10-20T20:29:10.045Z",
-        "id": "Ti3JL05CSVUvJj6A",
+        "updatedAt": "2025-03-05T09:02:20.383Z",
+        "createdAt": "2025-03-05T08:58:50.174Z",
+        "id": "Qz4EZoRaJoP60D6r",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-10-20T20:29:10.046Z",
-            "createdAt": "2025-10-20T20:29:10.046Z",
-            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
-            "projectId": "Ti3JL05CSVUvJj6A",
+            "updatedAt": "2025-03-05T08:58:50.174Z",
+            "createdAt": "2025-03-05T08:58:50.174Z",
+            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+            "projectId": "Qz4EZoRaJoP60D6r",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
-              "createdAt": "2025-10-20T20:29:09.823Z",
-              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "updatedAt": "2025-12-05T06:44:21.000Z",
+              "createdAt": "2025-03-05T08:58:49.757Z",
+              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
-                "personalization_survey_n8n_version": "1.115.3"
+                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
+                "personalization_survey_n8n_version": "1.81.4",
+                "automationGoalDevops": [
+                  "other",
+                  "monitoring-alerting",
+                  "reporting"
+                ],
+                "companySize": "personalUser",
+                "companyType": "systems-integrator",
+                "role": "engineering",
+                "reportedSource": "linkedin"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
-                "userActivatedAt": 1761636420034,
+                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
+                "userActivatedAt": 1761210491841,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763316240404
+                  "lastShownAt": 1763717488235
                 }
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }
@@ -659,18 +612,5 @@
       }
     }
   ],
-  "tags": [
-    {
-      "updatedAt": "2025-12-01T08:00:58.410Z",
-      "createdAt": "2025-12-01T08:00:58.410Z",
-      "id": "fTIAo3WUvkbJgslo",
-      "name": "drive"
-    },
-    {
-      "updatedAt": "2025-11-25T07:28:56.435Z",
-      "createdAt": "2025-11-25T07:28:56.435Z",
-      "id": "uEPVpiLWGIcHIKbE",
-      "name": "non-exectuable"
-    }
-  ]
+  "tags": []
 }

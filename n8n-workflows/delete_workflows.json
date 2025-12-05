@@ -1,149 +1,143 @@
 {
-  "updatedAt": "2025-12-05T06:44:57.088Z",
-  "createdAt": "2025-12-05T06:44:57.088Z",
-  "id": "RTUDMPWMw1F9nwok",
-  "name": "Add AI Process Tag",
+  "updatedAt": "2025-12-04T06:57:10.000Z",
+  "createdAt": "2025-12-04T06:52:28.080Z",
+  "id": "plV1jqF3D6dAgr6p",
+  "name": "Delete Workflows",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
-      "parameters": {
-        "inputSource": "passthrough"
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
+      "parameters": {},
+      "id": "7cb82c63-9c3b-432c-a5a2-5f1cbbb57450",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
       "position": [
-        -1168,
-        464
-      ],
-      "id": "5c7a6324-d55a-4cfd-a4b1-4b62dfb608fc",
-      "name": "Get many messages"
-    },
-    {
-      "parameters": {
-        "method": "PATCH",
-        "url": "=https://graph.microsoft.com/v1.0/me/messages/{{$json.id}}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{$input.first().json[\"access_token\"]}}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "{\n  \"categories\": [\"AI_Processed\"]\n}",
-        "options": {
-          "batching": {
-            "batch": {
-              "batchSize": 5
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        -720,
-        464
-      ],
-      "id": "8160c7a1-5744-4c9f-ad12-ac3711242b59",
-      "name": "AI Category",
-      "onError": "continueErrorOutput"
+        -880,
+        64
+      ]
     },
     {
       "parameters": {
         "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
+          "string": [
             {
-              "id": "05a8fb07-b925-4c0c-a8af-21e1f8b26491",
-              "leftValue": "={{ $json.id }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "exists",
-                "singleValue": true
-              }
+              "value1": "={{ $json.id }}",
+              "value2": "={{ $workflow.id }}"
+            },
+            {
+              "value1": "={{ $json.id }}",
+              "value2": "diFvMAUCZohar91V"
+            },
+            {
+              "value1": "={{ $json.id }}",
+              "value2": "81RqxYP6Lb5REVDL"
             }
-          ],
-          "combinator": "and"
+          ]
         },
-        "options": {}
+        "combineOperation": "any"
       },
+      "id": "da648dfc-9e63-4ec6-b1ff-a000bd256fb8",
+      "name": "If this workflow",
       "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
+      "typeVersion": 1,
       "position": [
-        -944,
-        464
-      ],
-      "id": "3580e7c0-c694-4fb0-a212-0ddf2a2ecd3d",
-      "name": "If"
+        -416,
+        64
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "7ccdde3a-9e85-47dd-b973-4df9d106a95a",
+      "name": "Do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        -80
+      ]
     },
     {
       "parameters": {
-        "chatId": "-3257168516",
-        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
-        "additionalFields": {}
+        "operation": "delete",
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "requestOptions": {}
       },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
+      "id": "604ff6c9-bc20-429a-b66f-669d243b5c36",
+      "name": "Delete Workflows",
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
       "position": [
-        -496,
-        464
+        -192,
+        208
       ],
-      "id": "838166b8-7216-4e40-b04e-d09ed9be3815",
-      "name": "Error Message",
-      "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
       "credentials": {
-        "telegramApi": {
-          "id": "xTSQ9buOorLMIRKW",
-          "name": "Telegram account"
+        "n8nApi": {
+          "id": "GDG9SijOxfBHqnVI",
+          "name": "n8n account"
         }
+      }
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
       },
-      "onError": "continueErrorOutput"
+      "id": "e9680e56-3242-4443-b3d8-f44da75b6f91",
+      "name": "Get All Workflows",
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        64
+      ],
+      "credentials": {
+        "n8nApi": {
+          "id": "GDG9SijOxfBHqnVI",
+          "name": "n8n account"
+        }
+      }
     }
   ],
   "connections": {
-    "Get many messages": {
+    "When clicking \"Execute Workflow\"": {
       "main": [
         [
           {
-            "node": "If",
+            "node": "Get All Workflows",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "AI Category": {
+    "If this workflow": {
       "main": [
-        [],
         [
           {
-            "node": "Error Message",
+            "node": "Do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete Workflows",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "If": {
+    "Get All Workflows": {
       "main": [
         [
           {
-            "node": "AI Category",
+            "node": "If this workflow",
             "type": "main",
             "index": 0
           }
@@ -155,17 +149,19 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
-  "pinData": null,
-  "versionId": "0cc2f822-6a77-4ca2-ac8b-8c642bfa398f",
-  "versionCounter": 1,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "c0e2b756-8c1a-4b1c-ab75-16dbd4abbbba",
+  "versionCounter": 5,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-05T06:44:57.110Z",
-      "createdAt": "2025-12-05T06:44:57.110Z",
+      "updatedAt": "2025-12-04T06:52:28.086Z",
+      "createdAt": "2025-12-04T06:52:28.086Z",
       "role": "workflow:owner",
-      "workflowId": "RTUDMPWMw1F9nwok",
+      "workflowId": "plV1jqF3D6dAgr6p",
       "projectId": "Qz4EZoRaJoP60D6r",
       "project": {
         "updatedAt": "2025-03-05T09:02:20.383Z",

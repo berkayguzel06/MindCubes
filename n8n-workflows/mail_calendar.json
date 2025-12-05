@@ -1,9 +1,8 @@
 {
-  "updatedAt": "2025-12-02T06:54:38.000Z",
-  "createdAt": "2025-11-20T07:07:24.418Z",
-  "id": "NlDvdXwFHBjxGgTA",
+  "updatedAt": "2025-12-05T06:49:03.000Z",
+  "createdAt": "2025-12-05T06:45:31.066Z",
+  "id": "SrOr4ivr8iaQTPxM",
   "name": "Mail-Calendar",
-  "description": null,
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -20,8 +19,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -3160,
-        8
+        -3168,
+        16
       ],
       "id": "3f35deb7-2336-422a-90ec-a9ebefa78bda",
       "name": "Email Calendar Agent",
@@ -50,7 +49,7 @@
       "typeVersion": 2,
       "position": [
         -2144,
-        8
+        16
       ],
       "id": "158fffbd-8be0-4c11-a403-7afda0b0a432",
       "name": "Adjust Date Data",
@@ -95,7 +94,7 @@
       "typeVersion": 2.2,
       "position": [
         -2368,
-        8
+        16
       ],
       "id": "4f6fa076-3028-4735-bc4c-eb9e6c9f9e49",
       "name": "Date Filter"
@@ -109,7 +108,7 @@
       "typeVersion": 1.3,
       "position": [
         -2960,
-        232
+        240
       ],
       "id": "c5032a5f-ee3e-4d5e-a72b-e2027bf8a5f0",
       "name": "Structured Output Parser1",
@@ -125,7 +124,7 @@
       "typeVersion": 2,
       "position": [
         -3088,
-        232
+        240
       ],
       "id": "9daab5f2-e809-4ea7-a41a-21ab28ba1b3e",
       "name": "Date & Time"
@@ -138,7 +137,7 @@
       "typeVersion": 1.1,
       "position": [
         -3664,
-        -232
+        -240
       ],
       "id": "d98b2222-be9e-4cd8-8ba1-37d38fb6c93c",
       "name": "When Executed by Another Workflow"
@@ -160,7 +159,7 @@
       "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
       "credentials": {
         "telegramApi": {
-          "id": "JG4HCYCvUBrFrjrG",
+          "id": "xTSQ9buOorLMIRKW",
           "name": "Telegram account"
         }
       },
@@ -174,13 +173,13 @@
       "typeVersion": 1,
       "position": [
         -3664,
-        664
+        672
       ],
       "id": "3f1cf16c-c603-4103-b164-1b67cdd49262",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "yohuzcpOTpBCKcFi",
+          "id": "fxWHzuDbpxOZTwOR",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -232,7 +231,7 @@
       "typeVersion": 2,
       "position": [
         -1248,
-        -424
+        -432
       ],
       "id": "e94a2552-7692-4733-874a-80fbe2a5988c",
       "name": "Code in JavaScript1"
@@ -279,7 +278,7 @@
       "typeVersion": 3.2,
       "position": [
         -1920,
-        -472
+        -480
       ],
       "id": "ad6da840-c2dd-4e15-8d5f-a48be1800d43",
       "name": "Merge"
@@ -292,7 +291,7 @@
       "typeVersion": 2,
       "position": [
         -2144,
-        -472
+        -480
       ],
       "id": "fa24bc3d-d6ba-4f26-a272-938a27eafa7c",
       "name": "Code in JavaScript2"
@@ -339,7 +338,7 @@
       "typeVersion": 2.2,
       "position": [
         -3440,
-        -232
+        -240
       ],
       "id": "7cda8f6e-f918-4c54-9361-116cf253acdb",
       "name": "If"
@@ -355,7 +354,7 @@
       "typeVersion": 1,
       "position": [
         -3216,
-        232
+        240
       ],
       "id": "40253a14-eb59-4ee3-81aa-aa0fb3c4f578",
       "name": "Ollama Chat Model",
@@ -377,7 +376,7 @@
       "typeVersion": 1,
       "position": [
         -2880,
-        440
+        448
       ],
       "id": "9ec1750c-fbd6-4eaf-82cf-9ed507909b0b",
       "name": "Ollama Model",
@@ -396,7 +395,7 @@
       "typeVersion": 3.4,
       "position": [
         -3440,
-        440
+        448
       ],
       "id": "4ea41324-f371-4713-8ecd-e78c50836ac7",
       "name": "Edit Fields"
@@ -407,7 +406,7 @@
       "typeVersion": 1,
       "position": [
         -3664,
-        440
+        448
       ],
       "id": "f4234f60-0b5d-4050-b49a-8ffd92aaaec1",
       "name": "When clicking ‘Execute workflow’"
@@ -473,7 +472,7 @@
       "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
       "credentials": {
         "telegramApi": {
-          "id": "JG4HCYCvUBrFrjrG",
+          "id": "xTSQ9buOorLMIRKW",
           "name": "Telegram account"
         }
       },
@@ -520,7 +519,7 @@
       "typeVersion": 4.3,
       "position": [
         -576,
-        -712
+        -720
       ],
       "id": "c873c6ac-474c-4f46-aec4-17ba76a6aa56",
       "name": "Get Schedule",
@@ -534,7 +533,7 @@
       "typeVersion": 2,
       "position": [
         -352,
-        -712
+        -720
       ],
       "id": "bfbeaf85-dc55-4082-b834-8932c65a4ec9",
       "name": "Code in JavaScript"
@@ -590,7 +589,7 @@
       "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
       "credentials": {
         "telegramApi": {
-          "id": "JG4HCYCvUBrFrjrG",
+          "id": "xTSQ9buOorLMIRKW",
           "name": "Telegram account"
         }
       },
@@ -713,7 +712,13 @@
     },
     "Google Gemini Chat Model": {
       "ai_languageModel": [
-        []
+        [
+          {
+            "node": "Email Calendar Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
       ]
     },
     "Get Calendar Lists": {
@@ -830,13 +835,7 @@
     },
     "Ollama Chat Model": {
       "ai_languageModel": [
-        [
-          {
-            "node": "Email Calendar Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Ollama Model": {
@@ -956,341 +955,66 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
-  "pinData": {
-    "Edit Fields": [
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5b\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yEAAAA=",
-          "categories": [
-            "Categorized",
-            "drive",
-            "todo"
-          ],
-          "receivedDateTime": "2025-12-01T14:13:06Z",
-          "hasAttachments": false,
-          "subject": "👀 HSBC calls out OpenAI",
-          "bodyPreview": "ALSO: How to create consultant-quality strategies  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
-          "from": {
-            "emailAddress": {
-              "name": "Superhuman – Zain Kahn",
-              "address": "superhuman@mail.joinsuperhuman.ai"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5V\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yIAAAA=",
-          "categories": [
-            "Categorized",
-            "drive",
-            "todo"
-          ],
-          "receivedDateTime": "2025-12-01T15:27:54Z",
-          "hasAttachments": false,
-          "subject": "How do your stocks stack up?",
-          "bodyPreview": "Visualize performance, valuation, dividends, and more—all in one place.\r\n\r\n\r\nSee How Your Stocks Really Stack Up\r\n\r\nEvery investor wants to know: Is my stock truly the strongest\r\nchoice in its space?\r\n\r\n\r\n\r\nTo show you how it works, we've pulled Nvidia's ",
-          "from": {
-            "emailAddress": {
-              "name": "Seeking Alpha",
-              "address": "subscriptions@seekingalpha.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5F\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yMAAAA=",
-          "categories": [
-            "Categorized",
-            "drive"
-          ],
-          "receivedDateTime": "2025-12-01T15:28:03Z",
-          "hasAttachments": false,
-          "subject": "What can AI reveal about AMZN?",
-          "bodyPreview": "Run an instant Virtual Analyst report to guide your next move.\r\n\r\n\r\nGet AI Insights for Faster Decisions\r\n\r\n\r\n\r\nYou’re building your watchlist and exploring our tools—now see what happens when you add in the power of AI.\r\n\r\n\r\n\r\nOur Virtual Analyst Reports",
-          "from": {
-            "emailAddress": {
-              "name": "Seeking Alpha",
-              "address": "subscriptions@seekingalpha.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5Z\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yQAAAA=",
-          "categories": [
-            "Categorized",
-            "drive",
-            "todo"
-          ],
-          "receivedDateTime": "2025-12-01T15:51:44Z",
-          "hasAttachments": false,
-          "subject": "USA Rare Earth: The Small Cap Sitting At The Center Of America's Rare Earth Competition With China",
-          "bodyPreview": "Stock Ideas\r\nStock Ideas\r\n \r\n\r\nAnalysis Picked for You\r\n\r\n\r\n\r\nUSA Rare Earth: The Small Cap Sitting At The Center Of America's Rare Earth Competition With China\r\n\r\nEveryday Options • USAR\r\n\r\n\r\n\r\nAlbemarle: Ride The Lithium Surge\r\n\r\nStone Fox Capital • ALB",
-          "from": {
-            "emailAddress": {
-              "name": "Stock Ideas",
-              "address": "account@seekingalpha.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5X\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yUAAAA=",
-          "categories": [
-            "Categorized",
-            "drive",
-            "todo"
-          ],
-          "receivedDateTime": "2025-12-01T18:46:09Z",
-          "hasAttachments": false,
-          "subject": "Did Wall Street Accidentally Hide This Arbitrage Trade for NetApp (NTAP) Stock?",
-          "bodyPreview": "Today's insight on high volume options activity.\r\nDid Wall Street Accidentally Hide This Arbitrage Trade for NetApp (NTAP) Stock?\r\nUnusual Options Report for December 01, 2025\r\n\r\n\r\nI’m going to be upfront: I’m supposed to be specifically focusing on unusu",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart",
-              "address": "newsletters@barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5h\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815yYAAAA=",
-          "categories": [
-            "Categorized",
-            "drive",
-            "todo"
-          ],
-          "receivedDateTime": "2025-12-01T19:38:37Z",
-          "hasAttachments": false,
-          "subject": "Nvidia's $2B stock buy",
-          "bodyPreview": "Return of the yen carry trade panic; plus, natural gas heats up.\r\n͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿ ͏ ‌     ﻿",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart Brief",
-              "address": "newsletters@brief.barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5f\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815ycAAAA=",
-          "categories": [
-            "Categorized",
-            "drive",
-            "todo"
-          ],
-          "receivedDateTime": "2025-12-01T19:58:15Z",
-          "hasAttachments": false,
-          "subject": "The AI Boom Is Shifting — Don’t Be Late to This One",
-          "bodyPreview": "Early buyers are already positioning ahead of the next AI boom.\r\n                Unsubscribe\r\n \r\nBelow is a message from one of our sponsors\r\nThe Next AI Boom Won’t Be Chips. It’ll Be Software—And This Startup Is Leading It.\r\n\r\nThe AI 1.0 boom made chip c",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart Partner",
-              "address": "bcmembers@partners.barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAeRDuVOrNheu612cE79cN/DN4uYXIAc+hOTu5XCWJ7xTysZh3c+GWm67+ztMzM2xvVV9XZnbnTJ5lr1tQIvmM12gVCNFuG/ZQiyhU7zL2XQ0qf1ZwPRoMMV9zETuKMgLmclP6q6G0eihELG3YLgfWr9XcVtkxxTVIDhdaQHCyS9kVabhZ3U1ReQF9MdtxlBboAQ79H737GUOr1oGD6TuCFVdoYVcoOvSB36nyOY3/B0appNF/3PQFuI7U+Hrov/XpwLqzOrGzQL5voUnFwW7RO1tDtOdhrSrw7zrAeu7JYg43LzwNbTc1VS34cQ3JR2jXfARmj5MFzMZ+CIGszxS+XUQZgAAEC4uB4+B9dyXpZIj9kS8mfRQA+Asw7ty8VNb/1vVw5lujuNcN537oqIf9tazQRRpS9p2geeIe6ce0f3nGxeUZMbWetDbSTqnbkU1fajkCMbYj6xmvkNCGyZGSR4SUOkKSU/000Ucyij9+NmRvUuFXXRoKfRq4sFhe3Bd3Ji6ChjVsUdSkHfGzEdwM5+xiLFb7QlqBaD7Ju3njJRX2MTu6z7No4MFj2++H3QtEwSgaMHOsijHizka/CUY9lyO8Fu9sDufRWDFY/WWEveVwBaE3AEkP6lChwJHHSgWX7UE0KmZ5SJHndOwnLhrFVYt6nyoA/7h1t0fcTKz8hdlL7n79jAyUuRTrHKzrY2IuidigzLmmOkkOCucL0t/2SI84QIp2u+sww82BJY9VeKN1RZKF2sheRPISLTjQzrGwyx1aBHm8CGOeSAn3xFcI0zj19FTIFbHjnghBQyCjjolCktsQ90u3AkTGYvEzJi6n9kpJwesobcOfef7dnI8K8AVg/lFBbGl5NAGZ4ofkDExYMgEmTNO9jMDoTWih2B7q4qs4qrf0mLEEQbWW0CVRdiCIoeZgFdxWd2GsrGEsKTQ7O21zC/3Ls+u5HNaFPdBDu0V2pGPt6Wn/MppaTMSf6mnpwldNH+cLtTd4ZVeL6svvUpol1U6Y76twAXqaB5QfNys40QVVgQgvb7UeeAXFLrqHwVo0pHbpSbDx+gfcIg2Pb3xYwxxsy6En/8sMfS5e8OvqKAm2asvg6TwtdARZhy0zoWfoHu7BdQr8dyEB3/8okUvqmcANKdkoBKvYQ75muDSDvBnB0VVrG58N2D6oU+HzI030xPzZMHkblKjL9TOHW0e5t9/kOSIU9T2EYGVhpv6rC+gNiPNxhe5pbttLHWfs4Fk3o7HlVRYz5Fa6xARoRnu8dnzLkcpy6kCLR9XrmQUH3/1z/UstFNinHAdyQlneDqhomYu8zKsgjDFCTM0BWx/hRrte4TQVaTzUhKoUC5o28i1VvHJlYhFTRHPbYYeYSg+xI5ZbqKzyCffsFVwHkd7zEO/g+56I/6Lt9SuuCBoxHz+pmTf8LtLuKSw+2gEmvOj93XFVVD6nhDxl2f5sRNSkJjejjWshRZmAzhWMSHCV1Q98Ro/zZSE5SwZKwzA1pWZ1X10jAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEvKr5d\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS815ygAAAA=",
-          "categories": [
-            "Categorized",
-            "drive",
-            "todo"
-          ],
-          "receivedDateTime": "2025-12-01T21:18:23Z",
-          "hasAttachments": false,
-          "subject": "Rotations Continue To The Next Rally As Markets Anticipate The January Effect",
-          "bodyPreview": "Timing is crucial for investment success; static buy-and-hold strategies often underperform due to market cycles and pro\r\n\r\nMust Reads\r\n\r\n \r\n \r\n\r\nGet 20% off any Seeking Alpha plan during our Cyber Monday sale* Claim Offer »\r\n\r\n \r\n \r\n \r\n \r\n \r\n\r\nFREE TREND",
-          "from": {
-            "emailAddress": {
-              "name": "Must Reads",
-              "address": "account@seekingalpha.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  },
-  "versionId": "1d2e1f11-60b3-4f4d-83e8-7d1161faff96",
-  "versionCounter": 48,
+  "meta": null,
+  "pinData": {},
+  "versionId": "7a052677-19de-40aa-a478-29d7fb9235a2",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-25T07:28:14.719Z",
-      "createdAt": "2025-11-25T07:28:14.719Z",
+      "updatedAt": "2025-12-05T06:45:31.072Z",
+      "createdAt": "2025-12-05T06:45:31.072Z",
       "role": "workflow:owner",
-      "workflowId": "NlDvdXwFHBjxGgTA",
-      "projectId": "Ti3JL05CSVUvJj6A",
+      "workflowId": "SrOr4ivr8iaQTPxM",
+      "projectId": "Qz4EZoRaJoP60D6r",
       "project": {
-        "updatedAt": "2025-10-20T20:29:51.468Z",
-        "createdAt": "2025-10-20T20:29:10.045Z",
-        "id": "Ti3JL05CSVUvJj6A",
+        "updatedAt": "2025-03-05T09:02:20.383Z",
+        "createdAt": "2025-03-05T08:58:50.174Z",
+        "id": "Qz4EZoRaJoP60D6r",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-10-20T20:29:10.046Z",
-            "createdAt": "2025-10-20T20:29:10.046Z",
-            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
-            "projectId": "Ti3JL05CSVUvJj6A",
+            "updatedAt": "2025-03-05T08:58:50.174Z",
+            "createdAt": "2025-03-05T08:58:50.174Z",
+            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+            "projectId": "Qz4EZoRaJoP60D6r",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
-              "createdAt": "2025-10-20T20:29:09.823Z",
-              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "updatedAt": "2025-12-05T06:44:21.000Z",
+              "createdAt": "2025-03-05T08:58:49.757Z",
+              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
-                "personalization_survey_n8n_version": "1.115.3"
+                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
+                "personalization_survey_n8n_version": "1.81.4",
+                "automationGoalDevops": [
+                  "other",
+                  "monitoring-alerting",
+                  "reporting"
+                ],
+                "companySize": "personalUser",
+                "companyType": "systems-integrator",
+                "role": "engineering",
+                "reportedSource": "linkedin"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
-                "userActivatedAt": 1761636420034,
+                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
+                "userActivatedAt": 1761210491841,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763316240404
+                  "lastShownAt": 1763717488235
                 }
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }
@@ -1298,18 +1022,5 @@
       }
     }
   ],
-  "tags": [
-    {
-      "updatedAt": "2025-11-28T07:54:31.025Z",
-      "createdAt": "2025-11-28T07:54:31.025Z",
-      "id": "PdONDcNhiGyYrDss",
-      "name": "calendar"
-    },
-    {
-      "updatedAt": "2025-11-25T07:28:56.435Z",
-      "createdAt": "2025-11-25T07:28:56.435Z",
-      "id": "uEPVpiLWGIcHIKbE",
-      "name": "non-exectuable"
-    }
-  ]
+  "tags": []
 }

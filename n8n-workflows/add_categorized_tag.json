@@ -1,9 +1,8 @@
 {
-  "updatedAt": "2025-11-28T11:44:11.000Z",
-  "createdAt": "2025-11-28T07:46:15.118Z",
-  "id": "vYPXcEiszJR2yd1o",
+  "updatedAt": "2025-12-05T06:44:58.030Z",
+  "createdAt": "2025-12-05T06:44:58.030Z",
+  "id": "1I6fApboY7fsM5tb",
   "name": "Add Categorized Tag",
-  "description": null,
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -110,7 +109,7 @@
       "webhookId": "f47eba34-f626-4cc1-bf72-ebf3fbba3706",
       "credentials": {
         "telegramApi": {
-          "id": "JG4HCYCvUBrFrjrG",
+          "id": "xTSQ9buOorLMIRKW",
           "name": "Telegram account"
         }
       },
@@ -222,158 +221,65 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": {
-    "Edit Fields": [
-      {
-        "json": {
-          "access_token": "EwBYBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZwHKMuQAcCwjFkgDvvMdm3D3qPhVyxoyG4LYw1NT9S8Yhv0tbRKPgDG7IAGzna+e7nM+8w7Txl7SWbHn7O0wjNhevd9wHTk0dPEQ6MdMzNjNkYsxuOwSoqlo7GDjzoH8ZZx4RBnTYjCdt2akkZ/VDSGHPzTCKTtDOnngfFPbpCl9uoIIVbihFfoR7Yb+OP0QyoTRdlRKMemj6pU7S0WUUDvOuOwJEMmcq9QYM0Urt49pEXr/9t+yvxeBQLqFzuoMyh6zClIcSMSZe0LUWz9vVrqV5XgVRduGRt8R4toOOAexWTU0Su4F6sa8CKIowzKtCiC2+dKmiwYShwvdl0dk58QZgAAEC7dXUy61grCHOv/Ao0GroEgAxVPvaRqMG9efIts54i2WWqXYvJPxhAUM3ThEGTktIvJgHBj0Q8PW5ELTvY0+CCuSCRoGSWNI4cQfxiSlEzpTa1OAocU0jTPDCo+IiXSvLHg7wxYLKFf+XFGjZAog6DXP7ceIVzWcnP6Lo2dno17Sc7wxoxoJmmwD10nbY8GSNnsPYZN9kbbgKwzH+Knfqe7Pr8PJHPcu2CSaoZvRHE940GE2KrF5pGhMqshZMyhc8HF3C8p6Pb31IaNK39ttwrO3yIzBF9p6oBYmt7ufvdtYVeqRQ+FfC3/X+TNx6kYjQ50MPOXvwoOJ2Z1s03ng2pnZ8OA5q9TTZz36HPuYsnrs6Rof5fzZsHe+CuaCYCaTWzikYpZlRSfc22opV/rPzw4WKo5tbsNlHguNS50aWU4nawvpTT9LsHeXZLMxH9b+vW7mwf9yNt6jdLUriBe8G50Nx0RSGyw9L6DfXqyD4v1EajVeKCktFpLBIJodJFb8ModKIsOw2JhLIAH62e6XcALQ9hvz7B8XQ8HiXlDkPzsCRYyAfj2TLPZplGDVEh7MSKSOuRj23YFZxO4c07/o8rQXkoQKWBUuor4DSsJyZe2BQKaDOKul3xPwLO8ohpqPEfuFwxnXv0zeTpYuabpq3ytruNYHYEYT4LwTzU/7nxO4tP2ww+NwJWmY0uG0CPl7h0WGXit3OcajCa98D45Vq5xUgHSgz8CUwajVjAlyxZdWdkxAeRgWHVDkdwsHkN1pxbwGozVWluPEkpj17f7Fpk2pTgat0KZZkW5FMr0T2fKN1MdQtBoyyp1ZKWbv1zLdRW6sqrJE64IsnUTqRjk6xUky0u66KkyJVj2eSXFMfInI2sEh+BPF44rsiEdFwKcToUIZP8Onn2rTc7Hm3x1npSuM6iLONeqxplzKtkB+Hw8jOylYbp1mbpP/9nnbxucXIybV/G+BC9yMLe4AupCHwLJ2gmBiMqfyjuzTtb1NJrZFHwhzIlHGx2zL7HWOnh0LoM7zYJCrc4ukhSomrwAzu8yRzr0xbf0MqNf1mM35zl4p+fBPFHRGxZxgOmkrl4sym0BZAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEuEXDC\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS4cfpMAAAA=",
-          "categories": [
-            "Calendar"
-          ],
-          "receivedDateTime": "2025-11-25T17:15:32Z",
-          "hasAttachments": false,
-          "subject": "Entegrasyon Sürecine İlişkin Onay Talebi",
-          "bodyPreview": "Selam,\r\n\r\nAkinon tarafındaki entegrasyon için hazırlanan yeni yapılandırma dosyalarını test ortamına aktarmadan önce onayını talep ediyorum.\r\n\r\nKontrol etmeni istediğim noktalar:\r\n\r\n  *   Endpoint doğruluk testi\r\n\r\n  *   Timeout & retry politikaları\r\n\r\n  ",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwBYBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZwHKMuQAcCwjFkgDvvMdm3D3qPhVyxoyG4LYw1NT9S8Yhv0tbRKPgDG7IAGzna+e7nM+8w7Txl7SWbHn7O0wjNhevd9wHTk0dPEQ6MdMzNjNkYsxuOwSoqlo7GDjzoH8ZZx4RBnTYjCdt2akkZ/VDSGHPzTCKTtDOnngfFPbpCl9uoIIVbihFfoR7Yb+OP0QyoTRdlRKMemj6pU7S0WUUDvOuOwJEMmcq9QYM0Urt49pEXr/9t+yvxeBQLqFzuoMyh6zClIcSMSZe0LUWz9vVrqV5XgVRduGRt8R4toOOAexWTU0Su4F6sa8CKIowzKtCiC2+dKmiwYShwvdl0dk58QZgAAEC7dXUy61grCHOv/Ao0GroEgAxVPvaRqMG9efIts54i2WWqXYvJPxhAUM3ThEGTktIvJgHBj0Q8PW5ELTvY0+CCuSCRoGSWNI4cQfxiSlEzpTa1OAocU0jTPDCo+IiXSvLHg7wxYLKFf+XFGjZAog6DXP7ceIVzWcnP6Lo2dno17Sc7wxoxoJmmwD10nbY8GSNnsPYZN9kbbgKwzH+Knfqe7Pr8PJHPcu2CSaoZvRHE940GE2KrF5pGhMqshZMyhc8HF3C8p6Pb31IaNK39ttwrO3yIzBF9p6oBYmt7ufvdtYVeqRQ+FfC3/X+TNx6kYjQ50MPOXvwoOJ2Z1s03ng2pnZ8OA5q9TTZz36HPuYsnrs6Rof5fzZsHe+CuaCYCaTWzikYpZlRSfc22opV/rPzw4WKo5tbsNlHguNS50aWU4nawvpTT9LsHeXZLMxH9b+vW7mwf9yNt6jdLUriBe8G50Nx0RSGyw9L6DfXqyD4v1EajVeKCktFpLBIJodJFb8ModKIsOw2JhLIAH62e6XcALQ9hvz7B8XQ8HiXlDkPzsCRYyAfj2TLPZplGDVEh7MSKSOuRj23YFZxO4c07/o8rQXkoQKWBUuor4DSsJyZe2BQKaDOKul3xPwLO8ohpqPEfuFwxnXv0zeTpYuabpq3ytruNYHYEYT4LwTzU/7nxO4tP2ww+NwJWmY0uG0CPl7h0WGXit3OcajCa98D45Vq5xUgHSgz8CUwajVjAlyxZdWdkxAeRgWHVDkdwsHkN1pxbwGozVWluPEkpj17f7Fpk2pTgat0KZZkW5FMr0T2fKN1MdQtBoyyp1ZKWbv1zLdRW6sqrJE64IsnUTqRjk6xUky0u66KkyJVj2eSXFMfInI2sEh+BPF44rsiEdFwKcToUIZP8Onn2rTc7Hm3x1npSuM6iLONeqxplzKtkB+Hw8jOylYbp1mbpP/9nnbxucXIybV/G+BC9yMLe4AupCHwLJ2gmBiMqfyjuzTtb1NJrZFHwhzIlHGx2zL7HWOnh0LoM7zYJCrc4ukhSomrwAzu8yRzr0xbf0MqNf1mM35zl4p+fBPFHRGxZxgOmkrl4sym0BZAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEuEXDH\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS4cfpQAAAA=",
-          "categories": [
-            "Calendar"
-          ],
-          "receivedDateTime": "2025-11-25T17:14:52Z",
-          "hasAttachments": true,
-          "subject": "İnceleme İçin Gereken Dokümanlar (Ek Mevcut)",
-          "bodyPreview": "Merhaba,\r\n\r\nBahsettiğimiz süreç analiziyle ilgili dokümanları ekte paylaşıyorum. (attachment sen ekleyeceksin)\r\n\r\nİnceledikten sonra:\r\n\r\n  *   Eksik gördüğün noktaları işaretleyebilir\r\n\r\n  *   Revizyon önerilerini yazabilir\r\n\r\n  *   Onayladığın versiyonu ",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwBYBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZwHKMuQAcCwjFkgDvvMdm3D3qPhVyxoyG4LYw1NT9S8Yhv0tbRKPgDG7IAGzna+e7nM+8w7Txl7SWbHn7O0wjNhevd9wHTk0dPEQ6MdMzNjNkYsxuOwSoqlo7GDjzoH8ZZx4RBnTYjCdt2akkZ/VDSGHPzTCKTtDOnngfFPbpCl9uoIIVbihFfoR7Yb+OP0QyoTRdlRKMemj6pU7S0WUUDvOuOwJEMmcq9QYM0Urt49pEXr/9t+yvxeBQLqFzuoMyh6zClIcSMSZe0LUWz9vVrqV5XgVRduGRt8R4toOOAexWTU0Su4F6sa8CKIowzKtCiC2+dKmiwYShwvdl0dk58QZgAAEC7dXUy61grCHOv/Ao0GroEgAxVPvaRqMG9efIts54i2WWqXYvJPxhAUM3ThEGTktIvJgHBj0Q8PW5ELTvY0+CCuSCRoGSWNI4cQfxiSlEzpTa1OAocU0jTPDCo+IiXSvLHg7wxYLKFf+XFGjZAog6DXP7ceIVzWcnP6Lo2dno17Sc7wxoxoJmmwD10nbY8GSNnsPYZN9kbbgKwzH+Knfqe7Pr8PJHPcu2CSaoZvRHE940GE2KrF5pGhMqshZMyhc8HF3C8p6Pb31IaNK39ttwrO3yIzBF9p6oBYmt7ufvdtYVeqRQ+FfC3/X+TNx6kYjQ50MPOXvwoOJ2Z1s03ng2pnZ8OA5q9TTZz36HPuYsnrs6Rof5fzZsHe+CuaCYCaTWzikYpZlRSfc22opV/rPzw4WKo5tbsNlHguNS50aWU4nawvpTT9LsHeXZLMxH9b+vW7mwf9yNt6jdLUriBe8G50Nx0RSGyw9L6DfXqyD4v1EajVeKCktFpLBIJodJFb8ModKIsOw2JhLIAH62e6XcALQ9hvz7B8XQ8HiXlDkPzsCRYyAfj2TLPZplGDVEh7MSKSOuRj23YFZxO4c07/o8rQXkoQKWBUuor4DSsJyZe2BQKaDOKul3xPwLO8ohpqPEfuFwxnXv0zeTpYuabpq3ytruNYHYEYT4LwTzU/7nxO4tP2ww+NwJWmY0uG0CPl7h0WGXit3OcajCa98D45Vq5xUgHSgz8CUwajVjAlyxZdWdkxAeRgWHVDkdwsHkN1pxbwGozVWluPEkpj17f7Fpk2pTgat0KZZkW5FMr0T2fKN1MdQtBoyyp1ZKWbv1zLdRW6sqrJE64IsnUTqRjk6xUky0u66KkyJVj2eSXFMfInI2sEh+BPF44rsiEdFwKcToUIZP8Onn2rTc7Hm3x1npSuM6iLONeqxplzKtkB+Hw8jOylYbp1mbpP/9nnbxucXIybV/G+BC9yMLe4AupCHwLJ2gmBiMqfyjuzTtb1NJrZFHwhzIlHGx2zL7HWOnh0LoM7zYJCrc4ukhSomrwAzu8yRzr0xbf0MqNf1mM35zl4p+fBPFHRGxZxgOmkrl4sym0BZAM=",
-          "telegram_chat_id": "-1003315838853",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEuEXDM\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS4cfpUAAAA=",
-          "categories": [
-            "Calendar"
-          ],
-          "receivedDateTime": "2025-11-13T13:20:28Z",
-          "hasAttachments": true,
-          "subject": "Evren Hayat Hediye 07.11.2025-13.11.2025 Tarihli Muhasebe Raporu hk",
-          "bodyPreview": "Merhaba, Evren Hayat Hediye'ye ait 07.11.2025 - 13.11.2025 tarihli siparişlerin dökümü ekte bilgilerinize sunulmuştur. Hayat Hediye",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  },
-  "versionId": "03e40695-ac36-4022-b890-b264fe210195",
-  "versionCounter": 14,
+  "pinData": null,
+  "versionId": "292d7e89-3170-467d-bf1b-23227f626f41",
+  "versionCounter": 1,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-28T07:46:15.121Z",
-      "createdAt": "2025-11-28T07:46:15.121Z",
+      "updatedAt": "2025-12-05T06:44:58.042Z",
+      "createdAt": "2025-12-05T06:44:58.042Z",
       "role": "workflow:owner",
-      "workflowId": "vYPXcEiszJR2yd1o",
-      "projectId": "Ti3JL05CSVUvJj6A",
+      "workflowId": "1I6fApboY7fsM5tb",
+      "projectId": "Qz4EZoRaJoP60D6r",
       "project": {
-        "updatedAt": "2025-10-20T20:29:51.468Z",
-        "createdAt": "2025-10-20T20:29:10.045Z",
-        "id": "Ti3JL05CSVUvJj6A",
+        "updatedAt": "2025-03-05T09:02:20.383Z",
+        "createdAt": "2025-03-05T08:58:50.174Z",
+        "id": "Qz4EZoRaJoP60D6r",
         "name": "Berkay Güzel <berkayguzel43@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "updatedAt": "2025-10-20T20:29:10.046Z",
-            "createdAt": "2025-10-20T20:29:10.046Z",
-            "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
-            "projectId": "Ti3JL05CSVUvJj6A",
+            "updatedAt": "2025-03-05T08:58:50.174Z",
+            "createdAt": "2025-03-05T08:58:50.174Z",
+            "userId": "fd0dad10-3532-42d3-92d8-22a846fddec9",
+            "projectId": "Qz4EZoRaJoP60D6r",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
-              "createdAt": "2025-10-20T20:29:09.823Z",
-              "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
+              "updatedAt": "2025-12-05T06:44:21.000Z",
+              "createdAt": "2025-03-05T08:58:49.757Z",
+              "id": "fd0dad10-3532-42d3-92d8-22a846fddec9",
               "email": "berkayguzel43@gmail.com",
               "firstName": "Berkay",
               "lastName": "Güzel",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-10-20T20:29:56.564Z",
-                "personalization_survey_n8n_version": "1.115.3"
+                "personalization_survey_submitted_at": "2025-03-05T09:03:26.064Z",
+                "personalization_survey_n8n_version": "1.81.4",
+                "automationGoalDevops": [
+                  "other",
+                  "monitoring-alerting",
+                  "reporting"
+                ],
+                "companySize": "personalUser",
+                "companyType": "systems-integrator",
+                "role": "engineering",
+                "reportedSource": "linkedin"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "igqmQcqCfFbzi8Ws",
-                "userActivatedAt": 1761636420034,
+                "firstSuccessfulWorkflowId": "l5177howJJ0DyiVM",
+                "userActivatedAt": 1761210491841,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1763316240404
+                  "lastShownAt": 1763717488235
                 }
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }
@@ -381,18 +287,5 @@
       }
     }
   ],
-  "tags": [
-    {
-      "updatedAt": "2025-11-28T07:47:36.846Z",
-      "createdAt": "2025-11-28T07:47:36.846Z",
-      "id": "rFb0OIp7gOe3RUr9",
-      "name": "categorized"
-    },
-    {
-      "updatedAt": "2025-11-25T07:28:56.435Z",
-      "createdAt": "2025-11-25T07:28:56.435Z",
-      "id": "uEPVpiLWGIcHIKbE",
-      "name": "non-exectuable"
-    }
-  ]
+  "tags": []
 }

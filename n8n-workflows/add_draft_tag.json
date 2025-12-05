@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2025-12-05T06:44:58.098Z",
-  "createdAt": "2025-12-05T06:44:58.098Z",
-  "id": "Yv4PRGGdIAAdCIcz",
-  "name": "Add Drive Tag",
+  "updatedAt": "2025-12-05T12:58:00.000Z",
+  "createdAt": "2025-12-05T12:57:42.900Z",
+  "id": "mIqZLZEI5r2Xjt9r",
+  "name": "Add Draft Tag",
   "active": false,
   "isArchived": false,
   "nodes": [
@@ -16,7 +16,7 @@
         -1312,
         432
       ],
-      "id": "db7e794b-bb90-490d-a7db-21a4ae9aac1c",
+      "id": "28601622-d51a-497e-b1b6-03cc6725ceda",
       "name": "Get many messages"
     },
     {
@@ -31,9 +31,9 @@
         -416,
         432
       ],
-      "id": "d1e2cfaf-5e85-44d7-a0e4-f7b7d50ef21b",
+      "id": "86328642-5901-4736-b3eb-ea6a612f9326",
       "name": "Error Message",
-      "webhookId": "b1dab969-a8fa-4b3c-83b3-aa5a35618615",
+      "webhookId": "0f50995f-5310-4475-a73b-dea3f071a077",
       "credentials": {
         "telegramApi": {
           "id": "xTSQ9buOorLMIRKW",
@@ -76,13 +76,13 @@
         -640,
         432
       ],
-      "id": "e60a7367-a247-47dc-9569-33e1183ddaf8",
+      "id": "0c139748-7cd0-4530-8341-70f4183c4fc7",
       "name": "AI Calendar",
       "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "jsCode": "return $input.all().map(item => {\n    const json = item.json;\n    const existing = json.categories || [];\n    const toAdd = \"drive\";\n\n    // Kategorileri merge et\n    const merged = Array.from(new Set([...existing, toAdd]));\n\n    // Güncel kategoriyi geri yaz\n    json.categories = merged;\n\n    return { json };\n});\n"
+        "jsCode": "return $input.all().map(item => {\n    const json = item.json;\n    const existing = json.categories || [];\n    const toAdd = \"draft\";\n\n    // Kategorileri merge et\n    const merged = Array.from(new Set([...existing, toAdd]));\n\n    // Güncel kategoriyi geri yaz\n    json.categories = merged;\n\n    return { json };\n});\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -90,7 +90,7 @@
         -864,
         432
       ],
-      "id": "d61ec66f-8f2b-4f30-989e-bf62b6831822",
+      "id": "619d07cd-10e6-4efa-97da-c5757672e190",
       "name": "Code in JavaScript"
     },
     {
@@ -124,7 +124,7 @@
         -1088,
         432
       ],
-      "id": "f8efbbbb-ab7f-4568-a91c-01d47a8a5ca8",
+      "id": "f77af2ae-8c44-49c1-81a3-31bf4dd47ef1",
       "name": "If1"
     }
   ],
@@ -180,16 +180,16 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": null,
-  "versionId": "4fea14e9-2661-411d-88ad-11a182a3570b",
-  "versionCounter": 1,
+  "pinData": {},
+  "versionId": "8e89e2d0-b55c-46d1-b2c9-e97fe8b15f52",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-05T06:44:58.105Z",
-      "createdAt": "2025-12-05T06:44:58.105Z",
+      "updatedAt": "2025-12-05T12:57:42.904Z",
+      "createdAt": "2025-12-05T12:57:42.904Z",
       "role": "workflow:owner",
-      "workflowId": "Yv4PRGGdIAAdCIcz",
+      "workflowId": "mIqZLZEI5r2Xjt9r",
       "projectId": "Qz4EZoRaJoP60D6r",
       "project": {
         "updatedAt": "2025-03-05T09:02:20.383Z",
