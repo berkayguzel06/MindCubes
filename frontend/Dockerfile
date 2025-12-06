@@ -15,9 +15,13 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build argument for API URL
-ARG NEXT_PUBLIC_API_BASE_URL=http://localhost:5001/api/v1
-ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+# Build arguments for API URLs - these MUST be passed at build time for Next.js
+ARG NEXT_PUBLIC_API_BASE_URL
+ARG NEXT_PUBLIC_BACKEND_URL
+
+# Set environment variables for build (Next.js embeds these at build time)
+ENV NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL:-http://localhost:5001/api/v1}
+ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-http://localhost:5001}
 
 # Build the application
 RUN npm run build
