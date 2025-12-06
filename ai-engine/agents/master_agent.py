@@ -63,11 +63,15 @@ INTENT_PATTERNS = {
     "mail_categorization": {
         "keywords": [
             "kategorile", "categorize", "sınıflandır", "organize", "düzenle",
-            "etiketle", "label", "mail organize", "posta düzenle", "inbox"
+            "etiketle", "label", "mail organize", "posta düzenle", "inbox",
+            "maillerimi kategorize et", "gerekli dosyalara ayır", "maillerimi düzenle",
+            "maillerimi sınıflandır", "maillerimi organize et", "dosyalara ayır",
+            "urgent", "important", "acil", "önemli", "kategorize"
         ],
         "patterns": [
             r"mail.*kategorile", r"email.*categorize", r"posta.*düzenle",
-            r"inbox.*organize"
+            r"inbox.*organize", r"mail.*düzenle", r"dosya.*ayır",
+            r"kategorize.*et", r"gerekli.*dosya"
         ],
         "description": "e-posta kategorilendirme",
         "needs_details": False
