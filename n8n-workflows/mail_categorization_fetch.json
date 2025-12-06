@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-12-04T20:18:58.000Z",
-  "createdAt": "2025-11-28T08:07:10.615Z",
-  "id": "wmgfcWHCt08DQNK8",
+  "updatedAt": "2025-12-05T16:40:55.000Z",
+  "createdAt": "2025-12-05T16:20:06.805Z",
+  "id": "zXSeFm94TgXgQAA4",
   "name": "Mail Categorization Fetch",
   "description": null,
   "active": false,
@@ -9,13 +9,13 @@
   "nodes": [
     {
       "parameters": {
-        "jsCode": "const mails = $input.all();\nconst user_mail = $input.first().json.email;\nlet emailList = []\n\nfor (const mail of mails) {\n  for (const recipient of mail.json.toRecipients) {\n    if(recipient.emailAddress.address===user_mail){\n       emailList.push(mail)\n       break;\n    }\n  }\n}\n\nreturn emailList;"
+        "jsCode": "const mails = $input.all();\nconst user_mail = $input.first().json.email;\nlet emailList = [];\n\nfor (const mail of mails) {\n  // Check if toRecipients exists and is iterable\n  const toRecipients = mail.json.toRecipients;\n  \n  if (toRecipients && Array.isArray(toRecipients)) {\n    for (const recipient of toRecipients) {\n      if (recipient.emailAddress && recipient.emailAddress.address === user_mail) {\n        emailList.push(mail);\n        break;\n      }\n    }\n  }\n}\n\nreturn emailList;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         -2176,
-        112
+        104
       ],
       "id": "9eeceb50-5a1f-451a-994a-f11fed38f357",
       "name": "Recipient Filter",
@@ -39,7 +39,7 @@
       "typeVersion": 4.3,
       "position": [
         -2848,
-        256
+        248
       ],
       "id": "803df440-bae2-4407-8be0-183b9f8b0b54",
       "name": "HTTP Request"
@@ -52,7 +52,7 @@
       "typeVersion": 2,
       "position": [
         -2624,
-        256
+        248
       ],
       "id": "33976f95-4f6a-4636-a3e7-1d032f2a0bec",
       "name": "Code in JavaScript",
@@ -82,7 +82,7 @@
       "typeVersion": 1.1,
       "position": [
         -3072,
-        64
+        56
       ],
       "id": "6e6241a3-dc3a-4091-b7e6-f7faa24c360a",
       "name": "When Executed by Another Workflow"
@@ -131,14 +131,14 @@
       "typeVersion": 3.2,
       "position": [
         -2400,
-        112
+        104
       ],
       "id": "17bde116-a427-4842-a573-638bea87cd12",
       "name": "Merge1"
     },
     {
       "parameters": {
-        "chatId": "-3257168516",
+        "chatId": "-1003257168516",
         "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
         "additionalFields": {}
       },
@@ -146,7 +146,7 @@
       "typeVersion": 1.2,
       "position": [
         -1952,
-        256
+        248
       ],
       "id": "b77dbb6a-24c4-4b97-bf47-d37e7e9f5937",
       "name": "Error Message",
@@ -162,9 +162,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "vYPXcEiszJR2yd1o",
+          "value": "AyKctiTX0fxh44Kj",
           "mode": "list",
-          "cachedResultUrl": "/workflow/vYPXcEiszJR2yd1o",
+          "cachedResultUrl": "/workflow/AyKctiTX0fxh44Kj",
           "cachedResultName": "Add Categorized Tag"
         },
         "workflowInputs": {
@@ -179,16 +179,16 @@
         -1504,
         -112
       ],
-      "id": "64b17d1c-56d0-4104-8ce8-c3ecffbbb023",
+      "id": "f9079f24-7c28-4c6e-b80c-b77ea3c9f202",
       "name": "Call 'Add Categorized Tag'"
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "rpTj6NRiVVAvLDLt",
+          "value": "8vuzfZJKl4TEOIF8",
           "mode": "list",
-          "cachedResultUrl": "/workflow/rpTj6NRiVVAvLDLt",
+          "cachedResultUrl": "/workflow/8vuzfZJKl4TEOIF8",
           "cachedResultName": "Mail-Labeler"
         },
         "workflowInputs": {
@@ -203,7 +203,7 @@
         -1504,
         80
       ],
-      "id": "f1ebb396-e8ed-473b-9f5f-cca8863e70ff",
+      "id": "b8843e74-a8b2-4a1d-9d07-70a3b9738cbe",
       "name": "Call 'Mail-Labeler'"
     }
   ],
@@ -316,24 +316,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
-  "staticData": {
-    "node:Schedule Trigger": {
-      "recurrenceRules": []
-    }
-  },
+  "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "7b19647f-63a7-43f2-9bce-9e1376a9f8d8",
-  "versionCounter": 110,
-  "triggerCount": 1,
+  "versionId": "9c912ee0-4c92-4ec4-81c1-310e6092ed36",
+  "versionCounter": 3,
+  "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-28T08:07:10.619Z",
-      "createdAt": "2025-11-28T08:07:10.619Z",
+      "updatedAt": "2025-12-05T16:20:06.813Z",
+      "createdAt": "2025-12-05T16:20:06.813Z",
       "role": "workflow:owner",
-      "workflowId": "wmgfcWHCt08DQNK8",
+      "workflowId": "zXSeFm94TgXgQAA4",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -350,7 +348,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -373,7 +371,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }

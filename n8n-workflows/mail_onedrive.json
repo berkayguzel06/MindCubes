@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-12-01T08:57:48.000Z",
-  "createdAt": "2025-11-21T12:35:25.086Z",
-  "id": "Vxx0invazo8UfRuk",
+  "updatedAt": "2025-12-05T16:31:18.000Z",
+  "createdAt": "2025-12-05T16:20:06.995Z",
+  "id": "4PWZPYzSfK22Puj7",
   "name": "Mail-OneDrive",
   "description": null,
   "active": false,
@@ -543,75 +543,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
   "meta": null,
-  "pinData": {
-    "Edit Fields": [
-      {
-        "json": {
-          "access_token": "EwBoBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAdFdkDcbJynxbmNbgAqohyf50LbeLSA3MhvvaJyIugKcZobrehAgNAZPelCr/YM2Y8/BivElbSCr7DsG8yQ4ZLy3EVXZJ0bKG/uyPuF7NSAwpkpfyYOzUOzzBEYVDvSSjOrEQJW4VxYpfOovzCJgr2lLefhSDuM+kCn6t3AxHlCF9za/ht8TvtJ+UoB+YxO5Bs1PxEQPBXdoDTsd5unjWRPI4pCqIiHem1+BJvqVd7D6BVxUMpMYM6bPVdjJGy0WZa6edcycGSqK1e48d2yM38E/QEyQFOQCBDHjupqG6QF39yvbNoX0OJONDzzjUFhHC5ATapj1cAedVyMEpM6JgT0QZgAAEFoAk0vWtTyxug7EJnmig8UwA5wFS2XTSVUBp5RlKLHJ+ngld5VxA7VoZnuUbTqLqkNgUccwKYGvh/w/lMCNfEThJ0IvxuMBeqPKL7FIH0b6Fev5ZMr4kfbo5gQO9DDtTkYHTyOHAvpDekyNOkP7pK+5bBraHL+UFUr7bzofM5A36n9atDE3iSuZFwgEEBn8HqeF+r77F8tuNQC8PsqZU3NGpyHNzzDJA8TtLMCocGiDhlrze0yHbdwoiURo0F57qlxyWIiqiSeqsBQaGtukf6cwT+lSJcwfDTwQpsvwAZyZlB+z53hlgvwbcCaBM2mpQYCVd9wHCts81qfTHji6aOs2Go7M62hsB6Gmvo/3mU+/jlCYWfs6HJmqCsSMpGUIZjJcpfxri8cwrZaLT1yy1+q5UalLMqSN6bavKBkxhFik0rlAM+dnfroXZT6fyFG0iX9LvKTg7Qs8VNjPdEKCct3ipYptbc+G1ApwkvLCFORUVs9ek8du39zRp3vRaJjFTZ1Z9IuY2qSHlwlFLopACF5r46qVKrwpY5hNHxRSQl0YL03NP85xeoiBF5sJUfxdJRIRQSc0U4EHhdLSZk02DQ8t8N4mjcWQrvCwFiw1AlZ9/KHjLngQefZm3sSMdNnHjzw/jEk0EAyVVf+6orj1pZcriG5pJ2qNYoU0KovF9hbh05vlaXPo2/s3g+xGTNSx3SqWaHst4UOK69g7KTJFoeraW7EcLMv8vx9uXoqvQGJINRHwfcpzen+ig0Z2nnqYv00zXqJs0LoI1uV0RC0imzm2Zu+kTe8hxkpMW05um4XVvYzBMbGbnfMFFwyTPwDLFzF4UGkEUAsFIgdTJmOCNUAl0VezVFsrPGDxsqb9QEy2e0t1AalkD/T/6Z1o6VQnAcD/MQeYFeiniJ7D5R69RXVrlcdKsJ53nS54RyFr4jgFL8FoxFGkY512HAELf/c7gipr2pPIXrQ1VGB8U6zGN8HhGr8Ff3uhMESMmYJTtGyGI3CmpHvznFUEAb7gW5Th0Z2ArO1+hZUQxRH+/VOaOCTMZ177jUySi2nuJrU3dqSxatTbHU6tFMWIY6ERn3Yyl/4d3YxcizIPExw9JPMXvT/DQHgD",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAErsVlZ\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAASu7AjAAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-13T13:20:28Z",
-          "hasAttachments": true,
-          "subject": "Evren Hayat Hediye 07.11.2025-13.11.2025 Tarihli Muhasebe Raporu hk",
-          "bodyPreview": "Merhaba, Evren Hayat Hediye'ye ait 07.11.2025 - 13.11.2025 tarihli siparişlerin dökümü ekte bilgilerinize sunulmuştur. Hayat Hediye",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwBoBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAUQAUyMyBNbW/JTmxtLg5RQ4hLYVAyVxQrW9Bgn5LvwjqUR7wjRjYvvA1d2rXwBH0bfJL7fsxxg2ZsbBXVMqNZwH8wHLU5LltmLpja+9iFn+LTjlykkzns49bn0IjlRTFNJg5xy15Z39871+a7JdBiY7o6rDRadKRlxhXySjq3zmSwZChhRKqcMG8KfrGcSsMp7bb5OFqnexpnCirFXkdiySPNHnoCZ85qcXEAwKqecQAhk0l4t4jI7hbj1eMYGJt3dmZW4aH2dQ2ota/HnGqCs8lcqjGEDipDGhlELbjI1p+7u8hQcL1EOGbL5AKtx5kGH6y9ywmXsi3TlsAFLjkCcQZgAAECEQmTeh5UCDiypnfjn5JfUwAwnmuDCIZzvY4EmlxZzq8qfNYyXJgDAs7ayXYE1n2MFN8tXXQNVjX1C1HAkF4rSuDyc7aORHYWUaa8Y38foEX7wmWn4wNtzAP7bHhEns/0p5vd9el6jhjUYiynCxUv3FT7ejB5CaXLmBPVsR5Ye+sLN3U2YDudp0z3JD88tIOXze+MTwwqSDbDbr785W+N4KvbNeC8dis8TkFlbVs+0fEHOKQbY+cZ17FbqCMUO0/dkvF7UIxSCNXvBiIYx0JZLB1NCdd/qD574CZwuGyYYIr0MBkvc0QWe+15cIucQv1DjabQXG9xb2klKNtwudLeUclro9a7i8gtF0RjrmSnOmfBIGM9d9nxva7u3902gJkVPth0BtGsBsAl14rNNjj/F1KU9h15rqiGkby+2l7dDWYpe7kg9q9DqGIuG+kaQY8yVHzkQ1nk78HBLyCCZgA6b9p4SBJpqNcXLhrPT1T3yECwefNoNGL/YQxNTFoTSvNGPp04eKlOjx/ifCG1ndFC9UcPCPfMJny6qBwqD76it2fbFJDcqNZDtz+J8VnOkDs8p8J052+ZjT2yJNCQ8sF+zeLe+jXAbsDK6rgQe4fS3smm0d/3mRngo8WR1/Ugwo87GqdSBlKXHnv4zqE9oA1YMvlp73zf7i+jhCPkDxHTdzvTVGt6DlFwB3wJDGgBh1bbkTE5dWP9oHEb0XddQhfZbzfkp5BjSmNMwSmxtCeCjhoryrNnWuuhZ3m4vZ5oyZK2PVAoXfnHZHNjr2COyYWotBE1x4vZqUel08VTJipQV0i57zWp33STOW65y/LZcz+EouBCPoSerI7v9FHTmZT/HZDv/0r+ZpIZIWsygtNEC2vGs/7vL6b197MdRIUOzLQQy3gxmhlqfsX1LJRJU6gr1bM1bKBnH2KFpYmOkoYzM1CkflJvIhVY3sFbWHrGmNeukjJmsL3OhJ+ypsd/mKrw6K1eKVfbCrZH3g0TlxcJuwiOV06huG0BoNqEGoNj3cYgDvgtFRv6ySYs7fSF2HtPzAja3ajfL/1rv250F4QmOJ03Y9Cumpevf59Xc2eV/4u2i8q7EZqNYr8IC24CnDeDbll3gD",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAErsVlZ\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAASu7AjAAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-13T13:20:28Z",
-          "hasAttachments": true,
-          "subject": "Evren Hayat Hediye 07.11.2025-13.11.2025 Tarihli Muhasebe Raporu hk",
-          "bodyPreview": "Merhaba, Evren Hayat Hediye'ye ait 07.11.2025 - 13.11.2025 tarihli siparişlerin dökümü ekte bilgilerinize sunulmuştur. Hayat Hediye",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  },
-  "versionId": "d05f3391-fef4-4cd7-97f0-9315aca35f72",
-  "versionCounter": 40,
+  "pinData": {},
+  "versionId": "f6b6feff-0eb8-469f-a2c1-76da7f5b9110",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-25T07:28:14.728Z",
-      "createdAt": "2025-11-25T07:28:14.728Z",
+      "updatedAt": "2025-12-05T16:20:07.004Z",
+      "createdAt": "2025-12-05T16:20:07.004Z",
       "role": "workflow:owner",
-      "workflowId": "Vxx0invazo8UfRuk",
+      "workflowId": "4PWZPYzSfK22Puj7",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -628,7 +575,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -651,7 +598,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }

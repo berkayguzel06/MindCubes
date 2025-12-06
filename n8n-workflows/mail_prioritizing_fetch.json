@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-12-04T20:18:42.000Z",
-  "createdAt": "2025-11-28T13:10:41.956Z",
-  "id": "Wc6WWHfAKygib05d",
+  "updatedAt": "2025-12-05T16:44:00.000Z",
+  "createdAt": "2025-12-05T16:20:07.082Z",
+  "id": "R2cycI3STlvFCsuA",
   "name": "Mail Prioritizing Fetch",
   "description": null,
   "active": false,
@@ -213,9 +213,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "FUeCBZqBVK8ytokA",
+          "value": "2UdEAp7tlduaP6DF",
           "mode": "list",
-          "cachedResultUrl": "/workflow/FUeCBZqBVK8ytokA",
+          "cachedResultUrl": "/workflow/2UdEAp7tlduaP6DF",
           "cachedResultName": "Add Prioritizing Tag"
         },
         "workflowInputs": {
@@ -230,16 +230,16 @@
         -1248,
         -80
       ],
-      "id": "c21fa53d-4cc2-4001-b980-05a2fbb178c2",
+      "id": "372b44ec-217f-47d8-986d-a3877d30174d",
       "name": "Call 'Add Prioritizing Tag'"
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "wF9RJClNrNYAlCjT",
+          "value": "JoHw0uG4Yjphka0k",
           "mode": "list",
-          "cachedResultUrl": "/workflow/wF9RJClNrNYAlCjT",
+          "cachedResultUrl": "/workflow/JoHw0uG4Yjphka0k",
           "cachedResultName": "Mail-Prioritizing"
         },
         "workflowInputs": {
@@ -254,7 +254,7 @@
         -1248,
         112
       ],
-      "id": "9d1eed46-13fa-4672-b4a9-94135a4f0bb2",
+      "id": "4138d270-0325-4816-acb4-ffbee246810c",
       "name": "Call 'Mail-Prioritizing'"
     }
   ],
@@ -400,26 +400,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
-  "staticData": {
-    "node:Schedule Trigger": {
-      "recurrenceRules": []
-    }
-  },
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "staticData": null,
+  "meta": null,
   "pinData": {},
-  "versionId": "2c4f7cfa-ae4c-4f93-b3d8-dd7ea203224d",
-  "versionCounter": 123,
-  "triggerCount": 1,
+  "versionId": "9f46939f-9876-477c-9879-61e8cd7ddf76",
+  "versionCounter": 3,
+  "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-28T13:10:41.960Z",
-      "createdAt": "2025-11-28T13:10:41.960Z",
+      "updatedAt": "2025-12-05T16:20:07.085Z",
+      "createdAt": "2025-12-05T16:20:07.085Z",
       "role": "workflow:owner",
-      "workflowId": "Wc6WWHfAKygib05d",
+      "workflowId": "R2cycI3STlvFCsuA",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -436,7 +432,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -459,7 +455,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }

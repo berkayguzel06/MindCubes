@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-12-02T06:58:26.000Z",
-  "createdAt": "2025-12-01T06:23:45.094Z",
-  "id": "DZmfi61qENV5ZOzJ",
+  "updatedAt": "2025-12-05T16:32:01.000Z",
+  "createdAt": "2025-12-05T16:20:07.486Z",
+  "id": "kgpb3gPGTDAR9oB3",
   "name": "Start-Mail-Workflow ToDo",
   "description": null,
   "active": true,
@@ -22,89 +22,75 @@
       "typeVersion": 1.2,
       "position": [
         -608,
-        16
+        -120
       ],
       "id": "337b1215-9aa8-4342-b5c3-4564daa9f843",
       "name": "Schedule Trigger"
     },
     {
       "parameters": {
-        "operation": "select",
-        "schema": {
-          "__rl": true,
-          "value": "public",
-          "mode": "list",
-          "cachedResultName": "public"
-        },
-        "table": {
-          "__rl": true,
-          "value": "users",
-          "mode": "list",
-          "cachedResultName": "users"
-        },
-        "options": {}
+        "chatId": "-3257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
       },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
       "position": [
-        -384,
-        -128
+        64,
+        -24
       ],
-      "id": "b4f7c6ee-7e1a-42b8-8de9-214c0c60fba4",
-      "name": "Select rows from a table",
+      "id": "845774ac-b250-4e45-ab41-0349b1fe9d2e",
+      "name": "Error Message",
+      "webhookId": "e79f74b9-6b6e-4082-a7d4-b7f707c9c17b",
       "credentials": {
-        "postgres": {
-          "id": "eeGTexNNm3ZWrmrC",
-          "name": "Postgres account"
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
         }
       },
       "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "mode": "combineBySql",
-        "query": "SELECT * FROM input1 LEFT JOIN input2 ON input1.id = input2.user_id",
+        "method": "POST",
+        "url": "=http://localhost:5000/api/v1/n8n/workflows/{{$workflow.id}}/users",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-SERVICE-KEY",
+              "value": "jdjJKKFK213123..askna!ak.sakn"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
         "options": {}
       },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
       "position": [
-        -160,
-        -80
+        -384,
+        -120
       ],
-      "id": "e6a0d4e2-434d-4a8d-ae0b-78a9ced7cd5d",
-      "name": "Merge"
+      "id": "45bcba56-0496-4a6e-a72a-776385542b79",
+      "name": "HTTP Request",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "operation": "select",
-        "schema": {
-          "__rl": true,
-          "mode": "list",
-          "value": "public"
-        },
-        "table": {
-          "__rl": true,
-          "value": "user_credentials",
-          "mode": "list",
-          "cachedResultName": "user_credentials"
-        },
-        "options": {}
+        "jsCode": "// Yeni çıktıları tutacağımız boş bir dizi\nconst newItems = [];\n\n// Gelen her bir input verisi için döngü (Genellikle 1 tane gelir ama standarttır)\nfor (const item of $input.all()) {\n  const data = item.json;\n  \n  // Ana workflow bilgilerini al\n  const workflow = data.workflow;\n  const users = data.users;\n\n  // Eğer users bir dizi ise, her kullanıcı için ayrı bir satır oluştur\n  if (users && Array.isArray(users)) {\n    for (const user of users) {\n      \n      // Yeni, düzleştirilmiş (flattened) objeyi oluştur\n      const flattenedItem = {\n        // --- Kullanıcı Bilgileri ---\n        id: user.id,\n        name: user.name,\n        last_name: user.lastName,\n        email: user.email,\n        role: user.role,\n        is_active: user.isActive,\n\n        // --- Credentials / Telegram Bilgileri ---\n        // ?. operatörü ile hata almayı engelliyoruz (credentials yoksa null döner)\n        telegram_chat_id: user.credentials?.telegramChatId || null,\n        token_expires_at: user.credentials?.expiresAt || null,\n        access_token: user.credentials?.accessToken || null,\n        // Access token çok uzun olduğu için genelde tabloya koyulmaz ama gerekirse buraya ekleyebilirsin:\n        // access_token: user.credentials?.accessToken\n      };\n\n      // Hazırladığımız bu satırı çıktı dizisine ekle\n      newItems.push({ json: flattenedItem });\n    }\n  }\n}\n\n// Yeni oluşturduğumuz düz listeyi n8n'e geri döndür\nreturn newItems;"
       },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        -384,
-        160
+        -160,
+        -192
       ],
-      "id": "279b74e2-561c-4ceb-b98e-e04e2a4c4100",
-      "name": "Select rows from a table1",
-      "credentials": {
-        "postgres": {
-          "id": "eeGTexNNm3ZWrmrC",
-          "name": "Postgres account"
-        }
-      },
+      "id": "56a40afa-1249-4af5-92df-d4b96dd1865a",
+      "name": "Code in JavaScript",
       "onError": "continueErrorOutput"
     },
     {
@@ -136,42 +122,19 @@
       "typeVersion": 2.2,
       "position": [
         64,
-        -80
+        -240
       ],
-      "id": "b8b0bfb7-a3a9-4799-92ff-cf89ed4317f0",
-      "name": "If"
-    },
-    {
-      "parameters": {
-        "chatId": "-3257168516",
-        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -160,
-        112
-      ],
-      "id": "845774ac-b250-4e45-ab41-0349b1fe9d2e",
-      "name": "Error Message",
-      "webhookId": "e79f74b9-6b6e-4082-a7d4-b7f707c9c17b",
-      "credentials": {
-        "telegramApi": {
-          "id": "JG4HCYCvUBrFrjrG",
-          "name": "Telegram account"
-        }
-      },
-      "onError": "continueErrorOutput"
+      "id": "d96c1cc6-5459-4591-9d9b-7b5632399911",
+      "name": "If1"
     },
     {
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "Y7v3LnlpWqKjA3cD",
+          "value": "uwFBg2fpc8eIiYLu",
           "mode": "list",
-          "cachedResultUrl": "/workflow/Y7v3LnlpWqKjA3cD",
-          "cachedResultName": "Mail ToDo"
+          "cachedResultUrl": "/workflow/uwFBg2fpc8eIiYLu",
+          "cachedResultName": "Mail ToDo Fetch"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -184,10 +147,10 @@
       "typeVersion": 1.3,
       "position": [
         288,
-        -80
+        -240
       ],
-      "id": "bb553a4e-50c5-4d67-b413-a89ef3239e9a",
-      "name": "Call 'Mail ToDo'"
+      "id": "63ecda15-6aa3-44ec-9e3c-8a5d19f2d6e3",
+      "name": "Call 'Mail ToDo Fetch'"
     }
   ],
   "connections": {
@@ -195,23 +158,18 @@
       "main": [
         [
           {
-            "node": "Select rows from a table",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Select rows from a table1",
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Select rows from a table": {
+    "HTTP Request": {
       "main": [
         [
           {
-            "node": "Merge",
+            "node": "Code in JavaScript",
             "type": "main",
             "index": 0
           }
@@ -225,24 +183,13 @@
         ]
       ]
     },
-    "Merge": {
+    "Code in JavaScript": {
       "main": [
         [
           {
-            "node": "If",
+            "node": "If1",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "Select rows from a table1": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 1
           }
         ],
         [
@@ -254,11 +201,11 @@
         ]
       ]
     },
-    "If": {
+    "If1": {
       "main": [
         [
           {
-            "node": "Call 'Mail ToDo'",
+            "node": "Call 'Mail ToDo Fetch'",
             "type": "main",
             "index": 0
           }
@@ -267,26 +214,26 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": {
     "node:Schedule Trigger": {
       "recurrenceRules": []
     }
   },
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "3c8ac649-800d-4931-9a62-fa764bf36a81",
-  "versionCounter": 57,
+  "versionId": "200d89bd-b5c9-438f-832a-c062c05b093d",
+  "versionCounter": 11,
   "triggerCount": 1,
   "shared": [
     {
-      "updatedAt": "2025-12-01T06:23:45.098Z",
-      "createdAt": "2025-12-01T06:23:45.098Z",
+      "updatedAt": "2025-12-05T16:20:07.489Z",
+      "createdAt": "2025-12-05T16:20:07.489Z",
       "role": "workflow:owner",
-      "workflowId": "DZmfi61qENV5ZOzJ",
+      "workflowId": "kgpb3gPGTDAR9oB3",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -303,7 +250,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -326,7 +273,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }
@@ -340,6 +287,12 @@
       "createdAt": "2025-12-01T06:23:06.670Z",
       "id": "0cbLQ4Aipx5LSkSX",
       "name": "todo"
+    },
+    {
+      "updatedAt": "2025-12-05T16:23:23.113Z",
+      "createdAt": "2025-12-05T16:23:23.113Z",
+      "id": "chdfMY23MzD2QqyT",
+      "name": "start"
     },
     {
       "updatedAt": "2025-11-25T07:28:56.435Z",

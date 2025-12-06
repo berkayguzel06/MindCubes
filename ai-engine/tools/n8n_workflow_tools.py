@@ -270,11 +270,12 @@ class MailCategorizationTool(N8nWorkflowTool):
         super().__init__(
             name="mail_categorization_workflow",
             description=(
-                "Categorizes and organizes emails automatically. "
+                "Categorizes and organizes emails automatically into folders based on urgency and importance. "
                 "Use this when user wants to: "
                 "- Organize their inbox "
-                "- Categorize emails "
-                "- Label messages automatically"
+                "- Categorize emails into urgent/important/not-urgent/not-important "
+                "- Label messages automatically "
+                "- Sort emails by priority"
             ),
             webhook_id=webhook_id or os.getenv("N8N_CATEGORIZATION_WEBHOOK_ID", "categorization-webhook-id"),
             n8n_base_url=n8n_base_url

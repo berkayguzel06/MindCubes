@@ -1,109 +1,12 @@
 {
-  "updatedAt": "2025-12-03T07:15:51.000Z",
-  "createdAt": "2025-11-20T07:17:40.839Z",
-  "id": "rpTj6NRiVVAvLDLt",
+  "updatedAt": "2025-12-05T16:41:20.000Z",
+  "createdAt": "2025-12-05T16:20:06.960Z",
+  "id": "8vuzfZJKl4TEOIF8",
   "name": "Mail-Labeler",
   "description": null,
   "active": false,
   "isArchived": false,
   "nodes": [
-    {
-      "parameters": {
-        "mode": "combine",
-        "advanced": true,
-        "mergeByFields": {
-          "values": [
-            {
-              "field1": "label_id",
-              "field2": "id"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        -2464,
-        592
-      ],
-      "id": "fcfe0fe8-f397-40d7-8c45-dca51141f456",
-      "name": "Merge Mail and Id"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=Body:{{ $json.bodyPreview }}\nSubject:{{ $json.subject }}\nSender:{{ $json.from.emailAddress.address }}",
-        "hasOutputParser": true,
-        "options": {
-          "systemMessage": "=You are a highly professional email response assistant.\nYour single responsibility is to write a clear, concise, and formally structured reply to the email you receive.\n\nYour writing style must always follow these principles:\n\nUse a polished, business-grade tone suitable for corporate communication.\n\nEnsure the response is respectful, solution-oriented, and grammatically flawless.\n\nReflect understanding of the sender’s message and address all actionable points.\n\nProvide clarification, confirmation, or next steps when appropriate.\n\nAvoid emotional language, unnecessary details, or informal expressions.\n\nDo NOT include any analysis about the email — only produce the final reply message.\n\nKeep the output strictly as the email reply text, without additional formatting, JSON, or commentary.\n\nDo NOT include disclaimers, self-references, or explanations about how you generated the message.\n\nYour output should be a complete, ready-to-send professional email reply.\n\nYour output language should be the language of the received mail.\n\nOutput Format:\n{\n\t\"message\":\"<generated_respone>\",\n     \"subject\":\"<generated_subject>\",\n     \"to\":\"<who-to-send-mail-address>\"\n}"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2.2,
-      "position": [
-        -2240,
-        336
-      ],
-      "id": "97e6b222-a7d6-4c76-8d96-793ff17ee5e5",
-      "name": "Mail Draft",
-      "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
-        "jsonSchemaExample": "{\n\t\"message\":\"<generated_respone>\",\n     \"subject\":\"<generated_subject>\",\n     \"to\":\"<who-to-send-mail-address>\"\n}"
-      },
-      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-      "typeVersion": 1.3,
-      "position": [
-        -2112,
-        560
-      ],
-      "id": "1e74172c-d100-49ee-b7a0-90abaa7cd16d",
-      "name": "Structured Output Parser3"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "3cfd1cfe-a2fc-4e4a-8e70-3f432fb895a2",
-              "leftValue": "={{ $json.label }}",
-              "rightValue": "Urgent_Important",
-              "operator": {
-                "type": "string",
-                "operation": "contains"
-              }
-            },
-            {
-              "id": "b6fb9e3c-43dc-4775-bddd-9f3a8363786c",
-              "leftValue": "={{ $json.label }}",
-              "rightValue": "Important_NotUrgent",
-              "operator": {
-                "type": "string",
-                "operation": "contains"
-              }
-            }
-          ],
-          "combinator": "or"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.filter",
-      "typeVersion": 2.2,
-      "position": [
-        -3136,
-        464
-      ],
-      "id": "df4e719f-934d-400b-a42f-b0f0d2f80d1c",
-      "name": "Filter1"
-    },
     {
       "parameters": {
         "jsonSchemaExample": "{\n  \"mail_id\":\"<id>\",\n  \"label\":\"<label>\"\n}",
@@ -112,8 +15,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        -3952,
-        1232
+        -4800,
+        1372
       ],
       "id": "5594e54a-c1b1-4764-9ad2-0a0ede5239eb",
       "name": "Structured Output Parser2",
@@ -121,40 +24,18 @@
     },
     {
       "parameters": {
-        "fieldsToAggregate": {
-          "fieldToAggregate": [
-            {
-              "fieldToAggregate": "output.mail_id",
-              "renameField": true,
-              "outputFieldName": "label_id"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.aggregate",
-      "typeVersion": 1,
-      "position": [
-        -2912,
-        464
-      ],
-      "id": "774ee4fd-d8d5-4cc0-98af-2d10edb1d147",
-      "name": "Collect Urgen and Important Mails"
-    },
-    {
-      "parameters": {
         "promptType": "define",
         "text": "=Body:{{ $json.bodyPreview }}\nSubject:{{ $json.subject }}\nId: {{ $json.id }}\nName:{{ $json.name }} {{ $json.last_name }} ",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "=You are a professional mail analysis assistant that categorizes emails according to a 4-quadrant urgency-importance matrix.\n\nYour single task:\n→ Assign exactly ONE label from the following set:\n\"Urgent_Important\", \"Important_NotUrgent\", \"Urgent_NotImportant\", \"NotUrgent_NotImportant\"\n\nYour analysis must follow the \"Relevance & Content\" logic defined below.\nDo not generate any explanations or text — output only the JSON.\n\n---\n\nUser Name Context:\nThe user's name is: [USER_NAME] \n(Check if this name appears in the email body or subject).\n\n---\n\nLOGIC & SCORING RULES:\n\n1. **Content Analysis (Primary):** Determine the base category using the definitions below.\n2. **Relevance Adjustment (Secondary):** - **IF User Name IS present:** Keep the base category determined by content.\n   - **IF User Name IS NOT present:** - *CRITICAL EXCEPTION:* If the content implies severe consequences (e.g., \"Server Down\", \"Legal Action\", \"Unpaid Debt\", \"Security Breach\"), DO NOT lower the category. Keep it as \"Urgent_Important\".\n     - *NON-CRITICAL:* If the content is generic (e.g., \"Weekly Update\", \"Team Announcement\", \"General Info\") and does not explicitly mention the user, **downgrade** the importance level (e.g., move from \"Important_NotUrgent\" to \"NotUrgent_NotImportant\").\n\n---\n\nCATEGORY DEFINITIONS:\n\n1️⃣ **Urgent_Important**\n- Must be acted on immediately. High impact or time-sensitive.\n- Examples: customer complaint, invoice due, payment confirmation, legal notice, project deadline, system failure, commitment confirmation.\n- Keywords: \"urgent\", \"ASAP\", \"deadline\", \"payment\", \"invoice\", \"problem\", \"legal\", \"approval\".\n\n2️⃣ **Important_NotUrgent**\n- Strategic or long-term importance but not time-critical.\n- Examples: project planning, reporting, performance review, partnership proposal, meeting arrangement.\n- Keywords: \"proposal\", \"plan\", \"meeting\", \"strategy\", \"analysis\", \"schedule\".\n\n3️⃣ **Urgent_NotImportant**\n- Quick response needed but low impact; routine or minor tasks.\n- Examples: internal reminders, small update requests, routine follow-ups, operational notifications.\n- Keywords: \"reminder\", \"update\", \"FYI\", \"request\", \"status\", \"confirmation\", \"note\".\n\n4️⃣ **NotUrgent_NotImportant**\n- No immediate action required. Informational or low-priority.\n- Examples: newsletters, promotions, announcements, thank-you notes, social or HR updates (especially if user is not mentioned).\n- Keywords: \"newsletter\", \"promotion\", \"announcement\", \"info\", \"social\", \"thank you\".\n\n---\n\nRequired Output Format:\n{\n  \"mail_id\":\"<id>\",\n  \"label\":\"<label>\"\n}"
+          "systemMessage": "=You are a professional mail analysis assistant that categorizes emails according to a 4-quadrant urgency-importance matrix.\n\nYour single task:\n→ Assign exactly ONE label from the following set:\n\"Urgent_Important\", \"Important_NotUrgent\", \"Urgent_NotImportant\", \"NotUrgent_NotImportant\"\n\nYour analysis must follow the \"Relevance & Content\" logic defined below.\nDo not generate any explanations or extra text — output only the JSON object described in **Required Output Format**.\nDo NOT include code fences, language tags, or any surrounding characters (no `json, no ` , no leading or trailing characters). The assistant's response must be exactly the JSON object and nothing else.\n\n---\n\nUser Name Context:\nThe user's name is: [USER_NAME]\n(Check if this name appears in the email body or subject.)\n\n---\n\nLOGIC & SCORING RULES:\n\n1. **Content Analysis (Primary):** Determine the base category using the CATEGORY DEFINITIONS below.\n2. **Relevance Adjustment (Secondary):**\n\n   * **IF User Name IS present:** Keep the base category determined by content.\n   * **IF User Name IS NOT present:**\n\n     * **CRITICAL EXCEPTION:** If the content implies severe consequences (e.g., \"Server Down\", \"Legal Action\", \"Unpaid Debt\", \"Security Breach\"), DO NOT lower the category. Keep it as \"Urgent_Important\".\n     * **NON-CRITICAL:** If the content is generic (e.g., \"Weekly Update\", \"Team Announcement\", \"General Info\") and does not explicitly mention the user, **downgrade** the importance level (for example: \"Important_NotUrgent\" → \"NotUrgent_NotImportant\").\n\n---\n\nCATEGORY DEFINITIONS:\n\n1️⃣ **Urgent_Important**\n\n* Must be acted on immediately. High impact or time-sensitive.\n* Examples: customer complaint, invoice due, payment confirmation, legal notice, project deadline, system failure, commitment confirmation.\n* Keywords: \"urgent\", \"ASAP\", \"deadline\", \"payment\", \"invoice\", \"problem\", \"legal\", \"approval\".\n\n2️⃣ **Important_NotUrgent**\n\n* Strategic or long-term importance but not time-critical.\n* Examples: project planning, reporting, performance review, partnership proposal, meeting arrangement.\n* Keywords: \"proposal\", \"plan\", \"meeting\", \"strategy\", \"analysis\", \"schedule\".\n\n3️⃣ **Urgent_NotImportant**\n\n* Quick response needed but low impact; routine or minor tasks.\n* Examples: internal reminders, small update requests, routine follow-ups, operational notifications.\n* Keywords: \"reminder\", \"update\", \"FYI\", \"request\", \"status\", \"confirmation\", \"note\".\n\n4️⃣ **NotUrgent_NotImportant**\n\n* No immediate action required. Informational or low-priority.\n* Examples: newsletters, promotions, announcements, thank-you notes, social or HR updates (especially if user is not mentioned).\n* Keywords: \"newsletter\", \"promotion\", \"announcement\", \"info\", \"social\", \"thank you\".\n\n---\n\nRequired Output Format (the assistant MUST output exactly this JSON structure, filling in values):\n{\n\"mail_id\":\"<id>\",\n\"label\":\"<label>\"\n}\n\nNotes:\n\n* Replace `<id>` with the mail identifier you are given.\n* Replace `<label>` with exactly one of: \"Urgent_Important\", \"Important_NotUrgent\", \"Urgent_NotImportant\", \"NotUrgent_NotImportant\".\n* Do not output any additional fields, whitespace lines before/after, comments, or explanatory text.\n* Never include code fences or language tags.\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -4048,
-        1008
+        -3440,
+        820
       ],
       "id": "49e3ae0a-30fb-44fd-8dc5-a3e2e74b00a7",
       "name": "Email Labeler Agent",
@@ -163,28 +44,13 @@
     },
     {
       "parameters": {
-        "fieldToSplitOut": "label_id",
-        "include": "allOtherFields",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitOut",
-      "typeVersion": 1,
-      "position": [
-        -2688,
-        464
-      ],
-      "id": "b84d1a07-ccb4-4523-a063-557ae1c31fab",
-      "name": "Split Urgen and Important Mails"
-    },
-    {
-      "parameters": {
         "inputSource": "passthrough"
       },
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -4528,
-        512
+        -5008,
+        528
       ],
       "id": "16fd1db4-a222-46fb-a13b-a61f475bf4f2",
       "name": "Get many messages"
@@ -196,27 +62,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -4528,
-        1872
-      ],
-      "id": "953e678b-2636-4429-947d-7ce2561a5b94",
-      "name": "Google Gemini Chat Model1",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "yohuzcpOTpBCKcFi",
-          "name": "Google Gemini(PaLM) Api account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        -4528,
-        1664
+        -5008,
+        1580
       ],
       "id": "f04433c5-b0e4-417b-9adc-e227037c7af4",
       "name": "Google Gemini Chat Model2",
@@ -226,72 +73,6 @@
           "name": "Google Gemini(PaLM) Api account"
         }
       }
-    },
-    {
-      "parameters": {
-        "mode": "combineBySql",
-        "query": "SELECT\n    input1.json.access_token,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        -3360,
-        384
-      ],
-      "id": "aa18af97-eb34-4286-81be-06deca339dee",
-      "name": "Merge"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -3584,
-        384
-      ],
-      "id": "d1dfd585-bdd7-49dc-8a16-9f4e5bfc3a92",
-      "name": "Code in JavaScript2"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.microsoft.com/v1.0/me/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{$input.first().json[\"folder_id\"].access_token}}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"subject\": \"{{$json.output.subject}}\",\n  \"body\": {\n    \"contentType\": \"HTML\",\n    \"content\": \"{{$json.output.message.replace(/\\n/g, \"<br>\")}}\"\n  },\n  \"toRecipients\": [\n    {\n      \"emailAddress\": {\n        \"address\": \"{{$json.output.to}}\"\n      }\n    }\n  ],\n  \"isDraft\": true\n}\n",
-        "options": {
-          "batching": {
-            "batch": {
-              "batchSize": 5
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        -1664,
-        720
-      ],
-      "id": "683e2b80-d8ca-485a-983d-fc50f2a99f1a",
-      "name": "Create Draft",
-      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -310,8 +91,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -2464,
-        64
+        -4336,
+        144
       ],
       "id": "19ac7e8f-3d8b-4063-b1d7-bf88982951c2",
       "name": "Get Mail Folders",
@@ -324,8 +105,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2688,
-        64
+        -4560,
+        144
       ],
       "id": "ea7ad3b4-92ed-4408-9859-eab0387247e4",
       "name": "Code in JavaScript4"
@@ -335,8 +116,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -2176,
-        -16
+        -2640,
+        -72
       ],
       "id": "aee74b81-c994-4402-9d70-eafacb5ea47b",
       "name": "Merge1"
@@ -348,27 +129,12 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1888,
-        -16
+        -2416,
+        -72
       ],
       "id": "a0697fc5-f0a0-4b8a-a6bc-be4b872c5223",
       "name": "Code in JavaScript1",
       "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
-        "mode": "combineBySql",
-        "query": "SELECT\n    input1.json AS folder_id,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        -1888,
-        720
-      ],
-      "id": "1f0dedd2-2cfa-4710-9e9f-9f770aeda34d",
-      "name": "Merge2"
     },
     {
       "parameters": {
@@ -402,8 +168,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -1664,
-        -80
+        -2192,
+        -144
       ],
       "id": "18ab58df-f43b-408f-9596-563e0636502d",
       "name": "Change Folder",
@@ -437,24 +203,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4304,
-        512
+        -4784,
+        528
       ],
       "id": "a6d5de9a-2aae-4d9d-952e-2c22efa6baec",
       "name": "If"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -2176,
-        768
-      ],
-      "id": "867f4bd3-66c2-433f-92c3-4e43d2e4480e",
-      "name": "Code in JavaScript"
     },
     {
       "parameters": {
@@ -466,8 +219,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -4080,
-        1232
+        -5008,
+        1788
       ],
       "id": "24d5c48e-4768-4106-8e33-b560b9438c03",
       "name": "Ollama Chat Model",
@@ -488,8 +241,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
       "position": [
-        -3872,
-        1440
+        -5008,
+        1372
       ],
       "id": "9f0360fb-6d36-4740-b1ca-fd62e75ac66c",
       "name": "Ollama Model",
@@ -510,8 +263,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -2240,
-        560
+        -3368,
+        1044
       ],
       "id": "9c5cac9a-8d33-46b8-b0b2-7d66668a5b63",
       "name": "Ollama Chat Model1",
@@ -529,8 +282,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -4304,
-        1440
+        -4784,
+        1148
       ],
       "id": "a2db4fd4-c2a8-4ebc-9e83-b7db866f6259",
       "name": "Edit Fields"
@@ -540,8 +293,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -4528,
-        1440
+        -5008,
+        1148
       ],
       "id": "04681a9f-8289-43a0-9203-35a19c23e152",
       "name": "When clicking ‘Execute workflow’"
@@ -553,8 +306,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3584,
-        1088
+        -3088,
+        892
       ],
       "id": "c9558593-f6ed-468d-96a5-49df6435e46b",
       "name": "Parse Date Data",
@@ -569,8 +322,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -1440,
-        368
+        -1968,
+        288
       ],
       "id": "0d95e995-ed75-443d-9d16-596b2ce7a242",
       "name": "Error Message",
@@ -582,85 +335,194 @@
         }
       },
       "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const folders = $input.first().json.value || [];\n\nconst requiredFolders = [\n  \"Urgent_Important\",\n  \"Urgent_NotImportant\",\n  \"NotUrgent_Important\",\n  \"NotUrgent_NotImportant\"\n];\n\nconst existingNames = folders.map(f => f.displayName);\n\nconst missing = requiredFolders.filter(f => !existingNames.includes(f));\n\n// Eksik klasör yoksa boş bir obje döndürmeliyiz\nif (missing.length === 0) {\n  return [{ json: {} }];\n}\n\n// Eksikler varsa listelerini döndür\nreturn missing.map(name => ({\n  json: { folderName: name }\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4112,
+        96
+      ],
+      "id": "058a2ea6-d19e-442b-8b72-72a299315a83",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.microsoft.com/v1.0/me/mailFolders",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$input.first().json[\"json\"].access_token}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"displayName\": \"{{$json.folderName}}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -3376,
+        144
+      ],
+      "id": "6f6e4bba-b945-4321-9287-0646c3175ad9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "eebc5c74-0dbd-40f4-8cff-aeac47b57a02",
+              "leftValue": "={{ $json.folderName }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3888,
+        96
+      ],
+      "id": "216c8c96-176c-4497-bbba-e2c887bd2eba",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -3664,
+        -72
+      ],
+      "id": "ec2e1972-aea7-4762-bdf7-e5dcdbfe85fc",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT * FROM input1 LEFT JOIN input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -3664,
+        144
+      ],
+      "id": "75216a67-e84d-4c17-b13f-5a8c1edb04c8",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/me/mailFolders?$top=999",
+        "sendHeaders": true,
+        "specifyHeaders": "=keypair",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $json.json.access_token }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -2864,
+        -240
+      ],
+      "id": "a73e6e87-ab1e-435d-813f-fdc1f2ce3d72",
+      "name": "Get Mail Folders1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -3088,
+        -240
+      ],
+      "id": "d2f86ed1-306c-446a-bb11-6533c345ce49",
+      "name": "Merge5"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "useDataOfInput": 2
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -5008,
+        -464
+      ],
+      "id": "87118352-cb96-4dbe-9767-0b052d4457c8",
+      "name": "Merge6"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gelen verinin ilk öğesini (listeyi) al ve dizi olarak döndür.\n// Dizi içinde sadece tek bir liste (görevler listesi) olacak.\nreturn [\n  {\n    json: items[0]\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3088,
+        528
+      ],
+      "id": "d1dfd585-bdd7-49dc-8a16-9f4e5bfc3a92",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "mode": "combineBySql",
+        "query": "SELECT\n    input1.json.access_token,\n    input2.*\nFROM\n    input1\nLEFT JOIN\n    input2;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -2864,
+        528
+      ],
+      "id": "aa18af97-eb34-4286-81be-06deca339dee",
+      "name": "Merge"
     }
   ],
   "connections": {
-    "Merge Mail and Id": {
-      "main": [
-        [
-          {
-            "node": "Mail Draft",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Code in JavaScript",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Mail Draft": {
-      "main": [
-        [
-          {
-            "node": "Merge2",
-            "type": "main",
-            "index": 1
-          }
-        ],
-        [
-          {
-            "node": "Error Message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Structured Output Parser3": {
-      "ai_outputParser": [
-        [
-          {
-            "node": "Mail Draft",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Filter1": {
-      "main": [
-        [
-          {
-            "node": "Collect Urgen and Important Mails",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Structured Output Parser2": {
       "ai_outputParser": [
-        [
-          {
-            "node": "Email Labeler Agent",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Collect Urgen and Important Mails": {
-      "main": [
-        [
-          {
-            "node": "Split Urgen and Important Mails",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Email Labeler Agent": {
@@ -681,17 +543,6 @@
         ]
       ]
     },
-    "Split Urgen and Important Mails": {
-      "main": [
-        [
-          {
-            "node": "Merge Mail and Id",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Get many messages": {
       "main": [
         [
@@ -703,41 +554,9 @@
         ]
       ]
     },
-    "Google Gemini Chat Model1": {
-      "ai_languageModel": [
-        []
-      ]
-    },
     "Google Gemini Chat Model2": {
       "ai_languageModel": [
         []
-      ]
-    },
-    "Code in JavaScript2": {
-      "main": [
-        [
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Merge": {
-      "main": [
-        [
-          {
-            "node": "Filter1",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge1",
-            "type": "main",
-            "index": 1
-          }
-        ]
       ]
     },
     "Code in JavaScript4": {
@@ -745,6 +564,16 @@
         [
           {
             "node": "Get Mail Folders",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge5",
             "type": "main",
             "index": 0
           }
@@ -755,7 +584,12 @@
       "main": [
         [
           {
-            "node": "Merge1",
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge3",
             "type": "main",
             "index": 0
           }
@@ -798,17 +632,6 @@
         ]
       ]
     },
-    "Merge2": {
-      "main": [
-        [
-          {
-            "node": "Create Draft",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "If": {
       "main": [
         [
@@ -818,40 +641,12 @@
             "index": 0
           },
           {
-            "node": "Code in JavaScript2",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge Mail and Id",
-            "type": "main",
-            "index": 1
-          },
-          {
             "node": "Email Labeler Agent",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "Code in JavaScript": {
-      "main": [
-        [
+          },
           {
-            "node": "Merge2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create Draft": {
-      "main": [
-        [],
-        [
-          {
-            "node": "Error Message",
+            "node": "Code in JavaScript2",
             "type": "main",
             "index": 0
           }
@@ -872,13 +667,7 @@
     },
     "Ollama Chat Model": {
       "ai_languageModel": [
-        [
-          {
-            "node": "Email Labeler Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Ollama Model": {
@@ -896,7 +685,7 @@
       "ai_languageModel": [
         [
           {
-            "node": "Mail Draft",
+            "node": "Email Labeler Agent",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -936,417 +725,136 @@
           }
         ]
       ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge5": {
+      "main": [
+        [
+          {
+            "node": "Get Mail Folders1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Mail Folders1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge6": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
-  "pinData": {
-    "Edit Fields": [
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAcLMa/zSJzx9OYPQWMXmokFkDvnc4WVjfDNZDX7rbDuNuhnQIKW8zekVHHnbLoL4kqCVl3+t6Rdmh0pKB3/t7c8P9mbJ3fu1uW4hHg9d7ggAvw5lXR9tW1E3rAYc/Vr1lQ4wDj3nS32+19Gz2GAtX6AOWM5CgM2DCZXvr9Yo1xRMq4ZxmSLAWdTT0uawOCahvRLoSZWYTxPHaU+GDWvawejCF6ajuCZQSnAfDk6TDO2RDs+ALzPD8xfB6SKyPUS2wPy5dPulHGAG9Ib+1miCq7crmWfe6u8zXKh4Cjwf6ygLP/5R903l2pw5cqVv5WiUERuK1044W0lP+4p7O88IfT0QZgAAEHVYWJOIMbvQfoJ6V3zi9zBQA2q7dwXV4sR3rRFSnHh+xLFfstANSWmUsUTXySEbwNaZ/NLlEsGMSCXpXU/L7dnpZEyz22DeYQRrcMh+ZZWGk1N0ZiqWCMbxlFgRkNVHDINW69jFiPgpq7/EzFEh6E53KRUSI9V4d9ZtV4V1GhVEFm/L2JeUnrHqa/OF+03tK4h/YPVIMSNOkugZrhorVJ0QV8Skrkeqk2c0Y4P4JBaz+hFbCzCqlGTXQ5RrfXDpnHJ1ugl98X0itgmILU4eNhnzD4jMVAqYCSDj+AzOJAj/HOEI99MUiBEijJsDjRKq1zPRLWLVoHEI25k8+1kVrl0G7ti2fH87odxfbpX6KOeq/c/M7PsmHUr09y6I7+vzYRPBA8A1XGEPghTPH/+9ijMvJqZseIrshODMYowG46Ro1BDC5MUPd++GjrRtEfCTqUNYRXa42iO+4UiBiVvjMT4y8uGUVsY52ac++yZ9IW2SnpFC7khqC7pm2Iif4B5WTv7j0R8spIQBH3wsuYi9HwDkwoHo+XIm/vPImcRq7sPHnzEHvlTjWSUMnmSGqVSiBwGSu5cOmJvW/fMXj2DCGf9/535EKWfh8he7y4HqUWkXhTjzygGlwysSexzC60q5+I5g1c+g9OYnvBDKTkvR77m6Q6eJswFjKGS1GdYEDdoq79oxWYcYADNC84wX51s1Dqf/SCVwJUUB8z6HyiiuQWF3BPCAcigv6c6vga4IAKWbUb6IMdm9OfH5gHFsxp3zVeg/wXdANO8rnSo2AHMBlQO5PVkfJWnEAdlQRHna9//VS6cXWxrWaVm8GGNa2RR+Otq1DnTSN29tZDVB8b13zLno8y6TiovNDN0CpwFMaJwJ4Eig4w5HB57bUhVHlI3qxnGw417i9clDsfrdTfiXGhZ0LoAPkkf3/7IG/gfd/9O30YhuPHJNHyRmBbvQ+7cMs6mMEbSpP/129mAL99DybXRzExrq505rHZPnc4CiaC84+0pnXd+Xbi7Xmxzsba2QE6HZLl/q186az1am2Y/TFqCHn0fWaMWQiAju5oxBD/0FeChe4PIIGerZdf4C1Q34vBpyLs1PqDp0ZEsUmYjMT1iCHza6YBtsuh7Kfv+f2/hsQLQnCCBUTmmgy0UCVVDR+zySjAM=",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXNj\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOcAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:25:50Z",
-          "hasAttachments": false,
-          "subject": "You're officially Superhuman 🤖",
-          "bodyPreview": "Welcome to the Superhuman tribe! Get your list of The Ultimate 100 AI Tools  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
-          "from": {
-            "emailAddress": {
-              "name": "Superhuman – Zain Kahn",
-              "address": "superhuman@mail.joinsuperhuman.ai"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXQU\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOUAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:29:42Z",
-          "hasAttachments": false,
-          "subject": "Welcome to Barchart Brief newsletter",
-          "bodyPreview": "Thank you for signing up to receive the Barchart Brief.\r\n\r\nThis free midday newsletter delivers market-moving news straight to your inbox, featuring exclusive charts, data, and insights you won’t find anywhere else.\r\n\r\nJust 5 minutes each day with the Bri",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart.com",
-              "address": "newsletters@barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXQM\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWO8AAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:29:52Z",
-          "hasAttachments": false,
-          "subject": "Welcome to Barchart Brief newsletter",
-          "bodyPreview": "Thank you for signing up to receive the Barchart Brief.\r\n\r\nThis free midday newsletter delivers market-moving news straight to your inbox, featuring exclusive charts, data, and insights you won’t find anywhere else.\r\n\r\nJust 5 minutes each day with the Bri",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart.com",
-              "address": "newsletters@barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXQF\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWO4AAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:30:09Z",
-          "hasAttachments": false,
-          "subject": "New Active Investor Subscription",
-          "bodyPreview": "Thank you for signing up to receive our Active Investor Newsletter\r\n\r\nOur records show that you have just opted in to receive email from us. If this is correct, do nothing... you will receive your first newsletter on the next scheduled send. If you did no",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart",
-              "address": "newsletters@barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXP9\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWO0AAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:30:11Z",
-          "hasAttachments": false,
-          "subject": "New Unusual Option Activity Subscription",
-          "bodyPreview": "Thank you for signing up to receive Barchart’s Unusual Options Activity Report!\r\n\r\nThis free daily e-newsletter is delivered by our expert analysts, who combine their own industry knowledge with our rich, real-time data flows to bring you exclusive - and ",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart",
-              "address": "newsletters@barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXP1\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWNQAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:30:20Z",
-          "hasAttachments": false,
-          "subject": "Artık oturum açmak için uygulama bildirimlerini kullanabilirsiniz",
-          "bodyPreview": "Microsoft hesabı\r\nMicrosoft hesabınızda oturum açmak artık daha kolay\r\nbe**6@outlook.com hesabınız için oturum açma bildirimlerini hızlı ve kolay bir şekilde onaylayın. Vivo V2247 cihazınızdaki Outlook uygulamasını kullanarak bir bildirim alacaksınız ve t",
-          "from": {
-            "emailAddress": {
-              "name": "Microsoft hesap ekibi",
-              "address": "account-security-noreply@accountprotection.microsoft.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXN5\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOsAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T15:32:45Z",
-          "hasAttachments": false,
-          "subject": "🧠 This device wiretaps your 'second brain'",
-          "bodyPreview": "PLUS: Apple axes jobs, in a rare move  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
-          "from": {
-            "emailAddress": {
-              "name": "The Rundown Tech",
-              "address": "crew@technews.therundown.ai"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPt\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOgAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:13:48Z",
-          "hasAttachments": false,
-          "subject": "Haftalık Proje Toplantısı – 27 Kasım 2025 / 14:00",
-          "bodyPreview": "Merhaba,\r\n\r\nBu hafta için proje durum değerlendirme toplantımızı 27 Kasım 2025 Perşembe günü saat 14:00’te gerçekleştireceğiz.\r\n\r\nToplantıda konuşulacak başlıklar:\r\n\r\n  *   Son sprint ilerlemeleri\r\n\r\n  *   Bloklayan maddeler\r\n\r\n  *   Önümüzdeki hafta göre",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPl\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOYAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:14:09Z",
-          "hasAttachments": false,
-          "subject": "Hatırlatma: Dashboard Revizyonu İçin Son Teslim Tarihi – 29 Kasım",
-          "bodyPreview": "Selam,\r\n\r\nDashboard revizyonu için son teslim tarihi 29 Kasım 2025 olarak belirlenmişti.\r\nAşağıdaki maddelerin güncellenmesi gerekiyor:\r\n\r\n  *   Yeni grafik bileşeninin eklenmesi\r\n\r\n  *   API response optimizasyonu\r\n\r\n  *   Hatalı tooltip davranışının düz",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPX\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPEAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:14:52Z",
-          "hasAttachments": true,
-          "subject": "İnceleme İçin Gereken Dokümanlar (Ek Mevcut)",
-          "bodyPreview": "Merhaba,\r\n\r\nBahsettiğimiz süreç analiziyle ilgili dokümanları ekte paylaşıyorum. (attachment sen ekleyeceksin)\r\n\r\nİnceledikten sonra:\r\n\r\n  *   Eksik gördüğün noktaları işaretleyebilir\r\n\r\n  *   Revizyon önerilerini yazabilir\r\n\r\n  *   Onayladığın versiyonu ",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPO\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWN0AAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:15:19Z",
-          "hasAttachments": false,
-          "subject": "Bugünkü Toplantı Sonrası Aksiyon Listesi",
-          "bodyPreview": "Merhaba,\r\n\r\nBugünkü toplantıdan çıkan aksiyonları aşağıya ekledim:\r\n\r\nAksiyonlar:\r\n\r\n  1.  API rate limit konfigürasyonunun yeniden düzenlenmesi\r\n\r\n  2.  Yeni kullanıcı onboarding ekranı için taslak oluşturulması\r\n\r\n  3.  Log analizi tarafında hata oranı ",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPC\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPAAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:15:32Z",
-          "hasAttachments": false,
-          "subject": "Entegrasyon Sürecine İlişkin Onay Talebi",
-          "bodyPreview": "Selam,\r\n\r\nAkinon tarafındaki entegrasyon için hazırlanan yeni yapılandırma dosyalarını test ortamına aktarmadan önce onayını talep ediyorum.\r\n\r\nKontrol etmeni istediğim noktalar:\r\n\r\n  *   Endpoint doğruluk testi\r\n\r\n  *   Timeout & retry politikaları\r\n\r\n  ",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPL\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOQAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:15:44Z",
-          "hasAttachments": false,
-          "subject": "Veri Akışı Güncellemesi Hakkında Bilgilendirme",
-          "bodyPreview": "Merhaba,\r\n\r\nSon güncelleme ile birlikte veri akışında aşağıdaki değişiklikler yapıldı:\r\n\r\n  *   Order import sürecinde paralelleştirme artırıldı\r\n\r\n  *   Hatalı siparişlerin retry sayısı yükseltildi\r\n\r\n  *   Export işlerinde dosya sıkıştırma aktif hale ge",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  },
-  "versionId": "f324eb1c-ff91-450b-9ee4-9f4e8082776a",
-  "versionCounter": 112,
+  "meta": null,
+  "pinData": {},
+  "versionId": "6f1801ec-9242-49a3-a8ce-10913e69a94d",
+  "versionCounter": 5,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-25T07:28:14.722Z",
-      "createdAt": "2025-11-25T07:28:14.722Z",
+      "updatedAt": "2025-12-05T16:20:06.964Z",
+      "createdAt": "2025-12-05T16:20:06.964Z",
       "role": "workflow:owner",
-      "workflowId": "rpTj6NRiVVAvLDLt",
+      "workflowId": "8vuzfZJKl4TEOIF8",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -1363,7 +871,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -1386,7 +894,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }

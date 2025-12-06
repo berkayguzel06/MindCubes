@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-11-28T11:52:16.000Z",
-  "createdAt": "2025-11-28T07:52:59.173Z",
-  "id": "tSPod95IBfOEZxwy",
+  "updatedAt": "2025-12-05T16:36:12.000Z",
+  "createdAt": "2025-12-05T16:20:06.410Z",
+  "id": "nuYzlzJjI97LmTtr",
   "name": "Add Calendar Tag",
   "description": null,
   "active": false,
@@ -177,22 +177,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "5ca7c27e-8412-4cbc-a25b-06cbd62e1a0a",
-  "versionCounter": 16,
+  "versionId": "9dbd7ab2-74f6-4e96-9e97-84cf0fc59c36",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-28T07:52:59.176Z",
-      "createdAt": "2025-11-28T07:52:59.176Z",
+      "updatedAt": "2025-12-05T16:20:06.412Z",
+      "createdAt": "2025-12-05T16:20:06.412Z",
       "role": "workflow:owner",
-      "workflowId": "tSPod95IBfOEZxwy",
+      "workflowId": "nuYzlzJjI97LmTtr",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -209,7 +209,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -232,7 +232,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }

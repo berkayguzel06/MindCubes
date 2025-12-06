@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-12-03T10:31:02.000Z",
-  "createdAt": "2025-11-20T07:06:58.089Z",
-  "id": "cbK2DhaqpErX6deF",
+  "updatedAt": "2025-12-05T16:29:18.000Z",
+  "createdAt": "2025-12-05T16:20:07.131Z",
+  "id": "JjywWYZ6MjIZRABj",
   "name": "Mail-ToDo",
   "description": null,
   "active": false,
@@ -14,8 +14,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -800,
-        352
+        -1072,
+        768
       ],
       "id": "a8e4a852-0a26-45d8-a73f-796d80a64b62",
       "name": "Parse ToDo Data",
@@ -50,8 +50,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -576,
-        368
+        -848,
+        792
       ],
       "id": "b7c8bcf4-e1ff-4c9b-8c7a-6972224f1ac1",
       "name": "If3"
@@ -85,8 +85,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1216,
-        -528
+        720,
+        -216
       ],
       "id": "c292c774-1698-496a-b0c5-657689dbcbc8",
       "name": "If4"
@@ -99,8 +99,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        -1168,
-        496
+        -1664,
+        1248
       ],
       "id": "771c7051-ceeb-4205-b629-a9026f7627b8",
       "name": "Structured Output Parser4",
@@ -118,8 +118,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -1376,
-        272
+        -1424,
+        696
       ],
       "id": "4ccb18a2-2379-434c-93d2-fb58d3f3e622",
       "name": "Mail Task App",
@@ -133,7 +133,7 @@
       "typeVersion": 1.1,
       "position": [
         -1872,
-        -192
+        264
       ],
       "id": "dea0c881-b399-41b7-ac0a-1aa6a74d2550",
       "name": "When Executed by Another Workflow"
@@ -146,7 +146,7 @@
       "typeVersion": 1,
       "position": [
         -1872,
-        1136
+        1664
       ],
       "id": "53942051-4944-44c0-9504-114b4b94c63e",
       "name": "Google Gemini Chat Model1",
@@ -184,8 +184,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1440,
-        -624
+        944,
+        -288
       ],
       "id": "b841253e-372a-4624-b29b-6a8219b57960",
       "name": "Create Tasks",
@@ -214,8 +214,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        96,
-        -192
+        -176,
+        240
       ],
       "id": "e800813d-ab8d-4d7c-8d01-d00640774c79",
       "name": "Get ToDo Lists",
@@ -252,8 +252,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1440,
-        -432
+        944,
+        -96
       ],
       "id": "eb87f89d-7c87-4b22-8c14-c4dd573a70cb",
       "name": "Create Tasks1",
@@ -268,8 +268,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -352,
-        -384
+        -624,
+        72
       ],
       "id": "9eee5456-8a6e-420e-a444-a2c57f1884fc",
       "name": "Merge"
@@ -283,8 +283,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        544,
-        -592
+        272,
+        -192
       ],
       "id": "daf38516-227c-47f0-89dd-f6fe3eca3b80",
       "name": "Merge1"
@@ -296,8 +296,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        320,
-        -304
+        48,
+        120
       ],
       "id": "37eb39ce-83f3-4625-8707-ff2ae337ed14",
       "name": "Code in JavaScript",
@@ -310,8 +310,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -576,
-        -384
+        -848,
+        72
       ],
       "id": "4b889c79-6641-4ecd-9024-9836e8099f71",
       "name": "Code in JavaScript2"
@@ -323,8 +323,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -128,
-        -112
+        -400,
+        312
       ],
       "id": "b07f1bd8-5a80-4ba7-a5ed-197d6b4d084f",
       "name": "Code in JavaScript3",
@@ -337,8 +337,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1504,
-        -672
+        -1872,
+        -560
       ],
       "id": "e48aa816-65e3-4b3c-a1b4-7d07f3f8ce91",
       "name": "Code in JavaScript1",
@@ -354,8 +354,8 @@
       "type": "n8n-nodes-base.dateTimeTool",
       "typeVersion": 2,
       "position": [
-        -1296,
-        496
+        -1288,
+        920
       ],
       "id": "7922b7e7-ee1c-440d-ba9f-3217d23762b7",
       "name": "Date & Time"
@@ -389,7 +389,7 @@
       "typeVersion": 2.2,
       "position": [
         -1648,
-        -192
+        264
       ],
       "id": "ef174850-2c95-4e55-b92d-7308076fd6e6",
       "name": "If"
@@ -402,7 +402,7 @@
       "typeVersion": 1,
       "position": [
         -1872,
-        928
+        1456
       ],
       "id": "613c8085-d2e3-47f2-86c0-8a845a9b79b1",
       "name": "Google Gemini Chat Model",
@@ -423,8 +423,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -1424,
-        496
+        -1416,
+        920
       ],
       "id": "5c077558-e164-4115-a3e2-ac605fa7405d",
       "name": "Ollama Chat Model",
@@ -445,8 +445,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmOllama",
       "typeVersion": 1,
       "position": [
-        -1088,
-        704
+        -1872,
+        1248
       ],
       "id": "3f1ee953-9e3e-47f3-9024-d42d4be4b413",
       "name": "Ollama Model",
@@ -463,7 +463,7 @@
       "typeVersion": 1,
       "position": [
         -1872,
-        704
+        1024
       ],
       "id": "b478320f-9d5e-4297-917a-09f0c140da95",
       "name": "When clicking ‘Execute workflow’"
@@ -476,7 +476,7 @@
       "typeVersion": 3.4,
       "position": [
         -1648,
-        704
+        1024
       ],
       "id": "9406b1d8-31f0-4552-996d-b680bf39c792",
       "name": "Edit Fields"
@@ -490,8 +490,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1664,
-        -144
+        1168,
+        240
       ],
       "id": "4c0333ac-f5f7-41c4-8ec8-0c10f02ea963",
       "name": "Error Message",
@@ -515,8 +515,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2336,
-        -640
+        1840,
+        -336
       ],
       "id": "4ab9f391-5a68-4d9a-80de-af2e27ce8f3d",
       "name": "Send a text message1",
@@ -538,8 +538,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        2112,
-        -640
+        1616,
+        -336
       ],
       "id": "8c10f3ed-f52a-40f4-a203-230e1a8d08c9",
       "name": "Merge5"
@@ -551,8 +551,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1888,
-        -576
+        1392,
+        -264
       ],
       "id": "94941bfd-6048-4e79-b64d-7d8f47e43b63",
       "name": "Code in JavaScript6"
@@ -562,8 +562,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        1664,
-        -576
+        1168,
+        -264
       ],
       "id": "3796eba6-2231-4693-bf57-932017ea29a9",
       "name": "Merge6"
@@ -577,8 +577,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1888,
-        -144
+        1392,
+        240
       ],
       "id": "7bdb2f51-72d9-4326-a247-eb573aeb7db0",
       "name": "Execute a SQL query",
@@ -596,7 +596,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1104,
+        -1872,
         -784
       ],
       "id": "f5745c12-980c-4598-beb3-0977c1f0c0b1",
@@ -609,8 +609,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        768,
-        -592
+        496,
+        -192
       ],
       "id": "1f919d2e-6600-4a5b-bc62-6268d68d0723",
       "name": "Code in JavaScript4",
@@ -701,13 +701,7 @@
     },
     "Structured Output Parser4": {
       "ai_outputParser": [
-        [
-          {
-            "node": "Mail Task App",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Merge": {
@@ -988,415 +982,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
-  "pinData": {
-    "Edit Fields": [
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAcLMa/zSJzx9OYPQWMXmokFkDvnc4WVjfDNZDX7rbDuNuhnQIKW8zekVHHnbLoL4kqCVl3+t6Rdmh0pKB3/t7c8P9mbJ3fu1uW4hHg9d7ggAvw5lXR9tW1E3rAYc/Vr1lQ4wDj3nS32+19Gz2GAtX6AOWM5CgM2DCZXvr9Yo1xRMq4ZxmSLAWdTT0uawOCahvRLoSZWYTxPHaU+GDWvawejCF6ajuCZQSnAfDk6TDO2RDs+ALzPD8xfB6SKyPUS2wPy5dPulHGAG9Ib+1miCq7crmWfe6u8zXKh4Cjwf6ygLP/5R903l2pw5cqVv5WiUERuK1044W0lP+4p7O88IfT0QZgAAEHVYWJOIMbvQfoJ6V3zi9zBQA2q7dwXV4sR3rRFSnHh+xLFfstANSWmUsUTXySEbwNaZ/NLlEsGMSCXpXU/L7dnpZEyz22DeYQRrcMh+ZZWGk1N0ZiqWCMbxlFgRkNVHDINW69jFiPgpq7/EzFEh6E53KRUSI9V4d9ZtV4V1GhVEFm/L2JeUnrHqa/OF+03tK4h/YPVIMSNOkugZrhorVJ0QV8Skrkeqk2c0Y4P4JBaz+hFbCzCqlGTXQ5RrfXDpnHJ1ugl98X0itgmILU4eNhnzD4jMVAqYCSDj+AzOJAj/HOEI99MUiBEijJsDjRKq1zPRLWLVoHEI25k8+1kVrl0G7ti2fH87odxfbpX6KOeq/c/M7PsmHUr09y6I7+vzYRPBA8A1XGEPghTPH/+9ijMvJqZseIrshODMYowG46Ro1BDC5MUPd++GjrRtEfCTqUNYRXa42iO+4UiBiVvjMT4y8uGUVsY52ac++yZ9IW2SnpFC7khqC7pm2Iif4B5WTv7j0R8spIQBH3wsuYi9HwDkwoHo+XIm/vPImcRq7sPHnzEHvlTjWSUMnmSGqVSiBwGSu5cOmJvW/fMXj2DCGf9/535EKWfh8he7y4HqUWkXhTjzygGlwysSexzC60q5+I5g1c+g9OYnvBDKTkvR77m6Q6eJswFjKGS1GdYEDdoq79oxWYcYADNC84wX51s1Dqf/SCVwJUUB8z6HyiiuQWF3BPCAcigv6c6vga4IAKWbUb6IMdm9OfH5gHFsxp3zVeg/wXdANO8rnSo2AHMBlQO5PVkfJWnEAdlQRHna9//VS6cXWxrWaVm8GGNa2RR+Otq1DnTSN29tZDVB8b13zLno8y6TiovNDN0CpwFMaJwJ4Eig4w5HB57bUhVHlI3qxnGw417i9clDsfrdTfiXGhZ0LoAPkkf3/7IG/gfd/9O30YhuPHJNHyRmBbvQ+7cMs6mMEbSpP/129mAL99DybXRzExrq505rHZPnc4CiaC84+0pnXd+Xbi7Xmxzsba2QE6HZLl/q186az1am2Y/TFqCHn0fWaMWQiAju5oxBD/0FeChe4PIIGerZdf4C1Q34vBpyLs1PqDp0ZEsUmYjMT1iCHza6YBtsuh7Kfv+f2/hsQLQnCCBUTmmgy0UCVVDR+zySjAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXNj\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOcAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:25:50Z",
-          "hasAttachments": false,
-          "subject": "You're officially Superhuman 🤖",
-          "bodyPreview": "Welcome to the Superhuman tribe! Get your list of The Ultimate 100 AI Tools  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
-          "from": {
-            "emailAddress": {
-              "name": "Superhuman – Zain Kahn",
-              "address": "superhuman@mail.joinsuperhuman.ai"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXQU\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOUAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:29:42Z",
-          "hasAttachments": false,
-          "subject": "Welcome to Barchart Brief newsletter",
-          "bodyPreview": "Thank you for signing up to receive the Barchart Brief.\r\n\r\nThis free midday newsletter delivers market-moving news straight to your inbox, featuring exclusive charts, data, and insights you won’t find anywhere else.\r\n\r\nJust 5 minutes each day with the Bri",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart.com",
-              "address": "newsletters@barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXQM\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWO8AAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:29:52Z",
-          "hasAttachments": false,
-          "subject": "Welcome to Barchart Brief newsletter",
-          "bodyPreview": "Thank you for signing up to receive the Barchart Brief.\r\n\r\nThis free midday newsletter delivers market-moving news straight to your inbox, featuring exclusive charts, data, and insights you won’t find anywhere else.\r\n\r\nJust 5 minutes each day with the Bri",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart.com",
-              "address": "newsletters@barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXQF\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWO4AAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:30:09Z",
-          "hasAttachments": false,
-          "subject": "New Active Investor Subscription",
-          "bodyPreview": "Thank you for signing up to receive our Active Investor Newsletter\r\n\r\nOur records show that you have just opted in to receive email from us. If this is correct, do nothing... you will receive your first newsletter on the next scheduled send. If you did no",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart",
-              "address": "newsletters@barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXP9\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWO0AAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:30:11Z",
-          "hasAttachments": false,
-          "subject": "New Unusual Option Activity Subscription",
-          "bodyPreview": "Thank you for signing up to receive Barchart’s Unusual Options Activity Report!\r\n\r\nThis free daily e-newsletter is delivered by our expert analysts, who combine their own industry knowledge with our rich, real-time data flows to bring you exclusive - and ",
-          "from": {
-            "emailAddress": {
-              "name": "Barchart",
-              "address": "newsletters@barchart.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXP1\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWNQAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T14:30:20Z",
-          "hasAttachments": false,
-          "subject": "Artık oturum açmak için uygulama bildirimlerini kullanabilirsiniz",
-          "bodyPreview": "Microsoft hesabı\r\nMicrosoft hesabınızda oturum açmak artık daha kolay\r\nbe**6@outlook.com hesabınız için oturum açma bildirimlerini hızlı ve kolay bir şekilde onaylayın. Vivo V2247 cihazınızdaki Outlook uygulamasını kullanarak bir bildirim alacaksınız ve t",
-          "from": {
-            "emailAddress": {
-              "name": "Microsoft hesap ekibi",
-              "address": "account-security-noreply@accountprotection.microsoft.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXN5\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOsAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T15:32:45Z",
-          "hasAttachments": false,
-          "subject": "🧠 This device wiretaps your 'second brain'",
-          "bodyPreview": "PLUS: Apple axes jobs, in a rare move  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ",
-          "from": {
-            "emailAddress": {
-              "name": "The Rundown Tech",
-              "address": "crew@technews.therundown.ai"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPt\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOgAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:13:48Z",
-          "hasAttachments": false,
-          "subject": "Haftalık Proje Toplantısı – 27 Kasım 2025 / 14:00",
-          "bodyPreview": "Merhaba,\r\n\r\nBu hafta için proje durum değerlendirme toplantımızı 27 Kasım 2025 Perşembe günü saat 14:00’te gerçekleştireceğiz.\r\n\r\nToplantıda konuşulacak başlıklar:\r\n\r\n  *   Son sprint ilerlemeleri\r\n\r\n  *   Bloklayan maddeler\r\n\r\n  *   Önümüzdeki hafta göre",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPl\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOYAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:14:09Z",
-          "hasAttachments": false,
-          "subject": "Hatırlatma: Dashboard Revizyonu İçin Son Teslim Tarihi – 29 Kasım",
-          "bodyPreview": "Selam,\r\n\r\nDashboard revizyonu için son teslim tarihi 29 Kasım 2025 olarak belirlenmişti.\r\nAşağıdaki maddelerin güncellenmesi gerekiyor:\r\n\r\n  *   Yeni grafik bileşeninin eklenmesi\r\n\r\n  *   API response optimizasyonu\r\n\r\n  *   Hatalı tooltip davranışının düz",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPX\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPEAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:14:52Z",
-          "hasAttachments": true,
-          "subject": "İnceleme İçin Gereken Dokümanlar (Ek Mevcut)",
-          "bodyPreview": "Merhaba,\r\n\r\nBahsettiğimiz süreç analiziyle ilgili dokümanları ekte paylaşıyorum. (attachment sen ekleyeceksin)\r\n\r\nİnceledikten sonra:\r\n\r\n  *   Eksik gördüğün noktaları işaretleyebilir\r\n\r\n  *   Revizyon önerilerini yazabilir\r\n\r\n  *   Onayladığın versiyonu ",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPO\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWN0AAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:15:19Z",
-          "hasAttachments": false,
-          "subject": "Bugünkü Toplantı Sonrası Aksiyon Listesi",
-          "bodyPreview": "Merhaba,\r\n\r\nBugünkü toplantıdan çıkan aksiyonları aşağıya ekledim:\r\n\r\nAksiyonlar:\r\n\r\n  1.  API rate limit konfigürasyonunun yeniden düzenlenmesi\r\n\r\n  2.  Yeni kullanıcı onboarding ekranı için taslak oluşturulması\r\n\r\n  3.  Log analizi tarafında hata oranı ",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPC\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWPAAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:15:32Z",
-          "hasAttachments": false,
-          "subject": "Entegrasyon Sürecine İlişkin Onay Talebi",
-          "bodyPreview": "Selam,\r\n\r\nAkinon tarafındaki entegrasyon için hazırlanan yeni yapılandırma dosyalarını test ortamına aktarmadan önce onayını talep ediyorum.\r\n\r\nKontrol etmeni istediğim noktalar:\r\n\r\n  *   Endpoint doğruluk testi\r\n\r\n  *   Timeout & retry politikaları\r\n\r\n  ",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "json": {
-          "access_token": "EwCIBMl6BAAUBKgm8k1UswUNwklmy2v7U/S+1fEAAZW5upOmt3qYUwN+Q8+M2/ebOWDCKUXx4A+cNUb2Vo5+lkau01hnRpbWMPtjAg/2KuuEkTv983mKZpYcgJXUxtqYS+sJGjDRjeFoNs1eQ7zMbzM/0rYOiN9CDZJHHzm/R/Yvx5mCNITAOQ4sv5yoV/bMyLd38D3Srw+d+1yfVQhRGxLFog4Ogmhe10BUIVHw668eElRgFXWejY0QgdWGXtFwrXljpI9Ax0jTgfoUgbjj0riMtnxm7r7tEHUPNPoY+XHxXHkXjCU4ybDhEcZMjflPhHl81iO7E6pVq5FewGhg85LzHIXwocL7QA51vE8j2K8Z/cBp1G1874TxK9XozZcQZgAAEIbqX4dpFNQVu1+OZlB0B5lQA1MPwK5Bfxh7KX/YI+dT+qStLt/Y7XGJXL/oqg8oCs0wOaGG7XX9TXdZ12DbkkWq6RQt/yV66Ebzk3mPFLRJ507pu5UoFFOQkjo6gMGq9FIef/XAZlnQ8EjIQ6gG9wTEza+7oVoi2b+9Lre/vKfNOKhdy/hy9uuVvgrs8xlffHE+v6/gwE2/mFXigI22CLSHIpZW0LCWAd/PAsC03x6Z5HkQNHtPcBSo8UCz+ViMz6n3XTlr1a2kTFfU9oXeY0YnMtgQlF4VfRfl1Gq+D9UYBvM8ldnppcTvSeUMjqpPH9xw5Dot/hRe7ukTKiRzaHIsGiV+DWIuEq6zedkDgKbJIGYhQBHTks6LXILk3/1Saj7m2sn7CYMWkvHj6O3sWW1u1S2P73/1vm2zBmF5BzFlZoMP1THranLY6BPwAkdkDZtv2bRJMcMsjSkkVQKUWRR03lVk8gGvyWquTBkWJADGEBivCR08+TzJK7jI6K7Rt5iIca2OC4vf8VgRuSOPPVRzudIjoqljt8uCm+9g9NOi/B/aq+tsz2hE7O1oIm0wZwtBvhMADwURyP4YW3cgAJLJR5KvYZxxh8AhqHgBY6d2+ce5L2M5w5S0mxqCQd0F3jKZGjDvfqKFZn3wQx1nEszPpPiDyGUffGo1cQ6NUb53zAen5psYO4mzkcyE1mBWPKWYfvuWCxPzVRBMkQHoGKyL6+cuPxLeD/NnB+HUmUzMn9rvbg/EliwPI188LB4yJpUrT45Qrivd8C9vi1Mb4ebmfhLIGPrIb2hUAaNIi0CxrTxmJXSRQckTtQNqu1dO6IpQWBWXhzyQm7rqN/29PqfvV7/hn9sRfGSoRY3HtTFPQj97r1A9ZxRjj0Tphg969qGZzPmq0+30XeMH7G/d9cEBQAPnapFqZN06CjC0M0jKEKboU+5aK19eL8yUYvTGXkdImchYCjkkPD2CZLp4YGhsVNPhAgdYKOWoJfsLGWRr7JfSZdKajQVCvLlreukgWDzRDSnj8zZ7vXETeGmdtLZMfDTFiTV4mW/3oMIySK/olUP99GZF7yCKRO+PSfgnMOqAMgfLbiZzSx+5s4aWGSq9teEgUaLlMI3ykWa9vHD67jN9yBfHzouu/cnD+MDdm/c1jAM=",
-          "user_id": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-          "email": "berkayguzel06@outlook.com",
-          "name": "Berkay",
-          "last_name": "Güzel",
-          "@odata.etag": "W/\"CQAAABYAAACmbAuzjNRkRJHPPR9ftVhgAAEtKXPL\"",
-          "id": "AQMkADAwATM0MDAAMS03YjViLTdjNTUALTAwAi0wMAoARgAAA1U4W2Btfe5Ik7wnmiPAttwHAKZsC7OM1GREkc89H1_1WGAAAAIBDAAAAKZsC7OM1GREkc89H1_1WGAAAS0zWOQAAAA=",
-          "categories": [],
-          "receivedDateTime": "2025-11-25T17:15:44Z",
-          "hasAttachments": false,
-          "subject": "Veri Akışı Güncellemesi Hakkında Bilgilendirme",
-          "bodyPreview": "Merhaba,\r\n\r\nSon güncelleme ile birlikte veri akışında aşağıdaki değişiklikler yapıldı:\r\n\r\n  *   Order import sürecinde paralelleştirme artırıldı\r\n\r\n  *   Hatalı siparişlerin retry sayısı yükseltildi\r\n\r\n  *   Export işlerinde dosya sıkıştırma aktif hale ge",
-          "from": {
-            "emailAddress": {
-              "name": "Berkay Güzel",
-              "address": "berkayguzel43@gmail.com"
-            }
-          },
-          "toRecipients": [
-            {
-              "emailAddress": {
-                "name": "berkayguzel06@outlook.com",
-                "address": "berkayguzel06@outlook.com"
-              }
-            }
-          ]
-        }
-      }
-    ]
-  },
-  "versionId": "7c559392-88e0-4f6f-9f85-0864730b94e1",
-  "versionCounter": 102,
+  "meta": null,
+  "pinData": {},
+  "versionId": "7cf7902a-a99a-4f58-86ce-b4a65bf419d8",
+  "versionCounter": 4,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-25T07:28:14.717Z",
-      "createdAt": "2025-11-25T07:28:14.717Z",
+      "updatedAt": "2025-12-05T16:20:07.135Z",
+      "createdAt": "2025-12-05T16:20:07.135Z",
       "role": "workflow:owner",
-      "workflowId": "cbK2DhaqpErX6deF",
+      "workflowId": "JjywWYZ6MjIZRABj",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -1413,7 +1014,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -1436,7 +1037,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }

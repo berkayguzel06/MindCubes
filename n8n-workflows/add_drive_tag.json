@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-12-01T08:01:47.000Z",
-  "createdAt": "2025-12-01T08:01:32.874Z",
-  "id": "VmewDeTUEcovonZE",
+  "updatedAt": "2025-12-05T16:31:25.000Z",
+  "createdAt": "2025-12-05T16:20:06.484Z",
+  "id": "tSPgY2Wo35FNIHCK",
   "name": "Add Drive Tag",
   "description": null,
   "active": false,
@@ -177,22 +177,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "f0f632c3-743d-44a1-8b6a-0ecff2ad327b",
-  "versionCounter": 19,
+  "versionId": "6cf22c22-b0e6-481a-b4f7-c766aa1f07cc",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-01T08:01:32.879Z",
-      "createdAt": "2025-12-01T08:01:32.879Z",
+      "updatedAt": "2025-12-05T16:20:06.486Z",
+      "createdAt": "2025-12-05T16:20:06.486Z",
       "role": "workflow:owner",
-      "workflowId": "VmewDeTUEcovonZE",
+      "workflowId": "tSPgY2Wo35FNIHCK",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -209,7 +209,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -232,7 +232,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }

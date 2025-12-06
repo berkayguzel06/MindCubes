@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-11-28T13:09:59.000Z",
-  "createdAt": "2025-11-28T13:08:53.191Z",
-  "id": "FUeCBZqBVK8ytokA",
+  "updatedAt": "2025-12-05T16:44:09.000Z",
+  "createdAt": "2025-12-05T16:20:06.509Z",
+  "id": "2UdEAp7tlduaP6DF",
   "name": "Add Prioritizing Tag",
   "description": null,
   "active": false,
@@ -177,22 +177,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "362efc4c-9611-409b-8c1f-863bcc29dac4",
-  "versionCounter": 19,
+  "versionId": "2cd5e5a9-c5c4-44bc-8daf-de4aa07277e6",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-28T13:08:53.195Z",
-      "createdAt": "2025-11-28T13:08:53.195Z",
+      "updatedAt": "2025-12-05T16:20:06.513Z",
+      "createdAt": "2025-12-05T16:20:06.513Z",
       "role": "workflow:owner",
-      "workflowId": "FUeCBZqBVK8ytokA",
+      "workflowId": "2UdEAp7tlduaP6DF",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -209,7 +209,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -232,7 +232,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }

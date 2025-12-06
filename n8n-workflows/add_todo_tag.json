@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-12-01T06:23:20.000Z",
-  "createdAt": "2025-12-01T06:23:10.747Z",
-  "id": "Vnp5sdn1TximetGj",
+  "updatedAt": "2025-12-05T16:28:30.000Z",
+  "createdAt": "2025-12-05T16:20:06.531Z",
+  "id": "MN95pP8JDC0YDuNk",
   "name": "Add ToDo Tag",
   "description": null,
   "active": false,
@@ -177,22 +177,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "f01060d3-058d-4d8c-918c-6a5612d27341",
-  "versionCounter": 17,
+  "versionId": "115fb55f-fd6f-4e91-bb4c-661adc518839",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-01T06:23:10.752Z",
-      "createdAt": "2025-12-01T06:23:10.752Z",
+      "updatedAt": "2025-12-05T16:20:06.536Z",
+      "createdAt": "2025-12-05T16:20:06.536Z",
       "role": "workflow:owner",
-      "workflowId": "Vnp5sdn1TximetGj",
+      "workflowId": "MN95pP8JDC0YDuNk",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -209,7 +209,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -232,7 +232,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }

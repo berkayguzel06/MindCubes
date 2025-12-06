@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-12-03T07:17:38.000Z",
-  "createdAt": "2025-12-02T08:26:56.003Z",
-  "id": "yGxdRtaf6wtaPdA4",
+  "updatedAt": "2025-12-05T16:44:32.000Z",
+  "createdAt": "2025-12-05T16:20:07.246Z",
+  "id": "F4XR4XT4dCBO9dFT",
   "name": "Save Workflows in Database",
   "description": null,
   "active": false,
@@ -72,7 +72,7 @@
       "typeVersion": 4.3,
       "position": [
         208,
-        -472
+        -480
       ],
       "id": "11d84950-e9bf-4094-8934-0d5a240b6a24",
       "name": "HTTP Request",
@@ -119,7 +119,7 @@
       "typeVersion": 2,
       "position": [
         2672,
-        -328
+        -336
       ],
       "id": "9242f3b7-27d9-4ff5-8761-fcc9e78fb59c",
       "name": "Code in JavaScript1",
@@ -247,7 +247,7 @@
       "typeVersion": 2.6,
       "position": [
         1552,
-        104
+        112
       ],
       "id": "f3b76c3b-f99f-4f7a-84d1-475a94331f00",
       "name": "Insert or update workflows",
@@ -342,7 +342,7 @@
       "typeVersion": 2.6,
       "position": [
         656,
-        -328
+        -336
       ],
       "id": "58b5a6b5-ff58-48be-9b79-1c894f446798",
       "name": "Insert or Update Tags",
@@ -478,7 +478,7 @@
       "typeVersion": 2.6,
       "position": [
         3568,
-        -184
+        -192
       ],
       "id": "bbac0630-0cde-494f-bbb0-50a59c0e2c54",
       "name": "Insert or update rows in a table",
@@ -519,7 +519,7 @@
       "typeVersion": 1.2,
       "position": [
         -16,
-        -472
+        -480
       ],
       "id": "71ff31b8-353c-49be-a5a5-d9d314291104",
       "name": "Schedule Trigger"
@@ -544,7 +544,7 @@
       "typeVersion": 2.6,
       "position": [
         3120,
-        -328
+        -336
       ],
       "id": "bf174d3c-13e4-40c3-88f2-e8b12b0a4ae4",
       "name": "Delete table or rows",
@@ -564,7 +564,7 @@
       "typeVersion": 2,
       "position": [
         2896,
-        -328
+        -336
       ],
       "id": "57927560-8b22-453a-9743-43546631550c",
       "name": "Code in JavaScript4"
@@ -578,7 +578,7 @@
       "typeVersion": 3.2,
       "position": [
         3344,
-        -184
+        -192
       ],
       "id": "52aaa190-e658-46bc-ac73-6399f6c1f418",
       "name": "Merge2"
@@ -873,22 +873,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "39e56caa-b793-4f9e-a7ac-8dca5f24a5c0",
-  "versionCounter": 14,
+  "versionId": "77e88ca8-8eba-42b8-9ecb-247f1d1c7abf",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-02T08:26:56.007Z",
-      "createdAt": "2025-12-02T08:26:56.007Z",
+      "updatedAt": "2025-12-05T16:20:07.249Z",
+      "createdAt": "2025-12-05T16:20:07.249Z",
       "role": "workflow:owner",
-      "workflowId": "yGxdRtaf6wtaPdA4",
+      "workflowId": "F4XR4XT4dCBO9dFT",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -905,7 +905,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -928,7 +928,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }
@@ -936,5 +936,12 @@
       }
     }
   ],
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2025-12-05T16:44:31.509Z",
+      "createdAt": "2025-12-05T16:44:31.509Z",
+      "id": "wgMjaO52Q3OltjFG",
+      "name": "database"
+    }
+  ]
 }

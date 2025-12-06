@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2025-12-01T08:56:51.000Z",
-  "createdAt": "2025-11-26T15:57:52.259Z",
-  "id": "23Eb5BG7UmbO8qn1",
-  "name": "Add AI Process Tag",
+  "updatedAt": "2025-12-05T16:33:59.000Z",
+  "createdAt": "2025-12-05T16:20:06.454Z",
+  "id": "3ySZih0p1cVAfrHX",
+  "name": "Add Draft Tag",
   "description": null,
   "active": false,
-  "isArchived": true,
+  "isArchived": false,
   "nodes": [
     {
       "parameters": {
@@ -14,11 +14,34 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -1168,
-        464
+        -1312,
+        432
       ],
-      "id": "5c7a6324-d55a-4cfd-a4b1-4b62dfb608fc",
+      "id": "28601622-d51a-497e-b1b6-03cc6725ceda",
       "name": "Get many messages"
+    },
+    {
+      "parameters": {
+        "chatId": "-3257168516",
+        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -416,
+        432
+      ],
+      "id": "86328642-5901-4736-b3eb-ea6a612f9326",
+      "name": "Error Message",
+      "webhookId": "0f50995f-5310-4475-a73b-dea3f071a077",
+      "credentials": {
+        "telegramApi": {
+          "id": "JG4HCYCvUBrFrjrG",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -39,7 +62,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\n  \"categories\": [\"AI_Processed\"]\n}",
+        "jsonBody": "={\n  \"categories\": {{ JSON.stringify($json.categories) }}\n}\n",
         "options": {
           "batching": {
             "batch": {
@@ -51,12 +74,25 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -720,
-        464
+        -640,
+        432
       ],
-      "id": "8160c7a1-5744-4c9f-ad12-ac3711242b59",
-      "name": "AI Category",
+      "id": "0c139748-7cd0-4530-8341-70f4183c4fc7",
+      "name": "AI Calendar",
       "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n    const json = item.json;\n    const existing = json.categories || [];\n    const toAdd = \"draft\";\n\n    // Kategorileri merge et\n    const merged = Array.from(new Set([...existing, toAdd]));\n\n    // Güncel kategoriyi geri yaz\n    json.categories = merged;\n\n    return { json };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -864,
+        432
+      ],
+      "id": "619d07cd-10e6-4efa-97da-c5757672e190",
+      "name": "Code in JavaScript"
     },
     {
       "parameters": {
@@ -86,34 +122,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -944,
-        464
+        -1088,
+        432
       ],
-      "id": "3580e7c0-c694-4fb0-a212-0ddf2a2ecd3d",
-      "name": "If"
-    },
-    {
-      "parameters": {
-        "chatId": "-3257168516",
-        "text": "=Error in workflow {{ $workflow.name }}\n{{ $json.error }}",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -496,
-        464
-      ],
-      "id": "838166b8-7216-4e40-b04e-d09ed9be3815",
-      "name": "Error Message",
-      "webhookId": "334474c1-8a99-4c2e-a320-7e3683e4ea3b",
-      "credentials": {
-        "telegramApi": {
-          "id": "JG4HCYCvUBrFrjrG",
-          "name": "Telegram account"
-        }
-      },
-      "onError": "continueErrorOutput"
+      "id": "f77af2ae-8c44-49c1-81a3-31bf4dd47ef1",
+      "name": "If1"
     }
   ],
   "connections": {
@@ -121,14 +134,14 @@
       "main": [
         [
           {
-            "node": "If",
+            "node": "If1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "AI Category": {
+    "AI Calendar": {
       "main": [
         [],
         [
@@ -140,11 +153,22 @@
         ]
       ]
     },
-    "If": {
+    "If1": {
       "main": [
         [
           {
-            "node": "AI Category",
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Calendar",
             "type": "main",
             "index": 0
           }
@@ -153,20 +177,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "07387a24-5e9a-4416-867e-3f6636df3fa0",
-  "versionCounter": 5,
+  "versionId": "0a5c51da-e07b-4757-b333-c171730042ce",
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-11-26T15:57:52.262Z",
-      "createdAt": "2025-11-26T15:57:52.262Z",
+      "updatedAt": "2025-12-05T16:20:06.458Z",
+      "createdAt": "2025-12-05T16:20:06.458Z",
       "role": "workflow:owner",
-      "workflowId": "23Eb5BG7UmbO8qn1",
+      "workflowId": "3ySZih0p1cVAfrHX",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -183,7 +209,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -206,7 +232,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }
@@ -215,6 +241,12 @@
     }
   ],
   "tags": [
+    {
+      "updatedAt": "2025-12-05T16:32:21.179Z",
+      "createdAt": "2025-12-05T16:32:21.179Z",
+      "id": "oaHPeL6BLsQowLef",
+      "name": "draft"
+    },
     {
       "updatedAt": "2025-11-25T07:28:56.435Z",
       "createdAt": "2025-11-25T07:28:56.435Z",

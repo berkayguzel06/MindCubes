@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2025-12-05T16:27:07.000Z",
-  "createdAt": "2025-12-05T16:20:07.438Z",
-  "id": "Zz0eSLGwonOX9LOS",
-  "name": "Start-Mail-Workflow Prioritizing",
-  "description": "",
+  "updatedAt": "2025-12-05T16:34:30.000Z",
+  "createdAt": "2025-12-05T16:20:07.388Z",
+  "id": "uk9ZNXmmd7epNwtb",
+  "name": "Start-Mail-Workflow Draft",
+  "description": null,
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -21,45 +21,11 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -1136,
-        -48
+        -608,
+        -168
       ],
-      "id": "eb6c9361-5b2a-4beb-aac8-4025f9710e3e",
+      "id": "d996261b-4a21-4a3f-8f96-e8745b727719",
       "name": "Schedule Trigger"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "79ab2920-bd16-42c8-8789-ffd8a5a415b1",
-              "leftValue": "={{ $json.access_token }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "exists",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -464,
-        -160
-      ],
-      "id": "afe91123-ad33-42b3-ac78-756a74633978",
-      "name": "If"
     },
     {
       "parameters": {
@@ -70,12 +36,12 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -464,
-        64
+        64,
+        -72
       ],
-      "id": "a1469125-1d39-409b-9ff7-5b00d1fd973f",
+      "id": "221faf00-d693-49f4-a1c0-17e74fb4b762",
       "name": "Error Message",
-      "webhookId": "43cb3681-5454-4643-91b1-5d0aac90c7d9",
+      "webhookId": "55a57c3a-bc27-481c-829a-fac6edccc74b",
       "credentials": {
         "telegramApi": {
           "id": "JG4HCYCvUBrFrjrG",
@@ -106,10 +72,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -912,
-        -48
+        -384,
+        -168
       ],
-      "id": "d2386fc1-7194-4620-a78d-72d5715f97fa",
+      "id": "9dc65f95-8a30-4fd8-a981-9f9952e0c4af",
       "name": "HTTP Request",
       "onError": "continueErrorOutput"
     },
@@ -120,21 +86,55 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -688,
-        -112
+        -160,
+        -240
       ],
-      "id": "c5c7c0f5-dcf9-40f6-9b4b-4502b00591cd",
+      "id": "26eb9a4a-2047-40a0-ad14-eaa91746f9d7",
       "name": "Code in JavaScript",
       "onError": "continueErrorOutput"
     },
     {
       "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "79ab2920-bd16-42c8-8789-ffd8a5a415b1",
+              "leftValue": "={{ $json.access_token }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        64,
+        -288
+      ],
+      "id": "384d1878-74f5-4e0e-8d16-a6ad7a469ccb",
+      "name": "If1"
+    },
+    {
+      "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "R2cycI3STlvFCsuA",
+          "value": "6ZNBgRIUh3ACnMTc",
           "mode": "list",
-          "cachedResultUrl": "/workflow/R2cycI3STlvFCsuA",
-          "cachedResultName": "Mail Prioritizing Fetch"
+          "cachedResultUrl": "/workflow/6ZNBgRIUh3ACnMTc",
+          "cachedResultName": "Mail Draft Fetch"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -146,11 +146,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -256,
-        -256
+        288,
+        -288
       ],
-      "id": "2732bf70-7db4-4705-bcda-91a8e12f768f",
-      "name": "Call 'Mail Prioritizing Fetch'"
+      "id": "cc6f833b-f02b-44aa-bcf3-b1eca16d6742",
+      "name": "Call 'Mail Draft Fetch'"
     }
   ],
   "connections": {
@@ -159,17 +159,6 @@
         [
           {
             "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If": {
-      "main": [
-        [
-          {
-            "node": "Call 'Mail Prioritizing Fetch'",
             "type": "main",
             "index": 0
           }
@@ -198,7 +187,7 @@
       "main": [
         [
           {
-            "node": "If",
+            "node": "If1",
             "type": "main",
             "index": 0
           }
@@ -206,6 +195,17 @@
         [
           {
             "node": "Error Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Call 'Mail Draft Fetch'",
             "type": "main",
             "index": 0
           }
@@ -225,15 +225,15 @@
   },
   "meta": null,
   "pinData": {},
-  "versionId": "cfe9371c-4069-4844-a276-9484d4175c3b",
-  "versionCounter": 9,
+  "versionId": "7c5784e7-0d5d-4b80-a00f-b12880082ce5",
+  "versionCounter": 6,
   "triggerCount": 1,
   "shared": [
     {
-      "updatedAt": "2025-12-05T16:20:07.441Z",
-      "createdAt": "2025-12-05T16:20:07.441Z",
+      "updatedAt": "2025-12-05T16:20:07.393Z",
+      "createdAt": "2025-12-05T16:20:07.393Z",
       "role": "workflow:owner",
-      "workflowId": "Zz0eSLGwonOX9LOS",
+      "workflowId": "uk9ZNXmmd7epNwtb",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -283,16 +283,16 @@
   ],
   "tags": [
     {
-      "updatedAt": "2025-11-28T13:09:46.760Z",
-      "createdAt": "2025-11-28T13:09:42.645Z",
-      "id": "3n3E42nvx4sr4k1N",
-      "name": "prioritizing"
-    },
-    {
       "updatedAt": "2025-12-05T16:23:23.113Z",
       "createdAt": "2025-12-05T16:23:23.113Z",
       "id": "chdfMY23MzD2QqyT",
       "name": "start"
+    },
+    {
+      "updatedAt": "2025-12-05T16:32:21.179Z",
+      "createdAt": "2025-12-05T16:32:21.179Z",
+      "id": "oaHPeL6BLsQowLef",
+      "name": "draft"
     },
     {
       "updatedAt": "2025-11-25T07:28:56.435Z",

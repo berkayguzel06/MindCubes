@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-12-03T08:36:17.000Z",
-  "createdAt": "2025-11-24T12:33:39.686Z",
-  "id": "svveFOQKZRrz6g1q",
+  "updatedAt": "2025-12-05T16:46:20.000Z",
+  "createdAt": "2025-12-05T16:20:07.514Z",
+  "id": "gvwFzprWtPp4EFKt",
   "name": "ToDo Single Executable",
   "description": null,
   "active": true,
@@ -14,7 +14,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -4000,
+        -4272,
         248
       ],
       "id": "180ffff9-d414-44d9-bc98-cd4391a32856",
@@ -49,7 +49,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2208,
+        -2480,
         -352
       ],
       "id": "46137480-3960-4650-b902-bc512e129be2",
@@ -63,8 +63,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        -4368,
-        400
+        -7104,
+        728
       ],
       "id": "09c9a811-a040-450a-8846-da7ee3839f36",
       "name": "Structured Output Parser4",
@@ -82,7 +82,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        -4568,
+        -4624,
         176
       ],
       "id": "6b36d136-74b8-41fc-9c06-ce0566a18e88",
@@ -98,7 +98,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -1760,
+        -2032,
         -64
       ],
       "id": "22608325-b475-4e1f-a07c-2782ecf96dba",
@@ -119,7 +119,7 @@
       "typeVersion": 1,
       "position": [
         -7312,
-        832
+        936
       ],
       "id": "1b156b0c-0e4e-497c-bae0-e6bb21d615a9",
       "name": "Google Gemini Chat Model",
@@ -138,7 +138,7 @@
       "typeVersion": 1,
       "position": [
         -7312,
-        1040
+        1144
       ],
       "id": "1dd763a9-36fe-472e-a740-b20a7a82a7cb",
       "name": "Google Gemini Chat Model1",
@@ -181,7 +181,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -1984,
+        -2256,
         -448
       ],
       "id": "d04da260-6580-4d6f-ab59-a93d7b4b2a38",
@@ -205,7 +205,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -3328,
+        -3600,
         -160
       ],
       "id": "706810aa-c72b-4adb-ba82-1a75fbcf2504",
@@ -244,7 +244,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -1984,
+        -2256,
         -256
       ],
       "id": "7194f3b3-1ab0-4841-81f0-a5fee7e45398",
@@ -260,8 +260,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -3776,
-        -384
+        -4048,
+        -376
       ],
       "id": "bdc41913-b419-4a71-afb4-c9508a5779ee",
       "name": "Merge"
@@ -275,8 +275,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -2880,
-        -456
+        -3152,
+        -448
       ],
       "id": "7d93da03-2f74-4596-befc-a37d7ac5c8cf",
       "name": "Merge1"
@@ -288,7 +288,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3104,
+        -3376,
         -232
       ],
       "id": "49e1c829-b105-4e5e-9094-bc6dcca65a11",
@@ -301,8 +301,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -4000,
-        -384
+        -4272,
+        -376
       ],
       "id": "d9f6d8e5-294f-4f4c-88f2-a70bb0330429",
       "name": "Code in JavaScript2"
@@ -314,7 +314,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3552,
+        -3824,
         -160
       ],
       "id": "0bffd112-f15f-4fe9-b419-681a253e53f0",
@@ -327,8 +327,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2656,
-        -456
+        -2928,
+        -448
       ],
       "id": "c7632053-c815-4653-9fc7-e04861d5ab9e",
       "name": "Code in JavaScript1"
@@ -343,7 +343,7 @@
       "type": "n8n-nodes-base.dateTimeTool",
       "typeVersion": 2,
       "position": [
-        -4496,
+        -4488,
         400
       ],
       "id": "0477630c-059c-4243-a37c-ae42083bdbb6",
@@ -371,7 +371,7 @@
       "typeVersion": 1,
       "position": [
         -7312,
-        608
+        504
       ],
       "id": "77e94b98-64e7-44c3-89c0-ba204dc49869",
       "name": "When clicking ‘Execute workflow’"
@@ -385,7 +385,7 @@
       "typeVersion": 3.4,
       "position": [
         -7088,
-        608
+        504
       ],
       "id": "6421eed0-14f6-422d-bf00-a43c43a4c2d3",
       "name": "Edit Fields"
@@ -454,7 +454,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2432,
+        -2704,
         -352
       ],
       "id": "4903612e-9944-48e9-9d2a-a6713e9c082e",
@@ -565,7 +565,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -4624,
+        -4616,
         400
       ],
       "id": "194ff3cd-d92a-4068-8def-561cbf3cce20",
@@ -587,8 +587,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -4288,
-        608
+        -7312,
+        728
       ],
       "id": "ac19e537-8812-4bdd-9f41-635daac22353",
       "name": "Ollama Chat Model1",
@@ -644,7 +644,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -1088,
+        -1360,
         -496
       ],
       "id": "0478f3cc-da4f-4abd-9639-ac22bcc292e2",
@@ -667,7 +667,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -1312,
+        -1584,
         -496
       ],
       "id": "2325f6ea-0e66-4ac2-9e51-99fbffda0c7f",
@@ -680,7 +680,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1536,
+        -1808,
         -400
       ],
       "id": "e8edcda8-9812-4bcf-a214-092a734f97c7",
@@ -691,7 +691,7 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        -1760,
+        -2032,
         -400
       ],
       "id": "750e74c4-e7b0-4b5f-aca9-a7227f80aa15",
@@ -818,7 +818,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -1536,
+        -1808,
         -64
       ],
       "id": "6aac5f89-3f9c-42f2-a700-76986baa9071",
@@ -870,13 +870,7 @@
     },
     "Structured Output Parser4": {
       "ai_outputParser": [
-        [
-          {
-            "node": "Mail Task App",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Mail Task App": {
@@ -1323,46 +1317,22 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
-  "pinData": {
-    "Edit Fields": [
-      {
-        "json": {
-          "headers": {
-            "host": "localhost:5678",
-            "content-type": "application/json",
-            "accept": "*/*",
-            "accept-encoding": "gzip, deflate",
-            "user-agent": "Python/3.13 aiohttp/3.13.2",
-            "content-length": "245"
-          },
-          "params": {},
-          "query": {},
-          "body": {
-            "chatInput": "yarın saat 18:00 a kadar https://genesis.energy.gov/ sitesine bakıp not almam lazım bunu görev olarak ekler misin\n",
-            "userId": "103d5077-eea1-47af-8d6f-3f4c63d87aba",
-            "timestamp": "2025-12-01T14:42:30.094331"
-          },
-          "webhookUrl": "http://localhost:5678/webhook/453c17e9-4868-4e9b-a5c4-ac847b3039ef",
-          "executionMode": "production"
-        }
-      }
-    ]
-  },
-  "versionId": "beeb2f8b-5df2-4426-b26c-e090dbfab6ed",
-  "versionCounter": 138,
+  "meta": null,
+  "pinData": {},
+  "versionId": "3fce6ed8-8713-4451-a5c3-5db6e629acfe",
+  "versionCounter": 5,
   "triggerCount": 1,
   "shared": [
     {
-      "updatedAt": "2025-11-25T07:28:14.737Z",
-      "createdAt": "2025-11-25T07:28:14.737Z",
+      "updatedAt": "2025-12-05T16:20:07.517Z",
+      "createdAt": "2025-12-05T16:20:07.517Z",
       "role": "workflow:owner",
-      "workflowId": "svveFOQKZRrz6g1q",
+      "workflowId": "gvwFzprWtPp4EFKt",
       "projectId": "Ti3JL05CSVUvJj6A",
       "project": {
         "updatedAt": "2025-10-20T20:29:51.468Z",
@@ -1379,7 +1349,7 @@
             "userId": "63547d7a-5632-4caa-b82b-e1517f572f8f",
             "projectId": "Ti3JL05CSVUvJj6A",
             "user": {
-              "updatedAt": "2025-12-04T20:18:03.000Z",
+              "updatedAt": "2025-12-05T16:18:55.000Z",
               "createdAt": "2025-10-20T20:29:09.823Z",
               "id": "63547d7a-5632-4caa-b82b-e1517f572f8f",
               "email": "berkayguzel43@gmail.com",
@@ -1402,7 +1372,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-04",
+              "lastActiveAt": "2025-12-05",
               "isPending": false
             }
           }
@@ -1416,18 +1386,6 @@
       "createdAt": "2025-11-24T12:37:07.615Z",
       "id": "JltU9W7VB1ZMp5s7",
       "name": "executable"
-    },
-    {
-      "updatedAt": "2025-12-02T08:40:18.627Z",
-      "createdAt": "2025-12-02T08:40:18.627Z",
-      "id": "NCCf83voH9D7wxJ0",
-      "name": "editable"
-    },
-    {
-      "updatedAt": "2025-11-26T15:49:38.868Z",
-      "createdAt": "2025-11-26T15:49:38.868Z",
-      "id": "QncEhlKLYZxVpjw0",
-      "name": "data-input"
     }
   ]
 }
