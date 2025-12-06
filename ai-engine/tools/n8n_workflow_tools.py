@@ -292,11 +292,17 @@ class MailPrioritizingTool(N8nWorkflowTool):
         super().__init__(
             name="mail_prioritizing_workflow",
             description=(
-                "Analyzes and prioritizes emails based on importance and urgency. "
+                "Analyzes, sorts, and highlights emails based on importance and urgency. "
+                "Automatically marks emails as urgent, important, or low priority. "
                 "Use this when user wants to: "
-                "- Prioritize their emails "
-                "- Find important messages "
-                "- Sort emails by urgency"
+                "- Prioritize their inbox "
+                "- Find and show only important or urgent messages "
+                "- Mark emails as high/low priority "
+                "- Sort emails by urgency or importance "
+                "- Highlight unread important emails "
+                "- Focus on high-priority conversations "
+                "- Filter emails to see only urgent ones "
+                "- Organize emails by priority levels"
             ),
             webhook_id=webhook_id or os.getenv("N8N_PRIORITIZING_WEBHOOK_ID", "prioritizing-webhook-id"),
             n8n_base_url=n8n_base_url
