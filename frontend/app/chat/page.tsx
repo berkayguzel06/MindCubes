@@ -1,11 +1,11 @@
 "use client";
 
-import { useStoredUser } from '@/hooks/useStoredUser';
+import { useStoredUser } from '../hooks/useStoredUser';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
 interface Message {
   id?: string;
   role: string;
@@ -52,7 +52,7 @@ const extractThinking = (content: string): { thinking: string | null; response: 
     /^(Let me think[\s\S]*?)(?=\n\n|$)/im,
     /^(Thinking:[\s\S]*?)(?=\n\n|$)/m,
   ];
-  
+
   for (const pattern of thinkPatterns) {
     const match = content.match(pattern);
     if (match) {
@@ -61,7 +61,7 @@ const extractThinking = (content: string): { thinking: string | null; response: 
       return { thinking, response };
     }
   }
-  
+
   return { thinking: null, response: content };
 };
 
@@ -69,26 +69,26 @@ const extractThinking = (content: string): { thinking: string | null; response: 
 const parseMarkdown = (text: string): React.ReactNode[] => {
   const elements: React.ReactNode[] = [];
   const lines = text.split('\n');
-  
+
   lines.forEach((line, lineIndex) => {
     let processedLine: React.ReactNode = line;
-    
+
     // Process bold text **text**
     if (line.includes('**')) {
       const parts = line.split(/\*\*([^*]+)\*\*/g);
-      processedLine = parts.map((part, i) => 
+      processedLine = parts.map((part, i) =>
         i % 2 === 1 ? <strong key={i} className="font-semibold">{part}</strong> : part
       );
     }
-    
+
     // Process italic text *text* (but not **)
     if (typeof processedLine === 'string' && processedLine.includes('*') && !processedLine.includes('**')) {
       const parts = processedLine.split(/\*([^*]+)\*/g);
-      processedLine = parts.map((part, i) => 
+      processedLine = parts.map((part, i) =>
         i % 2 === 1 ? <em key={i} className="italic">{part}</em> : part
       );
     }
-    
+
     // Bullet points
     if (line.trim().startsWith('•') || line.trim().startsWith('-') || line.trim().startsWith('*')) {
       if (!line.includes('**')) {
@@ -101,7 +101,7 @@ const parseMarkdown = (text: string): React.ReactNode[] => {
         return;
       }
     }
-    
+
     // Success indicator
     if (line.startsWith('✅')) {
       elements.push(
@@ -111,7 +111,7 @@ const parseMarkdown = (text: string): React.ReactNode[] => {
       );
       return;
     }
-    
+
     // Error indicator
     if (line.startsWith('❌')) {
       elements.push(
@@ -121,7 +121,7 @@ const parseMarkdown = (text: string): React.ReactNode[] => {
       );
       return;
     }
-    
+
     // Warning indicator
     if (line.startsWith('⚠️')) {
       elements.push(
@@ -131,7 +131,7 @@ const parseMarkdown = (text: string): React.ReactNode[] => {
       );
       return;
     }
-    
+
     // Regular line or empty line
     if (line.trim()) {
       elements.push(<div key={lineIndex} className="my-1">{processedLine}</div>);
@@ -139,7 +139,7 @@ const parseMarkdown = (text: string): React.ReactNode[] => {
       elements.push(<br key={lineIndex} />);
     }
   });
-  
+
   return elements;
 };
 
@@ -188,7 +188,7 @@ export default function Chat() {
         }
       });
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         setAvailableModels(data.data);
         // Set default model if not already set
@@ -208,7 +208,7 @@ export default function Chat() {
   // Load chat sessions from database
   const loadChatSessions = useCallback(async () => {
     if (!user?.id || !token) return;
-    
+
     setIsLoadingSessions(true);
     try {
       const response = await fetch(`${BACKEND_URL}/api/v1/chat/sessions?userId=${user.id}`, {
@@ -217,7 +217,7 @@ export default function Chat() {
         }
       });
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         // Add title from last_message
         const sessionsWithTitles = data.data.map((s: ChatSession) => ({
@@ -236,7 +236,7 @@ export default function Chat() {
   // Load session messages from database
   const loadSessionMessages = useCallback(async (sid: string) => {
     if (!user?.id || !token) return [];
-    
+
     try {
       const response = await fetch(`${BACKEND_URL}/api/v1/chat/history?userId=${user.id}&sessionId=${sid}`, {
         headers: {
@@ -244,7 +244,7 @@ export default function Chat() {
         }
       });
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         return data.data.map((msg: any) => ({
           id: msg.id,
@@ -268,9 +268,9 @@ export default function Chat() {
   // Initialize session on mount
   useEffect(() => {
     if (!user?.id) return;
-    
+
     loadChatSessions();
-    
+
     // Check for existing session in sessionStorage
     const storedSessionId = sessionStorage.getItem('chat_session_id');
     if (storedSessionId) {
@@ -324,7 +324,7 @@ export default function Chat() {
   const handleLoadSession = async (sid: string) => {
     setSessionId(sid);
     sessionStorage.setItem('chat_session_id', sid);
-    
+
     const loadedMessages = await loadSessionMessages(sid);
     setMessages(loadedMessages);
     setShowHistory(false);
@@ -333,22 +333,22 @@ export default function Chat() {
   // Delete a session
   const handleDeleteSession = async (sid: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (!user?.id || !token) return;
-    
+
     try {
       await fetch(`${BACKEND_URL}/api/v1/chat/history`, {
         method: 'DELETE',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ userId: user.id, sessionId: sid })
       });
-      
+
       // Update local state
       setChatSessions(prev => prev.filter(s => s.session_id !== sid));
-      
+
       if (sid === sessionId) {
         handleNewChat();
       }
@@ -359,9 +359,9 @@ export default function Chat() {
 
   const handleSend = async () => {
     if (!input.trim() && !selectedFile) return;
-    
-    const userMsg: Message = { 
-      role: 'user', 
+
+    const userMsg: Message = {
+      role: 'user',
       content: input,
       file: selectedFile ? {
         name: selectedFile.name,
@@ -372,12 +372,12 @@ export default function Chat() {
     setInput('');
     setIsLoading(true);
     setThinkingText('');
-    
+
     // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
-    
+
     try {
       if (selectedFile) {
         // File upload - use AI Engine directly
@@ -389,37 +389,37 @@ export default function Chat() {
         if (selectedModel) {
           formData.append('model', selectedModel);
         }
-        
+
         const response = await fetch('http://localhost:8000/api/chat/workflow', {
           method: 'POST',
           body: formData,
         });
-        
+
         const data = await response.json();
-        
+
         if (data && data.response) {
           const { thinking, response: cleanResponse } = extractThinking(data.response);
-          setMessages((prev) => [...prev, { 
-            role: 'assistant', 
+          setMessages((prev) => [...prev, {
+            role: 'assistant',
             content: cleanResponse,
             thinking: thinking || undefined,
             metadata: data.metadata
           }]);
         } else if (data && data.success === false) {
-          setMessages((prev) => [...prev, { 
-            role: 'assistant', 
+          setMessages((prev) => [...prev, {
+            role: 'assistant',
             content: `❌ Error: ${data.detail || 'Unknown error'}`
           }]);
         }
-        
+
         removeSelectedFile();
       } else {
         // Text message - use backend API (which saves to database)
         setThinkingText('Thinking');
-        
+
         const response = await fetch(`${BACKEND_URL}/api/v1/chat`, {
           method: 'POST',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
@@ -430,37 +430,37 @@ export default function Chat() {
             model: selectedModel || undefined
           }),
         });
-        
+
         const data = await response.json();
-        
+
         if (data && data.response) {
           const { thinking, response: cleanResponse } = extractThinking(data.response);
-          setMessages((prev) => [...prev, { 
-            role: 'assistant', 
+          setMessages((prev) => [...prev, {
+            role: 'assistant',
             content: cleanResponse,
             thinking: thinking || undefined,
             metadata: data.metadata
           }]);
-          
+
           // Update session ID if returned from backend
           if (data.sessionId && data.sessionId !== sessionId) {
             setSessionId(data.sessionId);
             sessionStorage.setItem('chat_session_id', data.sessionId);
           }
-          
+
           // Refresh sessions list
           loadChatSessions();
         } else if (data && data.success === false) {
-          setMessages((prev) => [...prev, { 
-            role: 'assistant', 
+          setMessages((prev) => [...prev, {
+            role: 'assistant',
             content: `❌ Error: ${data.message || 'Unknown error'}`
           }]);
         }
       }
     } catch (e) {
       console.error('Chat error', e);
-      setMessages((prev) => [...prev, { 
-        role: 'assistant', 
+      setMessages((prev) => [...prev, {
+        role: 'assistant',
         content: '❌ Failed to connect to server. Please make sure the backend and AI Engine are running.'
       }]);
     } finally {
@@ -518,11 +518,10 @@ export default function Chat() {
               <div
                 key={session.session_id}
                 onClick={() => handleLoadSession(session.session_id)}
-                className={`p-3 rounded-lg cursor-pointer mb-2 group ${
-                  session.session_id === sessionId 
-                    ? 'bg-indigo-500/20 border border-indigo-500/30' 
-                    : 'bg-white/5 hover:bg-white/10 border border-transparent'
-                }`}
+                className={`p-3 rounded-lg cursor-pointer mb-2 group ${session.session_id === sessionId
+                  ? 'bg-indigo-500/20 border border-indigo-500/30'
+                  : 'bg-white/5 hover:bg-white/10 border border-transparent'
+                  }`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
@@ -561,7 +560,7 @@ export default function Chat() {
               </svg>
             </button>
             <h1 className="text-white font-medium">MindCubes AI</h1>
-            
+
             {/* Model Selector */}
             <div className="relative">
               <select
@@ -605,39 +604,39 @@ export default function Chat() {
               <div className="text-6xl mb-4">🤖</div>
               <h2 className="text-xl font-semibold text-white mb-2">Hello!</h2>
               <p className="text-gray-400 max-w-md mb-6">
-                I&apos;m your MindCubes AI assistant. I can help you with task creation, 
+                I&apos;m your MindCubes AI assistant. I can help you with task creation,
                 calendar management, file storage, email organization, and more.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
-                <button 
+                <button
                   onClick={() => setInput('Extract tasks from this file')}
                   className="bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 transition-colors"
                 >
                   <div className="text-indigo-400 font-medium mb-1">📋 Create Tasks</div>
                   <div className="text-gray-400">&quot;Extract tasks from this PDF&quot;</div>
                 </button>
-                <button 
+                <button
                   onClick={() => setInput('Add a meeting tomorrow at 2:00 PM')}
                   className="bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 transition-colors"
                 >
                   <div className="text-indigo-400 font-medium mb-1">📅 Add to Calendar</div>
                   <div className="text-gray-400">&quot;Meeting tomorrow at 2PM&quot;</div>
                 </button>
-                <button 
+                <button
                   onClick={() => setInput('Save this file to cloud')}
                   className="bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 transition-colors"
                 >
                   <div className="text-indigo-400 font-medium mb-1">☁️ Save File</div>
                   <div className="text-gray-400">&quot;Save to Drive&quot;</div>
                 </button>
-                <button 
+                <button
                   onClick={() => setInput('Categorize my emails')}
                   className="bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 transition-colors"
                 >
                   <div className="text-indigo-400 font-medium mb-1">📁 Categorize</div>
                   <div className="text-gray-400">&quot;Organize my inbox&quot;</div>
                 </button>
-                <button 
+                <button
                   onClick={() => setInput('Prioritize my emails')}
                   className="bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 transition-colors"
                 >
@@ -647,7 +646,7 @@ export default function Chat() {
               </div>
             </div>
           )}
-          
+
           {messages.map((msg, idx) => (
             <div
               key={msg.id || idx}
@@ -678,14 +677,13 @@ export default function Chat() {
                     )}
                   </div>
                 )}
-                
+
                 {/* Main message bubble */}
                 <div
-                  className={`rounded-2xl px-5 py-4 text-sm leading-relaxed shadow-lg ${
-                    msg.role === 'user'
-                      ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-br-sm'
-                      : 'bg-white/90 text-gray-900 rounded-bl-sm border border-white/40'
-                  }`}
+                  className={`rounded-2xl px-5 py-4 text-sm leading-relaxed shadow-lg ${msg.role === 'user'
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-br-sm'
+                    : 'bg-white/90 text-gray-900 rounded-bl-sm border border-white/40'
+                    }`}
                 >
                   {/* File attachment indicator */}
                   {msg.file && (
@@ -696,10 +694,10 @@ export default function Chat() {
                       <span className="text-xs opacity-80">{msg.file.name}</span>
                     </div>
                   )}
-                  
+
                   {/* Message content with markdown parsing */}
                   <div className="whitespace-pre-wrap">{parseMarkdown(msg.content)}</div>
-                  
+
                   {/* Workflow indicator */}
                   {msg.metadata?.workflow_triggered && (
                     <div className="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-500 flex items-center gap-1">
@@ -713,7 +711,7 @@ export default function Chat() {
               </div>
             </div>
           ))}
-          
+
           {/* Loading indicator with thinking */}
           {isLoading && (
             <div className="flex justify-start">
@@ -734,7 +732,7 @@ export default function Chat() {
               </div>
             </div>
           )}
-          
+
           <div ref={messagesEndRef} />
         </div>
 
@@ -751,7 +749,7 @@ export default function Chat() {
                 <span className="text-gray-400 text-xs">
                   {(selectedFile.size / 1024).toFixed(1)} KB
                 </span>
-                <button 
+                <button
                   onClick={removeSelectedFile}
                   className="text-gray-400 hover:text-white transition-colors"
                 >
@@ -762,7 +760,7 @@ export default function Chat() {
               </div>
             </div>
           )}
-          
+
           <div className="max-w-4xl mx-auto relative flex items-end gap-2">
             {/* File Upload Button */}
             <input
@@ -781,7 +779,7 @@ export default function Chat() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
               </svg>
             </button>
-            
+
             {/* Textarea Input */}
             <div className="flex-1 relative">
               <textarea
@@ -796,14 +794,13 @@ export default function Chat() {
                 style={{ minHeight: '48px', maxHeight: '200px' }}
               />
             </div>
-            
+
             {/* Send Button */}
             <button
-              className={`p-3 rounded-xl transition-colors flex-shrink-0 ${
-                isLoading || (!input.trim() && !selectedFile)
-                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  : 'bg-indigo-500 text-white hover:bg-indigo-600'
-              }`}
+              className={`p-3 rounded-xl transition-colors flex-shrink-0 ${isLoading || (!input.trim() && !selectedFile)
+                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                : 'bg-indigo-500 text-white hover:bg-indigo-600'
+                }`}
               onClick={handleSend}
               disabled={isLoading || (!input.trim() && !selectedFile)}
             >
@@ -818,12 +815,12 @@ export default function Chat() {
               )}
             </button>
           </div>
-          
+
           {/* Hint text */}
           <div className="max-w-4xl mx-auto mt-2 text-xs text-gray-500">
             Press Enter to send • Shift+Enter for new line
           </div>
-          
+
           {/* Quick Actions */}
           <div className="max-w-4xl mx-auto mt-3 flex flex-wrap gap-2">
             <button

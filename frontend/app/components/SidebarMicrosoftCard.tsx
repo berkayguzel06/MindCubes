@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import type { StoredUserSession } from '@/hooks/useStoredUser';
+import type { StoredUserSession } from '../hooks/useStoredUser';
 
 const MICROSOFT_AUTH_BASE = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
 const MICROSOFT_AUTH_PARAMS = {

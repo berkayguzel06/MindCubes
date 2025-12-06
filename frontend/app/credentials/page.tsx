@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SidebarCredentialsPanel from '@/app/components/SidebarCredentialsPanel';
 import SidebarMicrosoftCard from '@/app/components/SidebarMicrosoftCard';
-import { useStoredUser } from '@/hooks/useStoredUser';
+import { useStoredUser } from '../hooks/useStoredUser';
 
 export default function CredentialsPage() {
   const router = useRouter();

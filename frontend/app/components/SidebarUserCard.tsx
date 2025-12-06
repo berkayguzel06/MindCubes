@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import type { StoredUserSession } from '@/hooks/useStoredUser';
+import type { StoredUserSession } from '../hooks/useStoredUser';
 
 type SidebarUserCardProps = {
   user: StoredUserSession | null;
@@ -30,7 +30,7 @@ export default function SidebarUserCard({ user, onLogout }: SidebarUserCardProps
   const displayName = user ? `${user.name} ${user.lastName}` : 'Guest User';
   const email = user?.email ?? 'guest@example.com';
   const role = user?.role ?? 'guest';
-  
+
   const roleColors: Record<string, string> = {
     admin: 'bg-red-500/20 text-red-400 border-red-500/30',
     customer: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',

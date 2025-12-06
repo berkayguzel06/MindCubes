@@ -1,6 +1,6 @@
 'use client';
 
-import { useStoredUser } from '@/hooks/useStoredUser';
+import { useStoredUser } from '../hooks/useStoredUser';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
@@ -45,7 +45,7 @@ export default function Models() {
           }
         });
         const data = await response.json();
-        
+
         if (data.success) {
           setModels(data.data || []);
         } else {
@@ -141,7 +141,7 @@ export default function Models() {
                   orange: 'bg-orange-500/20 text-orange-400',
                   pink: 'bg-pink-500/20 text-pink-400'
                 };
-                
+
                 return (
                   <div key={model.id} className="glass-panel p-6 rounded-xl border border-white/5 hover:border-white/20 transition-colors">
                     <div className="flex items-start justify-between mb-4">

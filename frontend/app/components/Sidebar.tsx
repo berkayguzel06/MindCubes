@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { StoredUserSession } from '@/hooks/useStoredUser';
+import type { StoredUserSession } from '../hooks/useStoredUser';
 import SidebarMicrosoftCard from './SidebarMicrosoftCard';
 import SidebarUserCard from './SidebarUserCard';
 
@@ -46,42 +46,36 @@ export default function Sidebar({ user, onLogout }: SidebarProps) {
 
         <Link
           href="/agents"
-          className={`${baseLinkClasses} ${
-            isAgents ? activeClasses : inactiveClasses
-          }`}
+          className={`${baseLinkClasses} ${isAgents ? activeClasses : inactiveClasses
+            }`}
         >
           <span
-            className={`w-2 h-2 rounded-full ${
-              isAgents ? 'bg-purple-500' : 'bg-gray-600'
-            }`}
+            className={`w-2 h-2 rounded-full ${isAgents ? 'bg-purple-500' : 'bg-gray-600'
+              }`}
           />
           Agents
         </Link>
 
         <Link
           href="/models"
-          className={`${baseLinkClasses} ${
-            isModels ? activeClasses : inactiveClasses
-          }`}
+          className={`${baseLinkClasses} ${isModels ? activeClasses : inactiveClasses
+            }`}
         >
           <span
-            className={`w-2 h-2 rounded-full ${
-              isModels ? 'bg-emerald-500' : 'bg-gray-600'
-            }`}
+            className={`w-2 h-2 rounded-full ${isModels ? 'bg-emerald-500' : 'bg-gray-600'
+              }`}
           />
           Models
         </Link>
 
         <Link
           href="/chat"
-          className={`${baseLinkClasses} mt-4 ${
-            isChat ? activeClasses : inactiveClasses
-          }`}
+          className={`${baseLinkClasses} mt-4 ${isChat ? activeClasses : inactiveClasses
+            }`}
         >
           <span
-            className={`w-2 h-2 rounded-full ${
-              isChat ? 'bg-blue-500' : 'bg-gray-600'
-            }`}
+            className={`w-2 h-2 rounded-full ${isChat ? 'bg-blue-500' : 'bg-gray-600'
+              }`}
           />
           Chat
         </Link>

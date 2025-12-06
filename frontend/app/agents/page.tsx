@@ -1,6 +1,6 @@
 'use client';
 
-import { useStoredUser } from '@/hooks/useStoredUser';
+import { useStoredUser } from '../hooks/useStoredUser';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import NotificationPanel, { NotificationType } from '../components/NotificationPanel';
@@ -134,9 +134,8 @@ export default function Agents() {
 
         showNotification(
           data.message ||
-            `Workflow import completed with errors. Imported: ${data.importedCount ?? 0}, Failed: ${
-              data.errorCount ?? data.errors.length
-            }. ${failedFilesPreview}`,
+          `Workflow import completed with errors. Imported: ${data.importedCount ?? 0}, Failed: ${data.errorCount ?? data.errors.length
+          }. ${failedFilesPreview}`,
           'error'
         );
       } else if (data.success) {
@@ -170,7 +169,7 @@ export default function Agents() {
         }
       });
       const data = await response.json();
-      
+
       if (data.success) {
         setWorkflows(data.data || []);
       } else {
@@ -281,9 +280,9 @@ export default function Agents() {
         prev.map((wf) =>
           wf.id === workflowId
             ? {
-                ...wf,
-                is_enabled_for_user: !currentlyEnabled
-              }
+              ...wf,
+              is_enabled_for_user: !currentlyEnabled
+            }
             : wf
         )
       );
@@ -317,15 +316,15 @@ export default function Agents() {
 
     try {
       setExecuting(true);
-      
+
       const formData = new FormData();
       formData.append('chatInput', chatInput);
       formData.append('userId', userId);
-      
+
       if (webhookPath) {
         formData.append('webhookPath', webhookPath);
       }
-      
+
       if (selectedFile) {
         formData.append('file', selectedFile);
       }
@@ -337,9 +336,9 @@ export default function Agents() {
         },
         body: formData // Don't set Content-Type, browser will set it with boundary
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         showNotification('Workflow executed successfully.', 'success');
         closeExecuteModal();
@@ -403,9 +402,9 @@ export default function Agents() {
           'Authorization': `Bearer ${token}`
         }
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         // Refresh workflows
         fetchWorkflows();
@@ -451,21 +450,21 @@ export default function Agents() {
               <p className="text-gray-400 text-sm">Manage and execute your agents</p>
             </div>
             <div className="flex items-center gap-3">
-              <button 
+              <button
                 onClick={backupWorkflows}
                 disabled={backingUp}
                 className="px-4 py-2 bg-purple-500/20 text-purple-200 text-sm rounded-full font-medium hover:bg-purple-500/30 transition-colors border border-purple-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {backingUp ? '💾 Backing up...' : '💾 Backup Workflows'}
               </button>
-              <button 
+              <button
                 onClick={importWorkflows}
                 disabled={importing}
                 className="px-4 py-2 bg-emerald-500/20 text-emerald-200 text-sm rounded-full font-medium hover:bg-emerald-500/30 transition-colors border border-emerald-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {importing ? '↩ Importing...' : '↩ Import Workflows'}
               </button>
-              <button 
+              <button
                 onClick={fetchWorkflows}
                 className="px-4 py-2 bg-white/10 text-white text-sm rounded-full font-medium hover:bg-white/20 transition-colors border border-white/20"
               >
@@ -526,78 +525,76 @@ export default function Agents() {
                   return tagNames.includes(selectedTagFilter.toLowerCase());
                 })
                 .map((workflow) => {
-                const tagNames = (workflow.tags || []).map((t) => t.name.toLowerCase());
-                const hasDataInput = tagNames.includes('data-input');
-                const hasEditable = tagNames.includes('editable');
-                const hasStart = tagNames.includes('start');
-                const isActive = workflow.active;
-                const isEnabledForUser = workflow.is_enabled_for_user !== false;
+                  const tagNames = (workflow.tags || []).map((t) => t.name.toLowerCase());
+                  const hasDataInput = tagNames.includes('data-input');
+                  const hasEditable = tagNames.includes('editable');
+                  const hasStart = tagNames.includes('start');
+                  const isActive = workflow.active;
+                  const isEnabledForUser = workflow.is_enabled_for_user !== false;
 
-                return (
-                  <div
-                    key={workflow.id}
-                    className="glass-panel p-6 rounded-xl border border-white/5 hover:border-white/20 transition-colors group"
-                  >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                      </div>
-                      <div className={`px-2 py-1 text-xs rounded-full border ${
-                        workflow.active 
-                          ? 'bg-green-500/10 text-green-400 border-green-500/20' 
+                  return (
+                    <div
+                      key={workflow.id}
+                      className="glass-panel p-6 rounded-xl border border-white/5 hover:border-white/20 transition-colors group"
+                    >
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                          </svg>
+                        </div>
+                        <div className={`px-2 py-1 text-xs rounded-full border ${workflow.active
+                          ? 'bg-green-500/10 text-green-400 border-green-500/20'
                           : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
-                      }`}>
-                        {workflow.active ? 'Active' : 'Inactive'}
+                          }`}>
+                          {workflow.active ? 'Active' : 'Inactive'}
+                        </div>
                       </div>
-                    </div>
-                    
-                    <h3 className="text-lg font-medium text-white mb-2 truncate" title={workflow.name}>
-                      {workflow.name}
-                    </h3>
-                    
-                    <p className="text-sm text-gray-400 mb-4">
-                      {workflow.tags && workflow.tags.length > 0 
-                        ? `Tags: ${workflow.tags.map(t => t.name).join(', ')}`
-                        : 'No tags'
-                      }
-                    </p>
-                    
-                    <div className="flex items-center justify-between pt-4 border-t border-white/5 gap-2">
-                      <div className="flex items-center gap-2">
-                        {hasStart && (
-                          <button
-                            onClick={() => toggleWorkflowForUser(workflow.id, isEnabledForUser)}
-                            disabled={updatingSettings === workflow.id}
-                            className={`text-xs px-3 py-1 rounded-full border transition-colors ${
-                              isEnabledForUser
+
+                      <h3 className="text-lg font-medium text-white mb-2 truncate" title={workflow.name}>
+                        {workflow.name}
+                      </h3>
+
+                      <p className="text-sm text-gray-400 mb-4">
+                        {workflow.tags && workflow.tags.length > 0
+                          ? `Tags: ${workflow.tags.map(t => t.name).join(', ')}`
+                          : 'No tags'
+                        }
+                      </p>
+
+                      <div className="flex items-center justify-between pt-4 border-t border-white/5 gap-2">
+                        <div className="flex items-center gap-2">
+                          {hasStart && (
+                            <button
+                              onClick={() => toggleWorkflowForUser(workflow.id, isEnabledForUser)}
+                              disabled={updatingSettings === workflow.id}
+                              className={`text-xs px-3 py-1 rounded-full border transition-colors ${isEnabledForUser
                                 ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-200 hover:bg-emerald-500/20'
                                 : 'border-gray-500/40 bg-gray-700/40 text-gray-300 hover:bg-gray-600/60'
-                            } disabled:opacity-50 disabled:cursor-not-allowed`}
-                          >
-                            {updatingSettings === workflow.id
-                              ? 'Updating...'
-                              : isEnabledForUser
-                                ? 'Disable for me'
-                                : 'Enable for me'}
-                          </button>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {hasEditable && (
-                          <button
-                            onClick={() => openPromptModal(workflow.id, workflow.name)}
-                            className="text-xs px-3 py-1 rounded-full border border-purple-500/40 bg-purple-500/10 text-purple-200 hover:bg-purple-500/20 transition-colors"
-                          >
-                            ✏️ Edit Prompt
-                          </button>
-                        )}
+                                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                            >
+                              {updatingSettings === workflow.id
+                                ? 'Updating...'
+                                : isEnabledForUser
+                                  ? 'Disable for me'
+                                  : 'Enable for me'}
+                            </button>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {hasEditable && (
+                            <button
+                              onClick={() => openPromptModal(workflow.id, workflow.name)}
+                              className="text-xs px-3 py-1 rounded-full border border-purple-500/40 bg-purple-500/10 text-purple-200 hover:bg-purple-500/20 transition-colors"
+                            >
+                              ✏️ Edit Prompt
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           )}
         </div>
@@ -609,7 +606,7 @@ export default function Agents() {
           <div className="glass-panel border border-white/10 rounded-2xl p-6 w-full max-w-lg mx-4">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-white">Execute Workflow</h2>
-              <button 
+              <button
                 onClick={closeExecuteModal}
                 className="text-gray-400 hover:text-white transition-colors"
               >

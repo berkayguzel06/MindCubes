@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import NexmindLogo from './nexmind3-logo.png';
-import { useStoredUser } from '@/hooks/useStoredUser';
+import { useStoredUser } from './hooks/useStoredUser';
 
 export default function Home() {
   const containerRef = useRef<HTMLElement>(null);

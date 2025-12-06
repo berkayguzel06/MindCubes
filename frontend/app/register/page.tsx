@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
-import { useStoredUser } from '@/hooks/useStoredUser';
+import { useStoredUser } from '../hooks/useStoredUser';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:5000/api/v1';
 
@@ -16,9 +16,9 @@ export default function Register() {
 
   const handleChange =
     (field: keyof typeof form) =>
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setForm((prev) => ({ ...prev, [field]: event.target.value }));
-    };
+      (event: ChangeEvent<HTMLInputElement>) => {
+        setForm((prev) => ({ ...prev, [field]: event.target.value }));
+      };
 
   useEffect(() => {
     if (!hydrated) return;
