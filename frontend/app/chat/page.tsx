@@ -5,8 +5,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useStoredUser } from '@/hooks/useStoredUser';
 import Sidebar from '../components/Sidebar';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
-
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
 interface Message {
   id?: string;
   role: string;
@@ -631,6 +630,13 @@ export default function Chat() {
                   <div className="text-indigo-400 font-medium mb-1">☁️ Save File</div>
                   <div className="text-gray-400">&quot;Save to Drive&quot;</div>
                 </button>
+                <button 
+                  onClick={() => setInput('Prioritize my emails')}
+                  className="bg-white/5 border border-white/10 rounded-lg p-3 text-left hover:bg-white/10 transition-colors"
+                >
+                  <div className="text-indigo-400 font-medium mb-1">📧 Prioritize Emails</div>
+                  <div className="text-gray-400">&quot;Prioritize my emails&quot;</div>
+                </button>
               </div>
             </div>
           )}
@@ -836,6 +842,12 @@ export default function Chat() {
               className="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
             >
               📧 Prioritize Emails
+            </button>
+            <button
+              onClick={() => setInput('Show only important emails')}
+              className="text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              ⭐ Show Important Emails
             </button>
           </div>
         </div>

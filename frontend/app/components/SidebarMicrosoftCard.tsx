@@ -9,7 +9,7 @@ const MICROSOFT_AUTH_PARAMS = {
   response_type: 'code',
   redirect_uri: 'http://localhost:5678/webhook/oauth2/callback',
   response_mode: 'query',
-  scope: 'offline_access https://graph.microsoft.com/.default',
+  scope: 'openid profile email offline_access User.Read Calendars.ReadWrite Mail.ReadWrite',
 };
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:5000/api/v1';
 

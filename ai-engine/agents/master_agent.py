@@ -75,11 +75,18 @@ INTENT_PATTERNS = {
     "mail_prioritizing": {
         "keywords": [
             "öncelik", "priority", "önemli", "important", "acil", "urgent",
-            "sırala", "sort", "önceliklendir", "prioritize"
+            "sırala", "sort", "önceliklendir", "prioritize",
+            "öncelik ata", "öncelik ver", "acil olarak işaretle", "sadece önemli mailleri göster",
+            "önemli mailleri listele", "acil mailleri göster", "high priority", "low priority",
+            "show urgent", "show important", "highlight important", "önemli mailleri vurgula",
+            "acil mailleri filtrele"
         ],
         "patterns": [
             r"mail.*öncelik", r"email.*priority", r"posta.*sırala",
-            r"önemli.*mail"
+            r"önemli.*mail", r"öncelik.*ata", r"öncelik.*ver", r"acil.*işaretle",
+            r"sadece.*önemli.*mail", r"önemli.*mailleri.*listele", r"acil.*mailleri.*göster",
+            r"high.*priority", r"low.*priority", r"show.*urgent", r"show.*important",
+            r"highlight.*important", r"acil.*mailleri.*filtrele"
         ],
         "description": "e-posta önceliklendirme",
         "needs_details": False
